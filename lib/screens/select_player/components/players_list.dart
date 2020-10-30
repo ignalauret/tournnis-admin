@@ -7,10 +7,19 @@ import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class PlayersList extends StatelessWidget {
-  PlayersList({this.search = "", this.selectedId, this.select});
+  PlayersList({
+    this.search = "",
+    this.selectedId,
+    this.select,
+    this.showPoints = false,
+    this.selectedCategory,
+  });
+
   final String selectedId;
   final String search;
   final Function(Player) select;
+  final bool showPoints;
+  final int selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +30,23 @@ class PlayersList extends StatelessWidget {
           final List<Player> searchedPlayers = snapshot.data
               .where((player) => player.name.toLowerCase().contains(search))
               .toList();
+          if (showPoints)
+            searchedPlayers.sort((p1, p2) => p2.points[selectedCategory]
+                .compareTo(p1.points[selectedCategory]));
           return ListView.builder(
             itemBuilder: (context, index) {
               final player = searchedPlayers[index];
               return GestureDetector(
-                  onTap: () {
-                    if (select != null) select(player);
-                  },
-                  child: PlayersListItem(player, selectedId == player.id));
+                onTap: () {
+                  if (select != null) select(player);
+                },
+                child: PlayersListItem(
+                  player: player,
+                  selected: selectedId == player.id,
+                  showPoints: showPoints,
+                  selectedCategory: selectedCategory,
+                ),
+              );
             },
             itemCount: searchedPlayers.length,
           );
@@ -43,9 +61,16 @@ class PlayersList extends StatelessWidget {
 }
 
 class PlayersListItem extends StatelessWidget {
-  PlayersListItem(this.player, this.selected);
+  PlayersListItem({
+    this.player,
+    this.selected,
+    this.showPoints = false,
+    this.selectedCategory,
+  });
   final Player player;
   final bool selected;
+  final bool showPoints;
+  final int selectedCategory;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -54,11 +79,23 @@ class PlayersListItem extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Text(
-          player.name,
-          style: CustomStyles.kPlayerNameStyle.copyWith(
-            color: selected ? CustomColors.kAccentColor : null,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              player.name,
+              style: CustomStyles.kPlayerNameStyle.copyWith(
+                color: selected ? CustomColors.kAccentColor : null,
+              ),
+            ),
+            if (showPoints)
+              Text(
+                player.points[selectedCategory].toString() + " puntos",
+                style: CustomStyles.kResultStyle.copyWith(
+                  color: CustomColors.kAccentColor,
+                ),
+              ),
+          ],
         ),
       ),
     );
