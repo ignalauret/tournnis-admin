@@ -7,6 +7,7 @@ import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
 import 'package:tournnis_admin/screens/players/players_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -25,10 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
         height: double.infinity,
         width: double.infinity,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FlatButton(
               child: Text(
                 "Ver Partidos",
+                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.of(context).pushNamed(MatchesScreen.routeName);
@@ -37,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FlatButton(
               child: Text(
                 "Ver Jugadores",
+                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
               ),
               onPressed: () {
                 Navigator.of(context).pushNamed(PlayersScreen.routeName);

@@ -20,7 +20,7 @@ class TextDataCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 25,
+          height: 21,
           width: size.width * 0.8,
           child: Text(
             title,
@@ -32,7 +32,7 @@ class TextDataCard extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            height: 50,
+            height: 40,
             width: size.width * 0.8,
             padding: const EdgeInsets.only(
               left: 20,

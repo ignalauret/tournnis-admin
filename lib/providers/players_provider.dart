@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tournnis_admin/models/player.dart';
+import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 
 class PlayersProvider extends ChangeNotifier {
@@ -95,6 +96,13 @@ class PlayersProvider extends ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  Future<bool> addMatchPoints(TournamentMatch match) async {
+    await addPointsToPlayer(
+        match.pid1, match.firstPlayerPoints, match.category);
+    return await addPointsToPlayer(
+        match.pid2, match.secondPlayerPoints, match.category);
   }
 
   Future<bool> addPointsToPlayer(String pid, int points, int category) async {

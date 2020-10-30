@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 
 class MatchesProvider extends ChangeNotifier {
@@ -22,6 +23,11 @@ class MatchesProvider extends ChangeNotifier {
     _matches = await fetchMatches();
   }
 
+  TournamentMatch getMatchById(String id) {
+    if (id == null) return null;
+    return _matches.firstWhere((match) => match.id == id, orElse: () => null);
+  }
+
   void addLocalMatch(TournamentMatch match) {
     _matches.add(match);
     notifyListeners();
@@ -32,8 +38,11 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  TournamentMatch getMatchById(String id) {
-    return _matches.firstWhere((match) => match.id == id);
+  void addLocalResult(String id, List<int> result1, List<int> result2) {
+    final match = getMatchById(id);
+    match.result1 = result1;
+    match.result2 = result2;
+    notifyListeners();
   }
 
   /* CRUD Functions */
@@ -61,6 +70,7 @@ class MatchesProvider extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       // Add match in local memory.
+      match.id = jsonDecode(response.body)["name"];
       addLocalMatch(match);
       return true;
     } else {
@@ -81,14 +91,33 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  // /* Delete all matches played on a certain tournament. */
-  // Future<void> deleteMatchesOfTournament(String tournamentId) async {
-  //   _matches.forEach((match) {
-  //     if (match.tournament == tournamentId) {
-  //       deleteMatch(match.id);
-  //     }
-  //   });
-  // }
+  Future<bool> addResult(
+      TournamentMatch match, String result, PlayersProvider playersData) async {
+    final List<int> result1 = [];
+    final List<int> result2 = [];
+    final sets = result.split(" ");
+    for (String set in sets) {
+      final games = set.split(".");
+      result1.add(int.parse(games[0]));
+      result2.add(int.parse(games[1]));
+    }
+
+    // Try updating result in DB
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/${match.id}.json",
+      body: jsonEncode({
+        "result1": result1,
+        "result2": result2,
+      }),
+    );
+    if (response.statusCode == 200) {
+      addLocalResult(match.id, result1, result2);
+      await playersData.addMatchPoints(match);
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /* Predicates */
   bool playerHasMatches(String pid) {

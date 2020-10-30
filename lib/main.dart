@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: CustomColors.kMainColor,
           accentColor: CustomColors.kAccentColor,
+          colorScheme: ColorScheme.light(primary: CustomColors.kMainColor, secondary: CustomColors.kAccentColor),
           fontFamily: "Montserrat",
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),

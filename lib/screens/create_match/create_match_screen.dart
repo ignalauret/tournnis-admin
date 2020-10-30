@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/action_button.dart';
+import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
@@ -22,6 +23,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   String pid2;
   String name1;
   String name2;
+  int selectedCategory = 0;
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -72,7 +74,17 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    SizedBox(width: double.infinity,),
+                    CategorySelector(
+                      selectedCat: selectedCategory,
+                      select: (cat) {
+                        setState(() {
+                          selectedCategory = cat;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       "Horario",
                       style: CustomStyles.kTitleStyle,
@@ -135,7 +147,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
               ActionButton(
                 "Agregar",
                 () {
-                  context.read<MatchesProvider>().createMatch(
+                  context
+                      .read<MatchesProvider>()
+                      .createMatch(
                         TournamentMatch(
                           pid1: pid1,
                           pid2: pid2,
@@ -149,10 +163,13 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                               selectedTime.minute),
                           tid: "0",
                           isPlayOff: false,
-                          category: 0,
+                          category: selectedCategory,
                           playOffRound: null,
                         ),
-                      );
+                      )
+                      .then((value) {
+                    Navigator.of(context).pop();
+                  });
                 },
               ),
             ],

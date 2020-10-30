@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tournnis_admin/utils/constants.dart';
 
 class TournamentMatch {
   String id;
   final String pid1; // Player 1 ID.
   final String pid2; // Player 2 ID.
-  final List<int> result1;
-  final List<int> result2;
+  List<int> result1;
+  List<int> result2;
   final DateTime date;
   final String tid; // Tournament ID.
   final bool isPlayOff; // If is a play off match or a round match.
@@ -42,6 +43,20 @@ class TournamentMatch {
 
   String get winnerId {
     return isFirstWinner ? pid1 : pid2;
+  }
+
+  int get firstPlayerPoints {
+    if (!hasEnded) return 0;
+    if (isFirstWinner) return Constants.kLeaguePoints[0];
+    if (result1.length == 3) return Constants.kLeaguePoints[1];
+    return Constants.kLeaguePoints[2];
+  }
+
+  int get secondPlayerPoints {
+    if (!hasEnded) return 0;
+    if (isSecondWinner) return Constants.kLeaguePoints[0];
+    if (result1.length == 3) return Constants.kLeaguePoints[1];
+    return Constants.kLeaguePoints[2];
   }
 
   String get categoryName {
