@@ -5,6 +5,7 @@ import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
+import 'package:tournnis_admin/screens/players/players_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -23,13 +24,25 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        child: FlatButton(
-          child: Text(
-            "Ver Partidos",
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed(MatchesScreen.routeName);
-          },
+        child: Column(
+          children: [
+            FlatButton(
+              child: Text(
+                "Ver Partidos",
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(MatchesScreen.routeName);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Ver Jugadores",
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(PlayersScreen.routeName);
+              },
+            ),
+          ],
         ),
       ),
       // body: Consumer2<PlayersProvider, MatchesProvider>(

@@ -11,14 +11,6 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   List<Player> _players = [];
-  // Create new player variables
-  String newPlayerName;
-  String newPlayerClub;
-  String newPlayerNationality;
-  DateTime newPlayerBirth;
-  String newPlayerImageUrl;
-  bool newPlayerRightHanded;
-  bool newPlayerOneHanded;
 
   Future<List<Player>> get players async {
     if (_players == null) await getPlayers();
@@ -46,12 +38,12 @@ class PlayersProvider extends ChangeNotifier {
     }
   }
 
-  void addPlayer(Player player) {
+  void addLocalPlayer(Player player) {
     _players.add(player);
     notifyListeners();
   }
 
-  void removePlayer(pid) {
+  void removeLocalPlayer(pid) {
     _players.removeWhere((player) => player.id == pid);
     notifyListeners();
   }
@@ -61,14 +53,15 @@ class PlayersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createPlayer() async {
+  Future<bool> createPlayer(
+      {String name, String club, Backhand backhand, Handed hand}) async {
     final player = Player(
-      name: newPlayerName,
-      club: newPlayerClub,
-      nationality: newPlayerNationality,
-      backhand: newPlayerOneHanded ? Backhand.OneHanded : Backhand.TwoHanded,
-      handed: newPlayerRightHanded ? Handed.Right : Handed.Left,
-      birth: newPlayerBirth,
+      name: name,
+      club: club,
+      nationality: "Argentina",
+      backhand: backhand,
+      handed: hand,
+      birth: DateTime(1990, 10, 10),
       profileUrl: "assets/img/ignacio_lauret_profile.png",
       imageUrl: "assets/img/ignacio_lauret_image.png",
       bestRankings: [0, 0, 0, 0],
@@ -83,7 +76,7 @@ class PlayersProvider extends ChangeNotifier {
     print(response.body);
     if (response.statusCode == 200) {
       player.id = jsonDecode(response.body)["name"];
-      addPlayer(player);
+      addLocalPlayer(player);
       return true;
     } else {
       return false;
@@ -97,7 +90,7 @@ class PlayersProvider extends ChangeNotifier {
     print(response.statusCode);
     if (response.statusCode == 200) {
       // Remove from local memory.
-      removePlayer(pid);
+      removeLocalPlayer(pid);
       return true;
     } else {
       return false;
@@ -109,7 +102,7 @@ class PlayersProvider extends ChangeNotifier {
     // Try adding points in DB.
     final response = await http.patch(
       Constants.kDbPath + "/players/$pid/points.json",
-      body: jsonEncode({"$category":newPoints}),
+      body: jsonEncode({"$category": newPoints}),
     );
     print(response.statusCode);
     if (response.statusCode == 200) {

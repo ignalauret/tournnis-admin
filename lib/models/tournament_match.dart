@@ -27,12 +27,12 @@ class TournamentMatch {
 
   /* Getters */
   bool get isFirstWinner {
-    if(result1 == null) return false;
+    if (result1 == null) return false;
     return result1.last > result2.last;
   }
 
   bool get isSecondWinner {
-    if(result2 == null) return false;
+    if (result2 == null) return false;
     return result2.last > result1.last;
   }
 
@@ -64,8 +64,8 @@ class TournamentMatch {
       id: id,
       pid1: json["pid1"],
       pid2: json["pid2"],
-      result1: List<int>.from(json["result1"]),
-      result2: List<int>.from(json["result2"]),
+      result1: json["result1"] == null ? null : List<int>.from(json["result1"]),
+      result2: json["result2"] == null ? null : List<int>.from(json["result2"]),
       date: DateTime.parse(json["date"]),
       tid: json["tid"],
       isPlayOff: isPlayOff,

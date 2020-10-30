@@ -8,6 +8,12 @@ class CustomStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const kNormalStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+  );
+
   static const kPlayerNameStyle = TextStyle(
     color: CustomColors.kMainColor,
     fontSize: 17,

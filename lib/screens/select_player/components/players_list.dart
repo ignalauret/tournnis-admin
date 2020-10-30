@@ -26,7 +26,7 @@ class PlayersList extends StatelessWidget {
               final player = searchedPlayers[index];
               return GestureDetector(
                   onTap: () {
-                    select(player);
+                    if (select != null) select(player);
                   },
                   child: PlayersListItem(player, selectedId == player.id));
             },

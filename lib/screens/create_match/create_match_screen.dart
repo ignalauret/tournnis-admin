@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/action_button.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
@@ -68,106 +69,92 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              SizedBox(
-                width: double.infinity,
-              ),
-              Text(
-                "Horario",
-                style: CustomStyles.kTitleStyle,
-              ),
-              _buildDaySelector(),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "Jugadores",
-                style: CustomStyles.kTitleStyle,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              TextDataCard(
-                title: "Jugador 1",
-                data: name1 == null ? "Seleccionar jugador" : name1,
-                size: size,
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(SelectPlayerScreen.routeName)
-                      .then(
-                    (value) {
-                      if (value == null) return;
-                      final Map<String, String> map = value;
-                      setState(() {
-                        pid1 = map["id"];
-                        name1 = map["name"];
-                      });
-                    },
-                  );
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextDataCard(
-                title: "Jugador 2",
-                data: name2 == null ? "Seleccionar jugador" : name2,
-                size: size,
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed(SelectPlayerScreen.routeName)
-                      .then(
-                    (value) {
-                      if (value == null) return;
-                      final Map<String, String> map = value;
-                      setState(() {
-                        pid2 = map["id"];
-                        name2 = map["name"];
-                      });
-                    },
-                  );
-                },
-              ),
-              Spacer(),
-              Container(
-                height: 80,
-                width: size.width * 0.8,
-                decoration: BoxDecoration(
-                  color: CustomColors.kAccentColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                alignment: Alignment.center,
-                child: FlatButton(
-                  child: Text(
-                    "Agregar",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(width: double.infinity,),
+                    Text(
+                      "Horario",
+                      style: CustomStyles.kTitleStyle,
                     ),
-                  ),
-                  onPressed: () {
-                    context.read<MatchesProvider>().createMatch(
-                          TournamentMatch(
-                            pid1: pid1,
-                            pid2: pid2,
-                            result1: null,
-                            result2: null,
-                            date: DateTime(
-                                selectedDate.year,
-                                selectedDate.month,
-                                selectedDate.day,
-                                selectedTime.hour,
-                                selectedTime.minute),
-                            tid: "0",
-                            isPlayOff: false,
-                            category: 0,
-                            playOffRound: null,
-                          ),
+                    _buildDaySelector(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Jugadores",
+                      style: CustomStyles.kTitleStyle,
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    TextDataCard(
+                      title: "Jugador 1",
+                      data: name1 == null ? "Seleccionar jugador" : name1,
+                      size: size,
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(SelectPlayerScreen.routeName)
+                            .then(
+                          (value) {
+                            if (value == null) return;
+                            final Map<String, String> map = value;
+                            setState(() {
+                              pid1 = map["id"];
+                              name1 = map["name"];
+                            });
+                          },
                         );
-                  },
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextDataCard(
+                      title: "Jugador 2",
+                      data: name2 == null ? "Seleccionar jugador" : name2,
+                      size: size,
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(SelectPlayerScreen.routeName)
+                            .then(
+                          (value) {
+                            if (value == null) return;
+                            final Map<String, String> map = value;
+                            setState(() {
+                              pid2 = map["id"];
+                              name2 = map["name"];
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-              Spacer(),
+              ActionButton(
+                "Agregar",
+                () {
+                  context.read<MatchesProvider>().createMatch(
+                        TournamentMatch(
+                          pid1: pid1,
+                          pid2: pid2,
+                          result1: null,
+                          result2: null,
+                          date: DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              selectedTime.hour,
+                              selectedTime.minute),
+                          tid: "0",
+                          isPlayOff: false,
+                          category: 0,
+                          playOffRound: null,
+                        ),
+                      );
+                },
+              ),
             ],
           ),
         ),
