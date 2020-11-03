@@ -22,6 +22,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
@@ -30,7 +31,8 @@ class _MatchesScreenState extends State<MatchesScreen> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(CreateMatchScreen.routeName);
+              Navigator.of(context)
+                  .pushNamed(CreateMatchScreen.routeName, arguments: tid);
             },
           ),
         ],
@@ -42,7 +44,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
               selectedCat: selectedCategory,
               select: selectCategory,
             ),
-            Expanded(child: MatchesList(selectedCategory)),
+            Expanded(child: MatchesList(selectedCategory, tid)),
           ],
         ),
       ),

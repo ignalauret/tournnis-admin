@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/action_button.dart';
 import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
-import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/screens/select_player/select_player_screen.dart';
@@ -61,6 +60,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
@@ -161,7 +161,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                               selectedDate.day,
                               selectedTime.hour,
                               selectedTime.minute),
-                          tid: "0",
+                          tid: tid,
                           isPlayOff: false,
                           category: selectedCategory,
                           playOffRound: null,

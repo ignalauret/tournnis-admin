@@ -6,8 +6,9 @@ import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 
 class MatchesList extends StatelessWidget {
-  MatchesList(this.selectedCategory);
+  MatchesList(this.selectedCategory, this.tid);
   final int selectedCategory;
+  final String tid;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class MatchesList extends StatelessWidget {
           final List<TournamentMatch> filteredList = snapshot.data
               .where(
                 (match) =>
+                    match.tid == tid &&
                     match.date != null &&
                     (selectedCategory == 4 ||
                         match.category == selectedCategory),
@@ -39,4 +41,3 @@ class MatchesList extends StatelessWidget {
     );
   }
 }
-

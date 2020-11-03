@@ -9,21 +9,31 @@ import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class GroupsList extends StatelessWidget {
+  GroupsList(this.selectedCategory, this.tid);
+  final int selectedCategory;
+  final String tid;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<GroupZone>>(
       future: context.watch<GroupsProvider>().groups,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          final List<GroupZone> groupsList = snapshot.data
+              .where((group) =>
+                  (group.category == selectedCategory ||
+                      selectedCategory == 4) &&
+                  group.tid == tid)
+              .toList();
           return ListView.builder(
             itemBuilder: (context, index) => GestureDetector(
               onTap: () => Navigator.of(context).pushNamed(
                 GroupMatchesScreen.routeName,
                 arguments: snapshot.data[index],
               ),
-              child: GroupsListItem(snapshot.data[index]),
+              child: GroupsListItem(groupsList[index]),
             ),
-            itemCount: snapshot.data.length,
+            itemCount: groupsList.length,
           );
         } else {
           return Center(

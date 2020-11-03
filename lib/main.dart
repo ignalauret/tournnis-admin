@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
 import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
@@ -12,6 +13,7 @@ import 'package:tournnis_admin/screens/home/home_screen.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
 import 'package:tournnis_admin/screens/players/players_screen.dart';
 import 'package:tournnis_admin/screens/select_player/select_player_screen.dart';
+import 'package:tournnis_admin/screens/select_tournament/select_tournament_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 
 void main() {
@@ -36,6 +38,10 @@ class MyApp extends StatelessWidget {
           create: (context) => GroupsProvider(),
           lazy: false,
         ),
+        ChangeNotifierProvider<TournamentsProvider>(
+          create: (context) => TournamentsProvider(),
+          lazy: false,
+        ),
       ],
       child: MaterialApp(
         title: 'Tournnis',
@@ -49,8 +55,9 @@ class MyApp extends StatelessWidget {
           fontFamily: "Montserrat",
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: HomeScreen(),
+        home: SelectTournamentScreen(),
         routes: {
+          HomeScreen.routeName: (context) => HomeScreen(),
           MatchesScreen.routeName: (context) => MatchesScreen(),
           CreateMatchScreen.routeName: (context) => CreateMatchScreen(),
           GroupStageScreen.routeName: (context) => GroupStageScreen(),

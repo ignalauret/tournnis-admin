@@ -81,7 +81,7 @@ class TournamentMatch {
       pid2: json["pid2"],
       result1: json["result1"] == null ? null : List<int>.from(json["result1"]),
       result2: json["result2"] == null ? null : List<int>.from(json["result2"]),
-      date: DateTime.parse(json["date"]),
+      date: json["date"] == null ? null : DateTime.parse(json["date"]),
       tid: json["tid"],
       isPlayOff: isPlayOff,
       playOffRound: json["playOffRound"],

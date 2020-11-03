@@ -21,6 +21,8 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String tid = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
@@ -29,7 +31,7 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () =>
-                Navigator.of(context).pushNamed(CreateGroup.routeName),
+                Navigator.of(context).pushNamed(CreateGroup.routeName, arguments: tid),
           ),
         ],
       ),
@@ -46,7 +48,7 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: GroupsList(),
+                  child: GroupsList(selectedCategory, tid),
                 ),
               ),
             ],

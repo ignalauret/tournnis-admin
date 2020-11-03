@@ -24,6 +24,7 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
@@ -82,7 +83,7 @@ class _CreateGroupState extends State<CreateGroup> {
                       .createGroup(
                         context,
                         GroupZone(
-                          tid: "0",
+                          tid: tid,
                           name: nameController.text,
                           category: selectedCategory,
                           playersIds: pids,

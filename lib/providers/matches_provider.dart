@@ -105,7 +105,7 @@ class MatchesProvider extends ChangeNotifier {
         result1: null,
         result2: null,
         date: null,
-        tid: "0",
+        tid: group.tid,
         isPlayOff: false,
         category: group.category,
         playOffRound: null,
