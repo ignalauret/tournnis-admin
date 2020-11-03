@@ -22,6 +22,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
@@ -50,6 +51,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                 child: PlayersList(
                   showPoints: true,
                   selectedCategory: selectedCategory,
+                  tid: tid,
                 ),
               ),
             ],

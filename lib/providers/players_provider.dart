@@ -28,6 +28,7 @@ class PlayersProvider extends ChangeNotifier {
     final response = await http.get(Constants.kDbPath + "/players.json");
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if(responseData == null) return [];
       final List<Player> temp = responseData.entries
           .map(
             (entry) => Player.fromJson(entry.key, entry.value),
@@ -54,6 +55,12 @@ class PlayersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPlayerTournamentPoints(
+      String pid, String tid, int category, int points) {
+    getPlayerById(pid).tournamentCategoryPoints[category][tid] = points;
+    notifyListeners();
+  }
+
   Future<bool> createPlayer(
       {String name, String club, Backhand backhand, Handed hand}) async {
     final player = Player(
@@ -65,8 +72,13 @@ class PlayersProvider extends ChangeNotifier {
       birth: DateTime(1990, 10, 10),
       profileUrl: "assets/img/ignacio_lauret_profile.png",
       imageUrl: "assets/img/ignacio_lauret_image.png",
-      bestRankings: [0, 0, 0, 0],
       globalCategoryPoints: [0, 0, 0, 0],
+      tournamentCategoryPoints: [
+        {"default": 0},
+        {"default": 0},
+        {"default": 0},
+        {"default": 0}
+      ],
     );
     // Try adding player to DB.
     final response = await http.post(
@@ -100,23 +112,35 @@ class PlayersProvider extends ChangeNotifier {
 
   Future<bool> addMatchPoints(TournamentMatch match) async {
     await addPointsToPlayer(
-        match.pid1, match.firstPlayerPoints, match.category);
+        match.pid1, match.firstPlayerPoints, match.category, match.tid);
     return await addPointsToPlayer(
-        match.pid2, match.secondPlayerPoints, match.category);
+        match.pid2, match.secondPlayerPoints, match.category, match.tid);
   }
 
-  Future<bool> addPointsToPlayer(String pid, int points, int category) async {
+  Future<bool> addPointsToPlayer(
+      String pid, int points, int category, String tid) async {
     final newPoints = getPlayerPoints(pid, category) + points;
+    final newTournamentPoints =
+        getPlayerTournamentPoints(pid, tid, category) + points;
     // Try adding points in DB.
     final response = await http.patch(
       Constants.kDbPath + "/players/$pid/points.json",
       body: jsonEncode({"$category": newPoints}),
     );
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       // Add points in local memory.
       setPlayerPoints(pid, category, newPoints);
-      return true;
+      // try adding points to tournament in DB.
+      final response2 = await http.patch(
+        Constants.kDbPath + "/players/$pid/tournamentPoints/$category.json",
+        body: jsonEncode({"$tid": newTournamentPoints}),
+      );
+      if (response2.statusCode == 200) {
+        setPlayerTournamentPoints(pid, tid, category, newTournamentPoints);
+        return true;
+      }
+      return false;
     } else {
       return false;
     }
@@ -129,6 +153,10 @@ class PlayersProvider extends ChangeNotifier {
 
   int getPlayerPoints(String id, int category) {
     return getPlayerById(id).globalCategoryPoints[category];
+  }
+
+  int getPlayerTournamentPoints(String pid, String tid, int category) {
+    return getPlayerById(pid).getTournamentPointsOfCategory(tid, category);
   }
 
   String getPlayerImage(String id) {

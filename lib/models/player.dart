@@ -9,9 +9,9 @@ class Player {
     @required this.name,
     @required this.birth,
     @required this.globalCategoryPoints,
+    @required this.tournamentCategoryPoints,
     @required this.nationality,
     @required this.club,
-    @required this.bestRankings,
     this.profileUrl,
     this.imageUrl,
     this.backhand = Backhand.TwoHanded,
@@ -21,14 +21,15 @@ class Player {
   String id;
   final String name;
   final DateTime birth;
-  final List<int> globalCategoryPoints; // {"category (int)" : points (int)}.
+  final List<int> globalCategoryPoints; // [points [int]]
+  final List<Map<String, int>>
+      tournamentCategoryPoints; // [{category [int] : points [int]}]
   final String profileUrl;
   final String imageUrl;
   final Backhand backhand;
   final Handed handed;
   final String nationality;
   final String club;
-  final List<int> bestRankings; // {"category (int)" : ranking (int)}.
 
   /* Getters */
   int get age {
@@ -49,6 +50,12 @@ class Player {
 
   int getPointsOfCategory(int category) {
     return globalCategoryPoints[category];
+  }
+
+  int getTournamentPointsOfCategory(String tid, int category) {
+    if (tournamentCategoryPoints[category].containsKey(tid))
+      return tournamentCategoryPoints[category][tid];
+    return 0;
   }
 
   bool playsCategory(int category) {
@@ -84,7 +91,9 @@ class Player {
       handed: parseHand(playerData["handed"]),
       backhand: parseBackhand(playerData["backhand"]),
       globalCategoryPoints: List<int>.from(playerData["points"]),
-      bestRankings: List<int>.from(playerData["bestRankings"]),
+      tournamentCategoryPoints: List.from(playerData["tournamentPoints"])
+          .map((map) => Map<String, int>.from(map))
+          .toList(),
     );
   }
 
@@ -96,10 +105,10 @@ class Player {
       "backhand": getParsedBackhand(),
       "handed": getParsedHand(),
       "birth": birth.toString(),
-      "bestRankings": bestRankings,
       "points": globalCategoryPoints,
       "coverUrl": imageUrl,
       "profileUrl": profileUrl,
+      "tournamentPoints": tournamentCategoryPoints,
     };
   }
 }

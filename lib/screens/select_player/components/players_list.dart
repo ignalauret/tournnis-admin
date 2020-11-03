@@ -13,8 +13,10 @@ class PlayersList extends StatelessWidget {
     this.select,
     this.showPoints = false,
     this.selectedCategory,
+    this.tid,
   });
 
+  final String tid;
   final String selectedId;
   final String search;
   final Function(Player) select;
@@ -46,6 +48,7 @@ class PlayersList extends StatelessWidget {
                   selected: selectedId == player.id,
                   showPoints: showPoints,
                   selectedCategory: selectedCategory,
+                  tid: tid,
                 ),
               );
             },
@@ -67,11 +70,13 @@ class PlayersListItem extends StatelessWidget {
     this.selected,
     this.showPoints = false,
     this.selectedCategory,
+    this.tid,
   });
   final Player player;
   final bool selected;
   final bool showPoints;
   final int selectedCategory;
+  final String tid;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -91,7 +96,9 @@ class PlayersListItem extends StatelessWidget {
             ),
             if (showPoints)
               Text(
-                player.globalCategoryPoints[selectedCategory].toString() +
+                player
+                        .getTournamentPointsOfCategory(tid, selectedCategory)
+                        .toString() +
                     " puntos",
                 style: CustomStyles.kResultStyle.copyWith(
                   color: CustomColors.kAccentColor,
