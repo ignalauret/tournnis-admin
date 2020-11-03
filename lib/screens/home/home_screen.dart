@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
 import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
 import 'package:tournnis_admin/screens/players/players_screen.dart';
@@ -44,6 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pushNamed(PlayersScreen.routeName);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Ver Grupos",
+                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(GroupStageScreen.routeName);
               },
             ),
           ],

@@ -16,9 +16,14 @@ class MatchesList extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final List<TournamentMatch> filteredList = snapshot.data
-              .where((match) =>
-                  selectedCategory == 4 || match.category == selectedCategory)
+              .where(
+                (match) =>
+                    match.date != null &&
+                    (selectedCategory == 4 ||
+                        match.category == selectedCategory),
+              )
               .toList();
+          filteredList.sort((m1, m2) => m1.date.compareTo(m2.date));
           return ListView.builder(
             itemBuilder: (context, index) {
               return MatchCard(filteredList[index]);
@@ -34,3 +39,4 @@ class MatchesList extends StatelessWidget {
     );
   }
 }
+

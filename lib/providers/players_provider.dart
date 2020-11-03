@@ -50,7 +50,7 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   void setPlayerPoints(String id, int category, int points) {
-    getPlayerById(id).points[category] = points;
+    getPlayerById(id).globalCategoryPoints[category] = points;
     notifyListeners();
   }
 
@@ -66,7 +66,7 @@ class PlayersProvider extends ChangeNotifier {
       profileUrl: "assets/img/ignacio_lauret_profile.png",
       imageUrl: "assets/img/ignacio_lauret_image.png",
       bestRankings: [0, 0, 0, 0],
-      points: [0, 0, 0, 0],
+      globalCategoryPoints: [0, 0, 0, 0],
     );
     // Try adding player to DB.
     final response = await http.post(
@@ -128,7 +128,7 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   int getPlayerPoints(String id, int category) {
-    return getPlayerById(id).points[category];
+    return getPlayerById(id).globalCategoryPoints[category];
   }
 
   String getPlayerImage(String id) {

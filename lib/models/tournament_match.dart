@@ -7,7 +7,7 @@ class TournamentMatch {
   final String pid2; // Player 2 ID.
   List<int> result1;
   List<int> result2;
-  final DateTime date;
+  DateTime date;
   final String tid; // Tournament ID.
   final bool isPlayOff; // If is a play off match or a round match.
   final int category;
@@ -96,7 +96,7 @@ class TournamentMatch {
       "pid2": this.pid2,
       "result1": this.result1,
       "result2": this.result2,
-      "date": this.date.toString(),
+      "date": this.date == null ? null : this.date.toString(),
       "tid": this.tid,
       "category": this.category,
       "playOffRound": this.playOffRound,

@@ -8,7 +8,7 @@ class Player {
     this.id,
     @required this.name,
     @required this.birth,
-    @required this.points,
+    @required this.globalCategoryPoints,
     @required this.nationality,
     @required this.club,
     @required this.bestRankings,
@@ -21,7 +21,7 @@ class Player {
   String id;
   final String name;
   final DateTime birth;
-  final List<int> points; // {"category (int)" : points (int)}.
+  final List<int> globalCategoryPoints; // {"category (int)" : points (int)}.
   final String profileUrl;
   final String imageUrl;
   final Backhand backhand;
@@ -48,11 +48,11 @@ class Player {
   }
 
   int getPointsOfCategory(int category) {
-    return points[category];
+    return globalCategoryPoints[category];
   }
 
   bool playsCategory(int category) {
-    return points[category] != 0;
+    return globalCategoryPoints[category] != 0;
   }
 
   /* Parsers */
@@ -83,7 +83,7 @@ class Player {
       imageUrl: playerData["coverUrl"],
       handed: parseHand(playerData["handed"]),
       backhand: parseBackhand(playerData["backhand"]),
-      points: List<int>.from(playerData["points"]),
+      globalCategoryPoints: List<int>.from(playerData["points"]),
       bestRankings: List<int>.from(playerData["bestRankings"]),
     );
   }
@@ -97,7 +97,7 @@ class Player {
       "handed": getParsedHand(),
       "birth": birth.toString(),
       "bestRankings": bestRankings,
-      "points": points,
+      "points": globalCategoryPoints,
       "coverUrl": imageUrl,
       "profileUrl": profileUrl,
     };

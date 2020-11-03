@@ -136,6 +136,11 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
             color: CustomColors.kAccentColor,
           ),
         ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: CustomColors.kAccentColor,
+          ),
+        ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: CustomColors.kAccentColor,

@@ -33,7 +33,7 @@ class CategorySelector extends StatelessWidget {
   Widget _buildCategoryButton(String name, int id) {
     final selected = selectedCat == id;
     return Container(
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           select(id);
         },

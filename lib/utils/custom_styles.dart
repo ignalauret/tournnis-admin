@@ -21,7 +21,7 @@ class CustomStyles {
   );
 
   static const kResultStyle = TextStyle(
-    color: Colors.black,
+    color: CustomColors.kMainColor,
     fontSize: 15,
     fontWeight: FontWeight.bold,
   );

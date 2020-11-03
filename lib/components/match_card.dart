@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
 import 'package:tournnis_admin/utils/colors.dart';
@@ -11,6 +12,19 @@ import 'package:tournnis_admin/utils/custom_styles.dart';
 class MatchCard extends StatelessWidget {
   MatchCard(this.match);
   final TournamentMatch match;
+
+  Future<void> _setMatchDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
+      helpText: "Elegir fecha del partido",
+      confirmText: "Confirmar",
+      cancelText: "Cancelar",
+    );
+    if (picked != null) context.read<MatchesProvider>().addDate(match, picked);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,20 +92,29 @@ class MatchCard extends StatelessWidget {
                               Container(
                                 width: 70,
                                 height: 70,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.add,
-                                    color: CustomColors.kAccentColor,
-                                    size: 40,
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          MatchResultDialog(match),
-                                    );
-                                  },
-                                ),
+                                child: match.date == null
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.calendar_today,
+                                          color: CustomColors.kAccentColor,
+                                          size: 35,
+                                        ),
+                                        onPressed: () => _setMatchDate(context),
+                                      )
+                                    : IconButton(
+                                        icon: Icon(
+                                          Icons.add,
+                                          color: CustomColors.kAccentColor,
+                                          size: 35,
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                MatchResultDialog(match),
+                                          );
+                                        },
+                                      ),
                               ),
                             ],
                           ),
@@ -115,7 +138,9 @@ class MatchCard extends StatelessWidget {
             width: 35,
           ),
           Text(
-            DateFormat.MMMEd().add_jm().format(date),
+            date == null
+                ? "Por organizar"
+                : DateFormat.MMMEd().add_jm().format(date),
             style: CustomStyles.kResultStyle.copyWith(
               color: Colors.white,
               letterSpacing: -0.5,

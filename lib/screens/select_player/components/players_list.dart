@@ -31,8 +31,9 @@ class PlayersList extends StatelessWidget {
               .where((player) => player.name.toLowerCase().contains(search))
               .toList();
           if (showPoints)
-            searchedPlayers.sort((p1, p2) => p2.points[selectedCategory]
-                .compareTo(p1.points[selectedCategory]));
+            searchedPlayers.sort((p1, p2) => p2
+                .globalCategoryPoints[selectedCategory]
+                .compareTo(p1.globalCategoryPoints[selectedCategory]));
           return ListView.builder(
             itemBuilder: (context, index) {
               final player = searchedPlayers[index];
@@ -90,7 +91,8 @@ class PlayersListItem extends StatelessWidget {
             ),
             if (showPoints)
               Text(
-                player.points[selectedCategory].toString() + " puntos",
+                player.globalCategoryPoints[selectedCategory].toString() +
+                    " puntos",
                 style: CustomStyles.kResultStyle.copyWith(
                   color: CustomColors.kAccentColor,
                 ),

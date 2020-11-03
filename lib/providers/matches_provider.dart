@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/constants.dart';
@@ -28,6 +29,10 @@ class MatchesProvider extends ChangeNotifier {
     return _matches.firstWhere((match) => match.id == id, orElse: () => null);
   }
 
+  List<TournamentMatch> getMatchesById(List<String> ids) {
+    return ids.map((id) => getMatchById(id)).toList();
+  }
+
   void addLocalMatch(TournamentMatch match) {
     _matches.add(match);
     notifyListeners();
@@ -35,6 +40,12 @@ class MatchesProvider extends ChangeNotifier {
 
   void removeLocalMatch(String mid) {
     _matches.removeWhere((match) => match.id == mid);
+    notifyListeners();
+  }
+
+  void addLocalDate(String id, DateTime date) {
+    final match = getMatchById(id);
+    match.date = date;
     notifyListeners();
   }
 
@@ -62,7 +73,7 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> createMatch(TournamentMatch match) async {
+  Future<String> createMatch(TournamentMatch match) async {
     // Try adding match in DB.
     final response = await http.post(
       Constants.kDbPath + "/matches.json",
@@ -72,10 +83,38 @@ class MatchesProvider extends ChangeNotifier {
       // Add match in local memory.
       match.id = jsonDecode(response.body)["name"];
       addLocalMatch(match);
-      return true;
+      return match.id;
     } else {
-      return false;
+      return null;
     }
+  }
+
+  Future<List<String>> createMatchesOfGroup(GroupZone group) async {
+    // Create rivals list for the matches
+    final List<List<String>> rivals = [];
+    for (int i = 0; i < group.playersIds.length; i++) {
+      for (int j = i + 1; j < group.playersIds.length; j++) {
+        rivals.add([group.playersIds[i], group.playersIds[j]]);
+      }
+    }
+    final List<String> ids = [];
+    for (List<String> players in rivals) {
+      final match = TournamentMatch(
+        pid1: players[0],
+        pid2: players[1],
+        result1: null,
+        result2: null,
+        date: null,
+        tid: "0",
+        isPlayOff: false,
+        category: group.category,
+        playOffRound: null,
+      );
+      final id = await createMatch(match);
+      if (id == null) return null;
+      ids.add(id);
+    }
+    return ids;
   }
 
   Future<void> deleteMatch(String mid) async {
@@ -85,6 +124,21 @@ class MatchesProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       // Delete match in local memory.
       removeLocalMatch(mid);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> addDate(TournamentMatch match, DateTime date) async {
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/${match.id}.json",
+      body: jsonEncode({
+        "date": date.toString(),
+      }),
+    );
+    if (response.statusCode == 200) {
+      addLocalDate(match.id, date);
       return true;
     } else {
       return false;
