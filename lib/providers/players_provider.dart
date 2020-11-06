@@ -15,7 +15,7 @@ class PlayersProvider extends ChangeNotifier {
 
   Future<List<Player>> get players async {
     if (_players == null) await getPlayers();
-    return _players;
+    return [..._players];
   }
 
   Future<void> getPlayers() async {
@@ -169,13 +169,36 @@ class PlayersProvider extends ChangeNotifier {
 
   /* Ranking */
 
+  final Map<String, List<Player>> rankingsCache = {};
+
+  void refreshCache() {
+    rankingsCache.clear();
+  }
+
   Future<List<Player>> getTournamentRanking(String tid, int category) async {
+    if (rankingsCache.containsKey("$tid/$category")) {
+      return rankingsCache["$tid/$category"];
+    }
     final playersList = await players;
+    playersList.removeWhere(
+        (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
     playersList.sort(
       (p1, p2) => p2.getTournamentPointsOfCategory(tid, category).compareTo(
             p1.getTournamentPointsOfCategory(tid, category),
           ),
     );
+    rankingsCache["$tid/$category"] = [...playersList];
+    notifyListeners();
     return playersList;
+  }
+
+  Future<int> getPlayerRankingFromTournament(
+      String pid, String tid, int category) async {
+    if (!rankingsCache.containsKey("$tid/$category")) {
+      await getTournamentRanking(tid, category);
+    }
+    return rankingsCache["$tid/$category"]
+            .indexWhere((player) => player.id == pid) +
+        1;
   }
 }

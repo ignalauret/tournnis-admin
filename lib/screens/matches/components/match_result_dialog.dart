@@ -72,7 +72,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
             color: CustomColors.kAccentColor,
             disabledColor: Colors.black12,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            onPressed: !tapped || scoreController.text.isEmpty
+            onPressed: tapped || scoreController.text.isEmpty
                 ? null
                 : () {
                     setState(() {

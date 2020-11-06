@@ -46,7 +46,11 @@ class MatchCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _buildRankingsContainer(5, 1),
+                  _buildRankingsContainer(
+                      playersData.getPlayerRankingFromTournament(
+                          match.pid1, match.tid, match.category),
+                      playersData.getPlayerRankingFromTournament(
+                          match.pid2, match.tid, match.category)),
                   Expanded(
                     child: match.hasEnded
                         ? Column(
@@ -159,7 +163,8 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Container _buildRankingsContainer(int ranking1, int ranking2) {
+  Container _buildRankingsContainer(
+      Future<int> ranking1, Future<int> ranking2) {
     return Container(
       height: 70,
       width: 30,
@@ -172,8 +177,20 @@ class MatchCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildRanking(ranking1),
-          _buildRanking(ranking2),
+          FutureBuilder<int>(
+            future: ranking1,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) return _buildRanking(snapshot.data);
+              return Container();
+            },
+          ),
+          FutureBuilder<int>(
+            future: ranking2,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) return _buildRanking(snapshot.data);
+              return Container();
+            },
+          ),
         ],
       ),
     );
@@ -185,7 +202,7 @@ class MatchCard extends StatelessWidget {
       width: 30,
       alignment: Alignment.center,
       child: Text(
-        ranking.toString(),
+        ranking == 0 ? "-" : ranking.toString(),
         style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
       ),
     );

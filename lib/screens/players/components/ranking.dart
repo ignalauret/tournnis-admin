@@ -14,26 +14,32 @@ class Ranking extends StatelessWidget {
   final int category;
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Player>>(
-      future:
-          context.watch<PlayersProvider>().getTournamentRanking(tid, category),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemBuilder: (context, index) => RankingPlayerCard(
-              snapshot.data[index],
-              index + 1,
-              snapshot.data[index].getTournamentPointsOfCategory(tid, category),
-              context.watch<MatchesProvider>().getPlayerMatchesFromTournament(snapshot.data[index].id, tid, category),
-            ),
-            itemCount: snapshot.data.length,
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<PlayersProvider>().refreshCache();
+        await context.read<PlayersProvider>().getTournamentRanking(tid, category);
       },
+      child: FutureBuilder<List<Player>>(
+        future:
+            context.watch<PlayersProvider>().getTournamentRanking(tid, category),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemBuilder: (context, index) => RankingPlayerCard(
+                snapshot.data[index],
+                index + 1,
+                snapshot.data[index].getTournamentPointsOfCategory(tid, category),
+                context.watch<MatchesProvider>().getPlayerMatchesFromTournament(snapshot.data[index].id, tid, category),
+              ),
+              itemCount: snapshot.data.length,
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }
