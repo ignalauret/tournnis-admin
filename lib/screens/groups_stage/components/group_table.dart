@@ -26,18 +26,21 @@ class GroupTable extends StatelessWidget {
       ),
       child: Column(
         children: List.generate(group.playersIds.length, (index) => index)
-            .map((index) => _buildPlayerRow(
-                  context,
-                  index,
-                  orderedPids,
-                ))
+            .map(
+              (index) => _buildPlayerRow(
+                context,
+                index,
+                orderedPids,
+                playerData,
+              ),
+            )
             .toList(),
       ),
     );
   }
 
-  Row _buildPlayerRow(
-      BuildContext context, int index, List<String> orderedPids) {
+  Row _buildPlayerRow(BuildContext context, int index, List<String> orderedPids,
+      PlayersProvider playersData) {
     return Row(
       children: [
         Container(
@@ -54,12 +57,21 @@ class GroupTable extends StatelessWidget {
                     : Radius.zero),
           ),
           alignment: Alignment.center,
-          child: Text(
-            index.toString(),
-            style: CustomStyles.kResultStyle.copyWith(
-              color: CustomColors.kWhiteColor,
-            ),
-          ),
+          child: FutureBuilder<int>(
+              future: playersData.getPlayerGlobalRanking(
+                  orderedPids[index], group.category),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data == 0 ? "-" : snapshot.data.toString(),
+                    style: CustomStyles.kResultStyle.copyWith(
+                      color: CustomColors.kWhiteColor,
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
+              }),
         ),
         SizedBox(
           width: 5,

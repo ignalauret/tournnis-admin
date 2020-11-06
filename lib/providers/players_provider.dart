@@ -169,35 +169,74 @@ class PlayersProvider extends ChangeNotifier {
 
   /* Ranking */
 
-  final Map<String, List<Player>> rankingsCache = {};
+  final Map<String, List<Player>> tournamentRankingCache = {};
+  final Map<int, List<Player>> globalRankingCache = {};
 
-  void refreshCache() {
-    rankingsCache.clear();
+  void refreshTournamentCache() {
+    tournamentRankingCache.clear();
+  }
+
+  void refreshGlobalCache() {
+    globalRankingCache.clear();
+  }
+
+  Future<List<Player>> getGlobalRanking(int category) async {
+    // Return if cached
+    if (globalRankingCache.containsKey(category)) {
+      return tournamentRankingCache[category];
+    }
+    final playersList = await players;
+    // Remove players with no points.
+    playersList
+        .removeWhere((player) => player.getPointsOfCategory(category) == 0);
+    // Sort by category global points.
+    playersList.sort(
+      (p1, p2) => p2.getPointsOfCategory(category).compareTo(
+            p1.getPointsOfCategory(category),
+          ),
+    );
+    globalRankingCache[category] = [...playersList];
+    notifyListeners();
+    return playersList;
+  }
+
+  Future<int> getPlayerGlobalRanking(String pid, int category) async {
+    // If not cached, get ranking
+    if (!tournamentRankingCache.containsKey(category)) {
+      await getGlobalRanking(category);
+    }
+    return globalRankingCache[category]
+            .indexWhere((player) => player.id == pid) +
+        1;
   }
 
   Future<List<Player>> getTournamentRanking(String tid, int category) async {
-    if (rankingsCache.containsKey("$tid/$category")) {
-      return rankingsCache["$tid/$category"];
+    // Return if cached
+    if (tournamentRankingCache.containsKey("$tid/$category")) {
+      return tournamentRankingCache["$tid/$category"];
     }
     final playersList = await players;
+    // Remove players that dont have points.
     playersList.removeWhere(
         (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
+    // Sort by points.
     playersList.sort(
       (p1, p2) => p2.getTournamentPointsOfCategory(tid, category).compareTo(
             p1.getTournamentPointsOfCategory(tid, category),
           ),
     );
-    rankingsCache["$tid/$category"] = [...playersList];
+    // Cache
+    tournamentRankingCache["$tid/$category"] = [...playersList];
     notifyListeners();
     return playersList;
   }
 
   Future<int> getPlayerRankingFromTournament(
       String pid, String tid, int category) async {
-    if (!rankingsCache.containsKey("$tid/$category")) {
+    if (!tournamentRankingCache.containsKey("$tid/$category")) {
       await getTournamentRanking(tid, category);
     }
-    return rankingsCache["$tid/$category"]
+    return tournamentRankingCache["$tid/$category"]
             .indexWhere((player) => player.id == pid) +
         1;
   }

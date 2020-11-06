@@ -16,7 +16,7 @@ class Ranking extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<PlayersProvider>().refreshCache();
+        context.read<PlayersProvider>().refreshTournamentCache();
         await context.read<PlayersProvider>().getTournamentRanking(tid, category);
       },
       child: FutureBuilder<List<Player>>(
