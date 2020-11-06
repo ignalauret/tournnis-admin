@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/screens/group_matches/components/group_matches_list.dart';
 import 'package:tournnis_admin/screens/groups_stage/components/groups_list.dart';
-import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 

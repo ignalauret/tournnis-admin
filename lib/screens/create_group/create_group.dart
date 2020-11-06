@@ -40,14 +40,14 @@ class _CreateGroupState extends State<CreateGroup> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      CategorySelector(
-                        selectedCat: selectedCategory,
-                        select: (cat) {
-                          setState(() {
-                            selectedCategory = cat;
-                          });
-                        },
-                      ),
+                      // CategorySelector(
+                      //   selectedCat: selectedCategory,
+                      //   select: (cat) {
+                      //     setState(() {
+                      //       selectedCategory = cat;
+                      //     });
+                      //   },
+                      // ),
                       _buildTextField(nameController, "Nombre",
                           "Ingrese el nombre del grupo"),
                       SizedBox(

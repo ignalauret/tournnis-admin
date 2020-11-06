@@ -5,7 +5,7 @@ import 'package:tournnis_admin/utils/custom_styles.dart';
 const Categories = ["Platino", "Oro", "Plata", "Bronce", "Todas"];
 
 class CategorySelector extends StatelessWidget {
-  CategorySelector({this.select, this.selectedCat}) : options = [0, 1, 2, 3];
+  CategorySelector({this.select, this.selectedCat, this.options});
   CategorySelector.withAll({this.select, this.selectedCat})
       : options = [4, 0, 1, 2, 3];
 
@@ -37,7 +37,8 @@ class CategorySelector extends StatelessWidget {
         onTap: () {
           select(id);
         },
-        child: Container(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
           alignment: Alignment.center,
           child: Text(
             name,

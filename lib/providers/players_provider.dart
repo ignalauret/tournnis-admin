@@ -183,7 +183,7 @@ class PlayersProvider extends ChangeNotifier {
   Future<List<Player>> getGlobalRanking(int category) async {
     // Return if cached
     if (globalRankingCache.containsKey(category)) {
-      return tournamentRankingCache[category];
+      return globalRankingCache[category];
     }
     final playersList = await players;
     // Remove players with no points.
@@ -202,7 +202,7 @@ class PlayersProvider extends ChangeNotifier {
 
   Future<int> getPlayerGlobalRanking(String pid, int category) async {
     // If not cached, get ranking
-    if (!tournamentRankingCache.containsKey(category)) {
+    if (!globalRankingCache.containsKey(category)) {
       await getGlobalRanking(category);
     }
     return globalRankingCache[category]
@@ -217,8 +217,8 @@ class PlayersProvider extends ChangeNotifier {
     }
     final playersList = await players;
     // Remove players that dont have points.
-    playersList.removeWhere(
-        (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
+    // playersList.removeWhere(
+    //     (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
     // Sort by points.
     playersList.sort(
       (p1, p2) => p2.getTournamentPointsOfCategory(tid, category).compareTo(

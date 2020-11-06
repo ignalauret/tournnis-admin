@@ -14,7 +14,7 @@ class MatchCard extends StatelessWidget {
   final TournamentMatch match;
 
   Future<void> _setMatchDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
@@ -23,7 +23,22 @@ class MatchCard extends StatelessWidget {
       confirmText: "Confirmar",
       cancelText: "Cancelar",
     );
-    if (picked != null) context.read<MatchesProvider>().addDate(match, picked);
+    if (pickedDate != null) {
+      final TimeOfDay pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        confirmText: "Confirmar",
+        cancelText: "Cancelar",
+        helpText: "Elegir hora del partido",
+      );
+      if (pickedTime != null) {
+        context.read<MatchesProvider>().addDate(
+              match,
+              DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+                  pickedTime.hour, pickedTime.minute),
+            );
+      }
+    }
   }
 
   @override
@@ -47,10 +62,10 @@ class MatchCard extends StatelessWidget {
               child: Row(
                 children: [
                   _buildRankingsContainer(
-                      playersData.getPlayerRankingFromTournament(
-                          match.pid1, match.tid, match.category),
-                      playersData.getPlayerRankingFromTournament(
-                          match.pid2, match.tid, match.category)),
+                      playersData.getPlayerGlobalRanking(
+                          match.pid1, match.category),
+                      playersData.getPlayerGlobalRanking(
+                          match.pid2, match.category)),
                   Expanded(
                     child: match.hasEnded
                         ? Column(
@@ -142,9 +157,7 @@ class MatchCard extends StatelessWidget {
             width: 35,
           ),
           Text(
-            date == null
-                ? "Por organizar"
-                : TimeMethods.parseDate(date),
+            date == null ? "Por organizar" : TimeMethods.parseDate(date),
             style: CustomStyles.kResultStyle.copyWith(
               color: Colors.white,
               letterSpacing: -0.5,

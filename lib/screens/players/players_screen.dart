@@ -48,6 +48,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
               CategorySelector(
                 selectedCat: selectedCategory,
                 select: selectCategory,
+                options: [0,1,2,3],
               ),
               Container(
                 child: Row(

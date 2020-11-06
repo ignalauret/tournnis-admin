@@ -22,7 +22,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   String pid2;
   String name1;
   String name2;
-  int selectedCategory = 0;
+  int selectedCategory = 1;
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -82,6 +82,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                             selectedCategory = cat;
                           });
                         },
+                        options: [1,2,3],
                       ),
                       SizedBox(
                         height: 10,

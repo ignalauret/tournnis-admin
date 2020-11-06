@@ -11,13 +11,13 @@ class GroupStageScreen extends StatefulWidget {
 }
 
 class _GroupStageScreenState extends State<GroupStageScreen> {
-  int selectedCategory = 4;
+  int selectedCategory = 0;
 
-  void selectCategory(int cat) {
-    setState(() {
-      selectedCategory = cat;
-    });
-  }
+  // void selectCategory(int cat) {
+  //   setState(() {
+  //     selectedCategory = cat;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Grupos"),
+        title: Text("Grupos de platino"),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -41,10 +41,10 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
           width: double.infinity,
           child: Column(
             children: [
-              CategorySelector.withAll(
-                select: selectCategory,
-                selectedCat: selectedCategory,
-              ),
+              // CategorySelector.withAll(
+              //   select: selectCategory,
+              //   selectedCat: selectedCategory,
+              // ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
