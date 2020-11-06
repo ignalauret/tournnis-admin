@@ -37,44 +37,47 @@ class _CreateGroupState extends State<CreateGroup> {
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    CategorySelector(
-                      selectedCat: selectedCategory,
-                      select: (cat) {
-                        setState(() {
-                          selectedCategory = cat;
-                        });
-                      },
-                    ),
-                    _buildTextField(nameController, "Nombre",
-                        "Ingrese el nombre del grupo"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Jugadores",
-                      style: CustomStyles.kTitleStyle,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _buildPlayerSelector(size, 0),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _buildPlayerSelector(size, 1),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _buildPlayerSelector(size, 2),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    _buildPlayerSelector(size, 3),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CategorySelector(
+                        selectedCat: selectedCategory,
+                        select: (cat) {
+                          setState(() {
+                            selectedCategory = cat;
+                          });
+                        },
+                      ),
+                      _buildTextField(nameController, "Nombre",
+                          "Ingrese el nombre del grupo"),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Jugadores",
+                        style: CustomStyles.kTitleStyle,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _buildPlayerSelector(size, 0),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _buildPlayerSelector(size, 1),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _buildPlayerSelector(size, 2),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _buildPlayerSelector(size, 3),
+                    ],
+                  ),
                 ),
               ),
+              SizedBox(height: 20,),
               ActionButton(
                 "Agregar",
                 () {
@@ -93,6 +96,7 @@ class _CreateGroupState extends State<CreateGroup> {
                     Navigator.of(context).pop();
                   });
                 },
+                enabled: !pids.any((pid) => pid == null) && nameController.text.isNotEmpty,
               ),
             ],
           ),

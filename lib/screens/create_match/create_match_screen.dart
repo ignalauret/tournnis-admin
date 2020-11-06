@@ -72,77 +72,82 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    CategorySelector(
-                      selectedCat: selectedCategory,
-                      select: (cat) {
-                        setState(() {
-                          selectedCategory = cat;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Horario",
-                      style: CustomStyles.kTitleStyle,
-                    ),
-                    _buildDaySelector(),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      "Jugadores",
-                      style: CustomStyles.kTitleStyle,
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    TextDataCard(
-                      title: "Jugador 1",
-                      data: name1 == null ? "Seleccionar jugador" : name1,
-                      size: size,
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(SelectPlayerScreen.routeName)
-                            .then(
-                          (value) {
-                            if (value == null) return;
-                            final Map<String, String> map = value;
-                            setState(() {
-                              pid1 = map["id"];
-                              name1 = map["name"];
-                            });
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextDataCard(
-                      title: "Jugador 2",
-                      data: name2 == null ? "Seleccionar jugador" : name2,
-                      size: size,
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(SelectPlayerScreen.routeName)
-                            .then(
-                          (value) {
-                            if (value == null) return;
-                            final Map<String, String> map = value;
-                            setState(() {
-                              pid2 = map["id"];
-                              name2 = map["name"];
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CategorySelector(
+                        selectedCat: selectedCategory,
+                        select: (cat) {
+                          setState(() {
+                            selectedCategory = cat;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Horario",
+                        style: CustomStyles.kTitleStyle,
+                      ),
+                      _buildDaySelector(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        "Jugadores",
+                        style: CustomStyles.kTitleStyle,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      TextDataCard(
+                        title: "Jugador 1",
+                        data: name1 == null ? "Seleccionar jugador" : name1,
+                        size: size,
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(SelectPlayerScreen.routeName)
+                              .then(
+                            (value) {
+                              if (value == null) return;
+                              final Map<String, String> map = value;
+                              setState(() {
+                                pid1 = map["id"];
+                                name1 = map["name"];
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextDataCard(
+                        title: "Jugador 2",
+                        data: name2 == null ? "Seleccionar jugador" : name2,
+                        size: size,
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(SelectPlayerScreen.routeName)
+                              .then(
+                            (value) {
+                              if (value == null) return;
+                              final Map<String, String> map = value;
+                              setState(() {
+                                pid2 = map["id"];
+                                name2 = map["name"];
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               ActionButton(
                 "Agregar",
@@ -171,6 +176,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                     Navigator.of(context).pop();
                   });
                 },
+                enabled: pid1 != null && pid2 != null,
               ),
             ],
           ),

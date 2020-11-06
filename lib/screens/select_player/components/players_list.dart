@@ -33,9 +33,13 @@ class PlayersList extends StatelessWidget {
               .where((player) => player.name.toLowerCase().contains(search))
               .toList();
           if (showPoints)
-            searchedPlayers.sort((p1, p2) => p2
-                .globalCategoryPoints[selectedCategory]
-                .compareTo(p1.globalCategoryPoints[selectedCategory]));
+            searchedPlayers.sort(
+              (p1, p2) => p2
+                  .getTournamentPointsOfCategory(tid, selectedCategory)
+                  .compareTo(
+                    p1.getTournamentPointsOfCategory(tid, selectedCategory),
+                  ),
+            );
           return ListView.builder(
             itemBuilder: (context, index) {
               final player = searchedPlayers[index];
@@ -84,7 +88,7 @@ class PlayersListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

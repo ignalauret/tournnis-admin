@@ -29,7 +29,7 @@ class GroupsList extends StatelessWidget {
             itemBuilder: (context, index) => GestureDetector(
               onTap: () => Navigator.of(context).pushNamed(
                 GroupMatchesScreen.routeName,
-                arguments: snapshot.data[index],
+                arguments: groupsList[index],
               ),
               child: GroupsListItem(groupsList[index]),
             ),
@@ -75,7 +75,7 @@ class GroupsListItem extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 45,
+            width: 40,
           ),
           Text(
             name,

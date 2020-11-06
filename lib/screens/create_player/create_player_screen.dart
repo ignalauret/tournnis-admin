@@ -29,6 +29,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
@@ -36,17 +37,12 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
         title: Text("Nuevo jugador"),
       ),
       body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
+        child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Theme(
-            data: ThemeData(
-              primaryColor: CustomColors.kAccentColor,
-            ),
-            child: Column(
-              children: [
-                Expanded(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       _buildTextField(
@@ -74,6 +70,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                             selectedHand = hand;
                           });
                         },
+                        size,
                       ),
                       SizedBox(
                         height: 20,
@@ -87,32 +84,34 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                             selectedBackhand = backhand;
                           });
                         },
+                        size,
                       ),
                     ],
                   ),
                 ),
-                ActionButton(
-                  "Agregar",
-                  () {
-                    context
-                        .read<PlayersProvider>()
-                        .createPlayer(
-                          name: nameController.text,
-                          club: clubController.text,
-                          hand: selectedHand == "Derecha"
-                              ? Handed.Right
-                              : Handed.Left,
-                          backhand: selectedBackhand == "Dos manos"
-                              ? Backhand.TwoHanded
-                              : Backhand.OneHanded,
-                        )
-                        .then((value) {
-                      Navigator.of(context).pop();
-                    });
-                  },
-                ),
-              ],
-            ),
+              ),
+              ActionButton(
+                "Agregar",
+                () {
+                  context
+                      .read<PlayersProvider>()
+                      .createPlayer(
+                        name: nameController.text,
+                        club: clubController.text,
+                        hand: selectedHand == "Derecha"
+                            ? Handed.Right
+                            : Handed.Left,
+                        backhand: selectedBackhand == "Dos manos"
+                            ? Backhand.TwoHanded
+                            : Backhand.OneHanded,
+                      )
+                      .then((value) {
+                    Navigator.of(context).pop();
+                  });
+                },
+                enabled: nameController.text.isNotEmpty && clubController.text.isNotEmpty,
+              ),
+            ],
           ),
         ),
       ),
@@ -151,27 +150,27 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   }
 
   Row _buildSelector(
-      String option1, String option2, String selected, Function select) {
+      String option1, String option2, String selected, Function select, Size size) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildSelectorButton(option1, option1 == selected, select),
+        _buildSelectorButton(option1, option1 == selected, select, size),
         SizedBox(
           width: 20,
         ),
-        _buildSelectorButton(option2, option2 == selected, select),
+        _buildSelectorButton(option2, option2 == selected, select, size),
       ],
     );
   }
 
-  Widget _buildSelectorButton(String label, bool selected, Function select) {
+  Widget _buildSelectorButton(String label, bool selected, Function select, Size size) {
     return GestureDetector(
       onTap: () {
         select(label);
       },
       child: Container(
-        width: 150,
+        width: size.width * 0.35,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: selected ? CustomColors.kAccentColor : Colors.transparent,
@@ -179,10 +178,13 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
           border: Border.all(color: CustomColors.kAccentColor, width: 2),
         ),
         padding: const EdgeInsets.all(15),
-        child: Text(
-          label,
-          style: CustomStyles.kPlayerNameStyle.copyWith(
-            color: selected ? Colors.white : CustomColors.kAccentColor,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            style: CustomStyles.kPlayerNameStyle.copyWith(
+              color: selected ? Colors.white : CustomColors.kAccentColor,
+            ),
           ),
         ),
       ),

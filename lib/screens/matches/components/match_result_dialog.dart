@@ -7,10 +7,32 @@ import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
-class MatchResultDialog extends StatelessWidget {
+class MatchResultDialog extends StatefulWidget {
   MatchResultDialog(this.match);
   final TournamentMatch match;
+
+  @override
+  _MatchResultDialogState createState() => _MatchResultDialogState();
+}
+
+class _MatchResultDialogState extends State<MatchResultDialog> {
   final scoreController = TextEditingController();
+  bool tapped = false;
+
+  @override
+  void initState() {
+    scoreController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scoreController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -25,34 +47,46 @@ class MatchResultDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        FlatButton(
-          child: Text(
-            "Cancelar",
-            style: CustomStyles.kResultStyle.copyWith(color: Colors.black54),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        FlatButton(
-          child: Text(
-            "Agregar",
-            style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
-          ),
-          color: CustomColors.kAccentColor,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          onPressed: () {
-            context
-                .read<MatchesProvider>()
-                .addResult(match, scoreController.text,
-                    context.read<PlayersProvider>())
-                .then((value) {
+        SizedBox(
+          height: 40,
+          child: FlatButton(
+            child: Text(
+              "Cancelar",
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.black54),
+            ),
+            onPressed: () {
               Navigator.of(context).pop();
-            });
-          },
+            },
+          ),
+        ),
+        SizedBox(
+          height: 40,
+          child: FlatButton(
+            child: Text(
+              tapped ? "Agregando..." : "Agregar",
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
+            ),
+            color: CustomColors.kAccentColor,
+            disabledColor: Colors.black12,
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            onPressed: !tapped || scoreController.text.isEmpty
+                ? null
+                : () {
+                    setState(() {
+                      tapped = true;
+                    });
+                    context
+                        .read<MatchesProvider>()
+                        .addResult(widget.match, scoreController.text,
+                            context.read<PlayersProvider>())
+                        .then((value) {
+                      Navigator.of(context).pop();
+                    });
+                  },
+          ),
         ),
       ],
     );

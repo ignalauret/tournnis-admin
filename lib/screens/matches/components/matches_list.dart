@@ -25,7 +25,7 @@ class MatchesList extends StatelessWidget {
                         match.category == selectedCategory),
               )
               .toList();
-          filteredList.sort((m1, m2) => m1.date.compareTo(m2.date));
+          filteredList.sort((m1, m2) => m2.date.compareTo(m1.date));
           return ListView.builder(
             itemBuilder: (context, index) {
               return MatchCard(filteredList[index]);
