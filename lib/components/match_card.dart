@@ -5,6 +5,7 @@ import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
+import 'package:tournnis_admin/utils/TimeMethods.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -144,7 +145,7 @@ class MatchCard extends StatelessWidget {
           Text(
             date == null
                 ? "Por organizar"
-                : DateFormat.MMMEd().add_jm().format(date),
+                : TimeMethods.parseDate(date),
             style: CustomStyles.kResultStyle.copyWith(
               color: Colors.white,
               letterSpacing: -0.5,
