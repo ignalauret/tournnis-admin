@@ -28,7 +28,7 @@ class PlayersProvider extends ChangeNotifier {
     final response = await http.get(Constants.kDbPath + "/players.json");
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      if(responseData == null) return [];
+      if (responseData == null) return [];
       final List<Player> temp = responseData.entries
           .map(
             (entry) => Player.fromJson(entry.key, entry.value),
@@ -165,5 +165,17 @@ class PlayersProvider extends ChangeNotifier {
 
   Player getPlayerById(String id) {
     return _players.firstWhere((player) => player.id == id);
+  }
+
+  /* Ranking */
+
+  Future<List<Player>> getTournamentRanking(String tid, int category) async {
+    final playersList = await players;
+    playersList.sort(
+      (p1, p2) => p2.getTournamentPointsOfCategory(tid, category).compareTo(
+            p1.getTournamentPointsOfCategory(tid, category),
+          ),
+    );
+    return playersList;
   }
 }

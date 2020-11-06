@@ -173,11 +173,30 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  /* Predicates */
-  bool playerHasMatches(String pid) {
+  /* Getters */
+
+  Map<String, int> getPlayerMatchesFromTournament(
+      String pid, String tid, int category) {
+    int wins = 0;
+    int superTiebreaks = 0;
+    int loses = 0;
     for (TournamentMatch match in _matches) {
-      if (match.pid1 == pid || match.pid2 == pid) return true;
+      if (!match.hasEnded || match.tid != tid || match.category != category)
+        continue;
+      if (match.pid1 == pid || match.pid2 == pid) {
+        if (match.winnerId == pid) {
+          wins++;
+        } else if (match.result1.length == 3) {
+          superTiebreaks++;
+        } else {
+          loses++;
+        }
+      }
     }
-    return false;
+    return {
+      "wins": wins,
+      "superTiebreaks": superTiebreaks,
+      "loses": loses,
+    };
   }
 }

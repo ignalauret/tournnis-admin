@@ -11,17 +11,11 @@ class PlayersList extends StatelessWidget {
     this.search = "",
     this.selectedId,
     this.select,
-    this.showPoints = false,
-    this.selectedCategory,
-    this.tid,
   });
 
-  final String tid;
   final String selectedId;
   final String search;
   final Function(Player) select;
-  final bool showPoints;
-  final int selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +26,6 @@ class PlayersList extends StatelessWidget {
           final List<Player> searchedPlayers = snapshot.data
               .where((player) => player.name.toLowerCase().contains(search))
               .toList();
-          if (showPoints)
-            searchedPlayers.sort(
-              (p1, p2) => p2
-                  .getTournamentPointsOfCategory(tid, selectedCategory)
-                  .compareTo(
-                    p1.getTournamentPointsOfCategory(tid, selectedCategory),
-                  ),
-            );
           return ListView.builder(
             itemBuilder: (context, index) {
               final player = searchedPlayers[index];
@@ -50,9 +36,6 @@ class PlayersList extends StatelessWidget {
                 child: PlayersListItem(
                   player: player,
                   selected: selectedId == player.id,
-                  showPoints: showPoints,
-                  selectedCategory: selectedCategory,
-                  tid: tid,
                 ),
               );
             },
@@ -72,15 +55,11 @@ class PlayersListItem extends StatelessWidget {
   PlayersListItem({
     this.player,
     this.selected,
-    this.showPoints = false,
-    this.selectedCategory,
-    this.tid,
   });
+
   final Player player;
   final bool selected;
-  final bool showPoints;
-  final int selectedCategory;
-  final String tid;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -98,16 +77,6 @@ class PlayersListItem extends StatelessWidget {
                 color: selected ? CustomColors.kAccentColor : null,
               ),
             ),
-            if (showPoints)
-              Text(
-                player
-                        .getTournamentPointsOfCategory(tid, selectedCategory)
-                        .toString() +
-                    " puntos",
-                style: CustomStyles.kResultStyle.copyWith(
-                  color: CustomColors.kAccentColor,
-                ),
-              ),
           ],
         ),
       ),

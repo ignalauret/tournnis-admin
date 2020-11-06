@@ -32,4 +32,10 @@ class CustomStyles {
     fontWeight: FontWeight.bold,
     letterSpacing: -0.5,
   );
+
+  static const kSubtitleStyle = TextStyle(
+    color: Colors.white70,
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+  );
 }
