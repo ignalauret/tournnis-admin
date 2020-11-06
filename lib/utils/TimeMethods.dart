@@ -1,7 +1,7 @@
 class TimeMethods {
 
-  static const List<String> days = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sáb", "Dom"];
-  static const List<String> months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  static const List<String> days = ["", "Lun", "Mar", "Mie", "Jue", "Vie", "Sáb", "Dom"];
+  static const List<String> months = ["","ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
   static String parseDate(DateTime date) {
     final weekday = days[date.weekday];
