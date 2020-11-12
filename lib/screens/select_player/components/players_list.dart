@@ -71,10 +71,14 @@ class PlayersListItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              player.name,
-              style: CustomStyles.kPlayerNameStyle.copyWith(
-                color: selected ? CustomColors.kAccentColor : null,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                player.name,
+                style: CustomStyles.kPlayerNameStyle.copyWith(
+                  color: selected ? CustomColors.kAccentColor : null,
+                ),
               ),
             ),
           ],

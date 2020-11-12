@@ -34,6 +34,7 @@ class PlayersProvider extends ChangeNotifier {
             (entry) => Player.fromJson(entry.key, entry.value),
           )
           .toList();
+      print(temp.firstWhere((element) => element.name.contains("García Gómez")).id);
       return temp;
     } else {
       return null;

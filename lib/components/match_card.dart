@@ -228,10 +228,14 @@ class MatchCard extends StatelessWidget {
           width: 5,
         ),
         Expanded(
-          child: Text(
-            name,
-            style: CustomStyles.kPlayerNameStyle.copyWith(
-              color: isWinner ? null : CustomColors.kMainColor.withOpacity(0.5),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              name,
+              style: CustomStyles.kPlayerNameStyle.copyWith(
+                color: isWinner ? null : CustomColors.kMainColor.withOpacity(0.5),
+              ),
             ),
           ),
         ),

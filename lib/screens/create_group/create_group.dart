@@ -18,6 +18,7 @@ class CreateGroup extends StatefulWidget {
 class _CreateGroupState extends State<CreateGroup> {
   int selectedCategory = 0;
   final nameController = TextEditingController();
+  int players = 4;
   List<String> pids = [null, null, null, null];
   List<String> names = [null, null, null, null];
 
@@ -53,31 +54,62 @@ class _CreateGroupState extends State<CreateGroup> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        "Jugadores",
-                        style: CustomStyles.kTitleStyle,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                players--;
+                                pids.removeLast();
+                                names.removeLast();
+                              });
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              child: Icon(
+                                Icons.remove,
+                                color: CustomColors.kAccentColor,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "$players Jugadores",
+                            style: CustomStyles.kTitleStyle,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                players++;
+                                pids.add(null);
+                                names.add(null);
+                              });
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              child: Icon(
+                                Icons.add,
+                                color: CustomColors.kAccentColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _buildPlayerSelector(size, 0),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _buildPlayerSelector(size, 1),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _buildPlayerSelector(size, 2),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _buildPlayerSelector(size, 3),
+                      ...List.generate(names.length, (index) => index)
+                          .map(
+                            (i) => _buildPlayerSelector(size, i),
+                          )
+                          .toList()
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               ActionButton(
                 "Agregar",
                 () {
@@ -96,7 +128,8 @@ class _CreateGroupState extends State<CreateGroup> {
                     Navigator.of(context).pop();
                   });
                 },
-                enabled: !pids.any((pid) => pid == null) && nameController.text.isNotEmpty,
+                enabled: !pids.any((pid) => pid == null) &&
+                    nameController.text.isNotEmpty,
               ),
             ],
           ),
@@ -106,22 +139,25 @@ class _CreateGroupState extends State<CreateGroup> {
   }
 
   Widget _buildPlayerSelector(Size size, int index) {
-    return TextDataCard(
-      title: "Jugador ${index + 1}",
-      data: names[index] == null ? "Seleccionar jugador" : names[index],
-      size: size,
-      onTap: () {
-        Navigator.of(context).pushNamed(SelectPlayerScreen.routeName).then(
-          (value) {
-            if (value == null) return;
-            final Map<String, String> map = value;
-            setState(() {
-              pids[index] = map["id"];
-              names[index] = map["name"];
-            });
-          },
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: TextDataCard(
+        title: "Jugador ${index + 1}",
+        data: names[index] == null ? "Seleccionar jugador" : names[index],
+        size: size,
+        onTap: () {
+          Navigator.of(context).pushNamed(SelectPlayerScreen.routeName).then(
+            (value) {
+              if (value == null) return;
+              final Map<String, String> map = value;
+              setState(() {
+                pids[index] = map["id"];
+                names[index] = map["name"];
+              });
+            },
+          );
+        },
+      ),
     );
   }
 

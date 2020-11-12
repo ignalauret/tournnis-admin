@@ -77,13 +77,17 @@ class GroupTable extends StatelessWidget {
           width: 5,
         ),
         Expanded(
-          child: Text(
-            context.select<PlayersProvider, String>(
-                (data) => data.getPlayerName(orderedPids[index])),
-            style: index > 1
-                ? CustomStyles.kPlayerNameStyle
-                    .copyWith(color: CustomColors.kMainColor.withOpacity(0.5))
-                : CustomStyles.kPlayerNameStyle,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              context.select<PlayersProvider, String>(
+                  (data) => data.getPlayerName(orderedPids[index])),
+              style: index > group.playersIds.length - 3
+                  ? CustomStyles.kPlayerNameStyle
+                      .copyWith(color: CustomColors.kMainColor.withOpacity(0.5))
+                  : CustomStyles.kPlayerNameStyle,
+            ),
           ),
         ),
         Container(
@@ -98,7 +102,7 @@ class GroupTable extends StatelessWidget {
                         orderedPids[index], group.tid, group.category)
                     .toString() +
                 " puntos"),
-            style: index > 1
+            style: index > group.playersIds.length - 3
                 ? CustomStyles.kResultStyle
                     .copyWith(color: CustomColors.kMainColor.withOpacity(0.5))
                 : CustomStyles.kResultStyle,

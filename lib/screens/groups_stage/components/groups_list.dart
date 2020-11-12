@@ -25,6 +25,7 @@ class GroupsList extends StatelessWidget {
                       selectedCategory == 4) &&
                   group.tid == tid)
               .toList();
+          groupsList.sort((p1, p2) => p1.name.compareTo(p2.name));
           return ListView.builder(
             itemBuilder: (context, index) => GestureDetector(
               onTap: () => Navigator.of(context).pushNamed(

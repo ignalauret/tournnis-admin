@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tournnis_admin/components/search_bar.dart';
 import 'package:tournnis_admin/models/player.dart';
+import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
 import 'package:tournnis_admin/screens/select_player/components/players_list.dart';
 import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class SelectPlayerScreen extends StatefulWidget {
   static const routeName = "/select-player";
@@ -24,6 +26,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomInset: false,
@@ -46,19 +49,44 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: 60,
                 width: double.infinity,
-                child: SearchBar(
-                  hint: "Buscar jugador",
-                  onChanged: (newSearch) {
-                    setState(() {
-                      search = newSearch;
-                    });
-                  },
+                child: Row(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: size.width * 0.7,
+                      alignment: Alignment.center,
+                      child: SearchBar(
+                        hint: "Buscar jugador",
+                        onChanged: (newSearch) {
+                          setState(() {
+                            search = newSearch;
+                          });
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(CreatePlayerScreen.routeName);
+                        },
+                        child: Container(
+                          child: Text(
+                            "Agregar",
+                            style: CustomStyles.kResultStyle
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
