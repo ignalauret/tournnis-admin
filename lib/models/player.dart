@@ -19,17 +19,17 @@ class Player {
   });
 
   String id;
-  final String name;
+  String name;
   final DateTime birth;
   final List<int> globalCategoryPoints; // [points [int]]
   final List<Map<String, int>>
       tournamentCategoryPoints; // [{category [int] : points [int]}]
   final String profileUrl;
   final String imageUrl;
-  final Backhand backhand;
-  final Handed handed;
+  Backhand backhand;
+  Handed handed;
   final String nationality;
-  final String club;
+  String club;
 
   /* Getters */
   int get age {

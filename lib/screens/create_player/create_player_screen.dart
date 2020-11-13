@@ -20,11 +20,30 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   String selectedHand = "Derecha";
   String selectedBackhand = "Dos manos";
 
+  bool isEdit = false;
+  Player player;
+
   @override
   void dispose() {
     nameController.dispose();
     clubController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    player = ModalRoute.of(context).settings.arguments;
+    if (player != null) {
+      setState(() {
+        isEdit = true;
+        nameController.text = player.name;
+        clubController.text = player.club;
+        selectedHand = player.handed == Handed.Right ? "Derecha" : "Izquierda";
+        selectedBackhand =
+            player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
+      });
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -34,7 +53,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text("Nuevo jugador"),
+        title: Text(isEdit ? "Editar Jugador" : "Nuevo jugador"),
       ),
       body: SafeArea(
         child: Padding(
@@ -91,25 +110,44 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 ),
               ),
               ActionButton(
-                "Agregar",
+                isEdit ? "Guardar" : "Agregar",
                 () {
-                  context
-                      .read<PlayersProvider>()
-                      .createPlayer(
-                        name: nameController.text,
-                        club: clubController.text,
-                        hand: selectedHand == "Derecha"
-                            ? Handed.Right
-                            : Handed.Left,
-                        backhand: selectedBackhand == "Dos manos"
-                            ? Backhand.TwoHanded
-                            : Backhand.OneHanded,
-                      )
-                      .then((value) {
-                    Navigator.of(context).pop();
-                  });
+                  if (isEdit)
+                    context
+                        .read<PlayersProvider>()
+                        .editPlayer(
+                          player.id,
+                          nameController.text,
+                          clubController.text,
+                          selectedHand == "Derecha"
+                              ? Handed.Right
+                              : Handed.Left,
+                          selectedBackhand == "Dos manos"
+                              ? Backhand.TwoHanded
+                              : Backhand.OneHanded,
+                        )
+                        .then(
+                          (value) => Navigator.of(context).pop(),
+                        );
+                  else
+                    context
+                        .read<PlayersProvider>()
+                        .createPlayer(
+                          name: nameController.text,
+                          club: clubController.text,
+                          hand: selectedHand == "Derecha"
+                              ? Handed.Right
+                              : Handed.Left,
+                          backhand: selectedBackhand == "Dos manos"
+                              ? Backhand.TwoHanded
+                              : Backhand.OneHanded,
+                        )
+                        .then((value) {
+                      Navigator.of(context).pop();
+                    });
                 },
-                enabled: nameController.text.isNotEmpty && clubController.text.isNotEmpty,
+                enabled: nameController.text.isNotEmpty &&
+                    clubController.text.isNotEmpty,
               ),
             ],
           ),
@@ -149,8 +187,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
     );
   }
 
-  Row _buildSelector(
-      String option1, String option2, String selected, Function select, Size size) {
+  Row _buildSelector(String option1, String option2, String selected,
+      Function select, Size size) {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +202,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
     );
   }
 
-  Widget _buildSelectorButton(String label, bool selected, Function select, Size size) {
+  Widget _buildSelectorButton(
+      String label, bool selected, Function select, Size size) {
     return GestureDetector(
       onTap: () {
         select(label);

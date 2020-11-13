@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/player_detail/player_detail_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -17,19 +18,24 @@ class Ranking extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<PlayersProvider>().refreshTournamentCache();
-        await context.read<PlayersProvider>().getTournamentRanking(tid, category);
+        await context
+            .read<PlayersProvider>()
+            .getTournamentRanking(tid, category);
       },
       child: FutureBuilder<List<Player>>(
-        future:
-            context.watch<PlayersProvider>().getTournamentRanking(tid, category),
+        future: context
+            .watch<PlayersProvider>()
+            .getTournamentRanking(tid, category),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemBuilder: (context, index) => RankingPlayerCard(
                 snapshot.data[index],
                 index + 1,
-                snapshot.data[index].getTournamentPointsOfCategory(tid, category),
-                context.watch<MatchesProvider>().getPlayerMatchesFromTournament(snapshot.data[index].id, tid, category),
+                snapshot.data[index]
+                    .getTournamentPointsOfCategory(tid, category),
+                context.watch<MatchesProvider>().getPlayerMatchesFromTournament(
+                    snapshot.data[index].id, tid, category),
               ),
               itemCount: snapshot.data.length,
             );
@@ -53,16 +59,23 @@ class RankingPlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: CustomColors.kWhiteColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(PlayerDetailScreen.routeName, arguments: player.id);
+      },
+      child: Card(
+        color: CustomColors.kWhiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
+        ),
+        child: _buildPlayerRow(player, ranking, points, results),
       ),
-      child: _buildPlayerRow(player, ranking, points, results),
     );
   }
 
-  Row _buildPlayerRow(Player player, int ranking, int points, Map<String, int> results) {
+  Row _buildPlayerRow(
+      Player player, int ranking, int points, Map<String, int> results) {
     return Row(
       children: [
         Container(
@@ -133,7 +146,8 @@ class RankingPlayerCard extends StatelessWidget {
           margin: const EdgeInsets.only(right: 5),
           child: Text(
             points.toString(),
-            style: CustomStyles.kResultStyle.copyWith(color: CustomColors.kAccentColor),
+            style: CustomStyles.kResultStyle
+                .copyWith(color: CustomColors.kAccentColor),
           ),
         ),
       ],

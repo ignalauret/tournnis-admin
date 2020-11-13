@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/player_detail/player_detail_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -26,6 +27,8 @@ class PlayersList extends StatelessWidget {
           final List<Player> searchedPlayers = snapshot.data
               .where((player) => player.name.toLowerCase().contains(search))
               .toList();
+          searchedPlayers.sort((p1, p2) => p1.name.compareTo(p2.name));
+
           return ListView.builder(
             itemBuilder: (context, index) {
               final player = searchedPlayers[index];

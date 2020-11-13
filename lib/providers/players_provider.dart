@@ -34,7 +34,6 @@ class PlayersProvider extends ChangeNotifier {
             (entry) => Player.fromJson(entry.key, entry.value),
           )
           .toList();
-      print(temp.firstWhere((element) => element.name.contains("García Gómez")).id);
       return temp;
     } else {
       return null;
@@ -46,8 +45,17 @@ class PlayersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeLocalPlayer(pid) {
+  void removeLocalPlayer(String pid) {
     _players.removeWhere((player) => player.id == pid);
+    notifyListeners();
+  }
+
+  void editLocalPlayer(String pid, Map<String, dynamic> editData) {
+    final player = getPlayerById(pid);
+    player.name = editData["name"];
+    player.club = editData["club"];
+    player.handed = editData["handed"] == "r" ? Handed.Right : Handed.Left;
+    player.backhand = editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
     notifyListeners();
   }
 
@@ -86,8 +94,7 @@ class PlayersProvider extends ChangeNotifier {
       Constants.kDbPath + "/players.json",
       body: jsonEncode(player.toJson()),
     );
-    print(response.statusCode);
-    print(response.body);
+
     if (response.statusCode == 200) {
       player.id = jsonDecode(response.body)["name"];
       addLocalPlayer(player);
@@ -105,6 +112,27 @@ class PlayersProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       // Remove from local memory.
       removeLocalPlayer(pid);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editPlayer(String pid, String name, String club, Handed hand,
+      Backhand backhand) async {
+    final editData = {
+      "name": name,
+      "club": club,
+      "handed": hand == Handed.Right ? "r" : "l",
+      "backhand": backhand == Backhand.OneHanded ? 1 : 2,
+    };
+    final response = await http.patch(
+      Constants.kDbPath + "/players/$pid.json",
+      body: jsonEncode(editData),
+    );
+
+    if (response.statusCode == 200) {
+      editLocalPlayer(pid, editData);
       return true;
     } else {
       return false;
