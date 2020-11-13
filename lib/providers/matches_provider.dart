@@ -43,6 +43,15 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void editLocalMatch(String mid, Map<String, dynamic> editData) {
+    final match = getMatchById(mid);
+    match.pid1 = editData["pid1"];
+    match.pid2 = editData["pid2"];
+    match.date = DateTime.parse(editData["date"]);
+    match.category = editData["category"];
+    notifyListeners();
+  }
+
   void addLocalDate(String id, DateTime date) {
     final match = getMatchById(id);
     match.date = date;
@@ -124,6 +133,27 @@ class MatchesProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       // Delete match in local memory.
       removeLocalMatch(mid);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editMatch(
+      String mid, String pid1, String pid2, DateTime date, int category) async {
+    final editData = {
+      "pid1": pid1,
+      "pid2": pid2,
+      "date": date.toString(),
+      "category": category,
+    };
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/$mid.json",
+      body: jsonEncode(editData),
+    );
+
+    if (response.statusCode == 200) {
+      editLocalMatch(mid, editData);
       return true;
     } else {
       return false;

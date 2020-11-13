@@ -3,14 +3,14 @@ import 'package:tournnis_admin/utils/constants.dart';
 
 class TournamentMatch {
   String id;
-  final String pid1; // Player 1 ID.
-  final String pid2; // Player 2 ID.
+  String pid1; // Player 1 ID.
+  String pid2; // Player 2 ID.
   List<int> result1;
   List<int> result2;
   DateTime date;
   final String tid; // Tournament ID.
   final bool isPlayOff; // If is a play off match or a round match.
-  final int category;
+  int category;
   final int playOffRound; // If isPLayOff then what round is it.
 
   TournamentMatch({

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -36,9 +37,37 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        "Agregar resultado",
-        style: CustomStyles.kTitleStyle,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Text(
+            "Agregar resultado",
+            style: CustomStyles.kTitleStyle,
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: CustomColors.kAccentColor,
+            ),
+            onPressed: () {
+              final playerData = context.read<PlayersProvider>();
+              Navigator.popAndPushNamed(context, CreateMatchScreen.routeName,
+                  arguments: {
+                    "tid": widget.match.tid,
+                    "editData": {
+                      "pid1": widget.match.pid1,
+                      "pid2": widget.match.pid2,
+                      "name1": playerData.getPlayerName(widget.match.pid1),
+                      "name2": playerData.getPlayerName(widget.match.pid2),
+                      "mid": widget.match.id,
+                      "date": widget.match.date,
+                      "category": widget.match.category,
+                    }
+                  });
+            },
+          ),
+        ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,

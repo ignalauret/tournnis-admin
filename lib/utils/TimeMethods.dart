@@ -8,7 +8,7 @@ class TimeMethods {
     final day = date.day;
     final month = months[date.month];
     final hour = date.hour;
-    final minutes = date.minute == 0 ? "00" : date.minute;
+    final minutes = date.minute == 0 ? "00" : date.minute < 10 ? "0${date.minute}" : date.minute;
     return "$weekday $day $month, $hour:$minutes hs";
   }
 }
