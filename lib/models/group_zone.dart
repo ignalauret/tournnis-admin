@@ -1,7 +1,7 @@
 class GroupZone {
   String id;
-  final String name;
-  final List<String> playersIds;
+  String name;
+  List<String> playersIds;
   List<String> matchesIds;
   final int category;
   final String tid;

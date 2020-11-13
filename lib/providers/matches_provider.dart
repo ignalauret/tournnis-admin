@@ -52,6 +52,16 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void editLocalPlayerOfMatch(String mid, String prevPid, String newPid) {
+    final match = getMatchById(mid);
+    if (match.pid1 == prevPid) {
+      match.pid1 = newPid;
+    } else {
+      match.pid2 = newPid;
+    }
+    notifyListeners();
+  }
+
   void addLocalDate(String id, DateTime date) {
     final match = getMatchById(id);
     match.date = date;
@@ -126,7 +136,36 @@ class MatchesProvider extends ChangeNotifier {
     return ids;
   }
 
-  Future<void> deleteMatch(String mid) async {
+  Future<bool> editPlayerOfMatches(List<String> mids, String prevPid, String newPid) async {
+    for(String mid in mids) {
+      if(!await editPlayerOfMatch(mid, prevPid, newPid)) return false;
+    }
+    return true;
+  }
+
+  Future<bool> editPlayerOfMatch(String mid, String prevPid, String newPid) async {
+    final match = getMatchById(mid);
+    Map<String, String> body;
+    if (match.pid1 == prevPid) {
+      body = {"pid1": newPid};
+    } else if (match.pid2 == prevPid){
+      body = {"pid2": newPid};
+    } else {
+      return true;
+    }
+    final response = await http.patch(
+      Constants.kDbPath + "matches/$mid.json",
+      body: jsonEncode(body),
+    );
+    if(response.statusCode == 200) {
+      editLocalPlayerOfMatch(mid, prevPid, newPid);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteMatch(String mid) async {
     // Try deleting match in DB.
     final response =
         await http.delete(Constants.kDbPath + "/matches/$mid.json");
@@ -137,6 +176,13 @@ class MatchesProvider extends ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  Future<bool> deleteMatches(List<String> mids) async {
+    for(String mid in mids) {
+      if(!await deleteMatch(mid)) return false;
+    }
+    return true;
   }
 
   Future<bool> editMatch(

@@ -30,8 +30,8 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () =>
-                Navigator.of(context).pushNamed(CreateGroup.routeName, arguments: tid),
+            onPressed: () => Navigator.of(context)
+                .pushNamed(CreateGroup.routeName, arguments: {"tid": tid}),
           ),
         ],
       ),

@@ -33,8 +33,15 @@ class GroupsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeLocalGroup(String mid) {
-    _groups.removeWhere((group) => group.id == mid);
+  void removeLocalGroup(String gid) {
+    _groups.removeWhere((group) => group.id == gid);
+    notifyListeners();
+  }
+
+  void editLocalGroup(String gid, Map<String, dynamic> editData) {
+    final group = getGroupById(gid);
+    group.name = editData["name"];
+    group.playersIds = editData["players"];
     notifyListeners();
   }
 
@@ -68,6 +75,40 @@ class GroupsProvider extends ChangeNotifier {
       group.id = jsonDecode(response.body)["name"];
       addLocalGroup(group);
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editGroupName(BuildContext context, String gid, String name,
+      List<String> pids, List<String> previousPids) async {
+    final editData = {
+      "name": name,
+      "players": pids,
+    };
+    final response = await http.patch(
+      Constants.kDbPath + "/groups/$gid.json",
+      body: jsonEncode(editData),
+    );
+    if (response.statusCode == 200) {
+      // TODO: Call MatchesProvider.editPlayerOfMatches with the diff
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteGroup(BuildContext context, String gid) async {
+    final group = getGroupById(gid);
+    final response = await http.delete(Constants.kDbPath + "/groups/$gid.json");
+    if (response.statusCode == 200) {
+      final bool success =
+          await context.read<MatchesProvider>().deleteMatches(group.matchesIds);
+      if (success) {
+        removeLocalGroup(gid);
+        return true;
+      }
+      return false;
     } else {
       return false;
     }

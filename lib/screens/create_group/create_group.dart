@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/action_button.dart';
-import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
@@ -22,15 +21,35 @@ class _CreateGroupState extends State<CreateGroup> {
   List<String> pids = [null, null, null, null];
   List<String> names = [null, null, null, null];
 
+  bool isEdit = false;
+  String tid;
+
+  @override
+  void didChangeDependencies() {
+    final Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
+    tid = data["tid"];
+    final Map<String, dynamic> editData = data["editData"];
+    if (editData != null) {
+      setState(() {
+        isEdit = true;
+        nameController.text = editData["name"];
+        pids = editData["pids"];
+        names = editData["names"];
+        players = pids.length;
+        //selectedCategory = editData["category"];
+      });
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text("Nuevo grupo"),
+        title: Text(isEdit ? "Editar grupo" : "Nuevo grupo"),
       ),
       body: SafeArea(
         child: Padding(
@@ -111,22 +130,25 @@ class _CreateGroupState extends State<CreateGroup> {
                 height: 20,
               ),
               ActionButton(
-                "Agregar",
+                isEdit ? "Guardar" : "Agregar",
                 () {
-                  context
-                      .read<GroupsProvider>()
-                      .createGroup(
-                        context,
-                        GroupZone(
-                          tid: tid,
-                          name: nameController.text,
-                          category: selectedCategory,
-                          playersIds: pids,
-                        ),
-                      )
-                      .then((value) {
-                    Navigator.of(context).pop();
-                  });
+                  if (isEdit) {
+                  } else {
+                    context
+                        .read<GroupsProvider>()
+                        .createGroup(
+                          context,
+                          GroupZone(
+                            tid: tid,
+                            name: nameController.text,
+                            category: selectedCategory,
+                            playersIds: pids,
+                          ),
+                        )
+                        .then((value) {
+                      Navigator.of(context).pop();
+                    });
+                  }
                 },
                 enabled: !pids.any((pid) => pid == null) &&
                     nameController.text.isNotEmpty,
