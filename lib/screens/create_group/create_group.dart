@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/action_button.dart';
+import 'package:tournnis_admin/components/custom_text_field.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
@@ -68,8 +69,11 @@ class _CreateGroupState extends State<CreateGroup> {
                       //     });
                       //   },
                       // ),
-                      _buildTextField(nameController, "Nombre",
-                          "Ingrese el nombre del grupo"),
+                      CustomTextField(
+                        controller: nameController,
+                        label: "Nombre",
+                        hint: "Ingrese el nombre del grupo",
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -179,37 +183,6 @@ class _CreateGroupState extends State<CreateGroup> {
             },
           );
         },
-      ),
-    );
-  }
-
-  TextField _buildTextField(
-      TextEditingController controller, String label, String hint) {
-    return TextField(
-      controller: controller,
-      style: CustomStyles.kNormalStyle,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: CustomStyles.kResultStyle
-            .copyWith(color: CustomColors.kAccentColor),
-        hintText: hint,
-        hintStyle: CustomStyles.kNormalStyle.copyWith(color: Colors.white70),
-        alignLabelWithHint: true,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
-          ),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
-          ),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
-          ),
-        ),
       ),
     );
   }

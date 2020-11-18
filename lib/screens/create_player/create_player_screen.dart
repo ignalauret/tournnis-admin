@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/action_button.dart';
+import 'package:tournnis_admin/components/custom_text_field.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/colors.dart';
@@ -32,17 +33,20 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
 
   @override
   void didChangeDependencies() {
-    player = ModalRoute.of(context).settings.arguments;
-    if (player != null) {
-      setState(() {
-        isEdit = true;
-        nameController.text = player.name;
-        clubController.text = player.club;
-        selectedHand = player.handed == Handed.Right ? "Derecha" : "Izquierda";
-        selectedBackhand =
-            player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
-      });
+    if(player == null) {
+      player = ModalRoute.of(context).settings.arguments;
+      if(player != null) {
+        setState(() {
+          isEdit = true;
+          nameController.text = player.name;
+          clubController.text = player.club;
+          selectedHand = player.handed == Handed.Right ? "Derecha" : "Izquierda";
+          selectedBackhand =
+          player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
+        });
+      }
     }
+
     super.didChangeDependencies();
   }
 
@@ -64,18 +68,18 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildTextField(
-                        nameController,
-                        "Nombre",
-                        "Ingrese el nombre del jugador",
+                      CustomTextField(
+                        controller: nameController,
+                        label: "Nombre",
+                        hint: "Ingrese el nombre del jugador",
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      _buildTextField(
-                        clubController,
-                        "Club",
-                        "Ingrese el nombre del club",
+                      CustomTextField(
+                        controller: clubController,
+                        label: "Club",
+                        hint: "Ingrese el nombre del club",
                       ),
                       SizedBox(
                         height: 20,
@@ -150,37 +154,6 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     clubController.text.isNotEmpty,
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  TextField _buildTextField(
-      TextEditingController controller, String label, String hint) {
-    return TextField(
-      controller: controller,
-      style: CustomStyles.kNormalStyle,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: CustomStyles.kResultStyle
-            .copyWith(color: CustomColors.kAccentColor),
-        hintText: hint,
-        hintStyle: CustomStyles.kNormalStyle.copyWith(color: Colors.white70),
-        alignLabelWithHint: true,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
-          ),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
-          ),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: CustomColors.kAccentColor,
           ),
         ),
       ),

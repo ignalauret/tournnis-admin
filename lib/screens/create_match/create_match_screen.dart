@@ -125,7 +125,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         onPressed: () {
                           context
                               .read<MatchesProvider>()
-                              .deleteMatch(editMid)
+                              .deleteMatch(context, editMid)
                               .then((value) => Navigator.of(context).pop(true));
                         },
                       ),

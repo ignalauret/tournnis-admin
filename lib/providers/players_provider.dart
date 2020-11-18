@@ -130,7 +130,7 @@ class PlayersProvider extends ChangeNotifier {
       Constants.kDbPath + "/players/$pid.json",
       body: jsonEncode(editData),
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       editLocalPlayer(pid, editData);
       return true;

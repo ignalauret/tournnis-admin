@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
@@ -165,11 +166,17 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteMatch(String mid) async {
+  Future<bool> deleteMatch(BuildContext context, String mid) async {
     // Try deleting match in DB.
     final response =
         await http.delete(Constants.kDbPath + "/matches/$mid.json");
     if (response.statusCode == 200) {
+      final match = getMatchById(mid);
+      // If match has ended, remove points.
+      if(match.hasEnded) {
+        await context.read<PlayersProvider>().addPointsToPlayer(match.pid1, - 1 * match.firstPlayerPoints, match.category, match.tid);
+        await context.read<PlayersProvider>().addPointsToPlayer(match.pid2, -1 * match.secondPlayerPoints, match.category, match.tid);
+      }
       // Delete match in local memory.
       removeLocalMatch(mid);
       return true;
@@ -178,9 +185,9 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteMatches(List<String> mids) async {
+  Future<bool> deleteMatches(BuildContext context, List<String> mids) async {
     for(String mid in mids) {
-      if(!await deleteMatch(mid)) return false;
+      if(!await deleteMatch(context, mid)) return false;
     }
     return true;
   }

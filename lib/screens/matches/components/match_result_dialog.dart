@@ -37,6 +37,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: CustomColors.kMainColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
