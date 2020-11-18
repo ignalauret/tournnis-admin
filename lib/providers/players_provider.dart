@@ -108,7 +108,6 @@ class PlayersProvider extends ChangeNotifier {
     // Try deleting from DB.
     final response =
         await http.delete(Constants.kDbPath + "/players/$pid.json");
-    print(response.statusCode);
     if (response.statusCode == 200) {
       // Remove from local memory.
       removeLocalPlayer(pid);
@@ -130,7 +129,6 @@ class PlayersProvider extends ChangeNotifier {
       Constants.kDbPath + "/players/$pid.json",
       body: jsonEncode(editData),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       editLocalPlayer(pid, editData);
       return true;
@@ -254,6 +252,7 @@ class PlayersProvider extends ChangeNotifier {
             p1.getTournamentPointsOfCategory(tid, category),
           ),
     );
+    print(playersList[0].id);
     // Cache
     tournamentRankingCache["$tid/$category"] = [...playersList];
     notifyListeners();

@@ -140,7 +140,6 @@ class GroupsProvider extends ChangeNotifier {
         {"players": group.playersIds, "matches": group.matchesIds},
       ),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       notifyListeners();
       return true;
@@ -170,7 +169,6 @@ class GroupsProvider extends ChangeNotifier {
         {"players": group.playersIds, "matches": group.matchesIds},
       ),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       notifyListeners();
       return true;
