@@ -50,7 +50,7 @@ class _CreateGroupState extends State<CreateGroup> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar grupo" : "Nuevo grupo"),
+        title: Text(isEdit ? "Editar grupo" : "Nuevo grupo", style: CustomStyles.kAppBarTitle,),
       ),
       body: SafeArea(
         child: Padding(

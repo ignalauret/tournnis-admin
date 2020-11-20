@@ -20,12 +20,12 @@ class Ranking extends StatelessWidget {
         context.read<PlayersProvider>().refreshTournamentCache();
         await context
             .read<PlayersProvider>()
-            .getTournamentRanking(tid, category);
+            .getTournamentRanking(context, tid, category);
       },
       child: FutureBuilder<List<Player>>(
         future: context
             .watch<PlayersProvider>()
-            .getTournamentRanking(tid, category),
+            .getTournamentRanking(context, tid, category),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

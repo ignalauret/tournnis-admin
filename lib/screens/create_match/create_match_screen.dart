@@ -88,7 +88,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar partido" : "Nuevo partido"),
+        title: Text(isEdit ? "Editar partido" : "Nuevo partido", style: CustomStyles.kAppBarTitle,),
         actions: [
           if (isEdit)
             IconButton(

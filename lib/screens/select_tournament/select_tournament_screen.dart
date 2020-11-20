@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/menu_button.dart';
 import 'package:tournnis_admin/models/tournament.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/home/home_screen.dart';
@@ -25,21 +26,12 @@ class SelectTournamentScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: snapshot.data
-                      .map(
-                        (tournament) => FlatButton(
-                          child: Text(
+                      .map((tournament) => MenuButton(
                             tournament.name,
-                            style: CustomStyles.kResultStyle.copyWith(
-                              color: CustomColors.kWhiteColor,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
+                            () => Navigator.of(context).pushNamed(
                                 HomeScreen.routeName,
-                                arguments: tournament.id);
-                          },
-                        ),
-                      )
+                                arguments: tournament.id),
+                          ))
                       .toList(),
                 ),
               );

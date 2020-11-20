@@ -3,6 +3,7 @@ import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
 import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class MatchesScreen extends StatefulWidget {
   static const routeName = "/matches";
@@ -26,7 +27,10 @@ class _MatchesScreenState extends State<MatchesScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Partidos"),
+        title: Text(
+          "Partidos",
+          style: CustomStyles.kAppBarTitle,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),

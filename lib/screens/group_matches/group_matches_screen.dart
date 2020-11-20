@@ -14,7 +14,7 @@ class GroupMatchesScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text(group.name),
+        title: Text(group.name, style: CustomStyles.kAppBarTitle,),
         actions: [
           IconButton(
             icon: Icon(

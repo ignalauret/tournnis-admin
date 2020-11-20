@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/match_options_screen/match_options_screen.dart';
 import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
 import 'package:tournnis_admin/utils/TimeMethods.dart';
 import 'package:tournnis_admin/utils/colors.dart';
@@ -51,24 +52,28 @@ class MatchCard extends StatelessWidget {
         child: Column(
           children: [
             _buildHeader(match.date, match.categoryName, size),
-            Container(
-              height: 70,
-              width: size.width * 0.85,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(Constants.kCardBorderRadius),
-              ),
-              child: Row(
-                children: [
-                  _buildRankingsContainer(
-                      playersData.getPlayerGlobalRanking(
-                          match.pid1, match.category),
-                      playersData.getPlayerGlobalRanking(
-                          match.pid2, match.category)),
-                  Expanded(
-                    child: match.hasEnded
-                        ? Column(
+            GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(
+                  MatchOptionsScreen.routeName,
+                  arguments: match),
+              child: Container(
+                height: 70,
+                width: size.width * 0.85,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                      BorderRadius.circular(Constants.kCardBorderRadius),
+                ),
+                child: Row(
+                  children: [
+                    _buildRankingsContainer(
+                        playersData.getPlayerGlobalRanking(
+                            match.pid1, match.category),
+                        playersData.getPlayerGlobalRanking(
+                            match.pid2, match.category)),
+                    Expanded(
+                      child: match.hasEnded
+                          ? Column(
                             children: [
                               Expanded(
                                 child: _buildPlayerRow(
@@ -86,59 +91,60 @@ class MatchCard extends StatelessWidget {
                               ),
                             ],
                           )
-                        : Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: _buildPlayerRow(
-                                        playersData.getPlayerName(match.pid1),
-                                        match.result1,
-                                        !match.isSecondWinner,
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: _buildPlayerRow(
+                                          playersData.getPlayerName(match.pid1),
+                                          match.result1,
+                                          !match.isSecondWinner,
+                                        ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: _buildPlayerRow(
-                                        playersData.getPlayerName(match.pid2),
-                                        match.result2,
-                                        !match.isFirstWinner,
+                                      Expanded(
+                                        child: _buildPlayerRow(
+                                          playersData.getPlayerName(match.pid2),
+                                          match.result2,
+                                          !match.isFirstWinner,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                width: 70,
-                                height: 70,
-                                child: match.date == null
-                                    ? IconButton(
-                                        icon: Icon(
-                                          Icons.calendar_today,
-                                          color: CustomColors.kAccentColor,
-                                          size: 35,
+                                Container(
+                                  width: 70,
+                                  height: 70,
+                                  child: match.date == null
+                                      ? IconButton(
+                                          icon: Icon(
+                                            Icons.calendar_today,
+                                            color: CustomColors.kAccentColor,
+                                            size: 35,
+                                          ),
+                                          onPressed: () => _setMatchDate(context),
+                                        )
+                                      : IconButton(
+                                          icon: Icon(
+                                            Icons.add,
+                                            color: CustomColors.kAccentColor,
+                                            size: 35,
+                                          ),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  MatchResultDialog(match),
+                                            );
+                                          },
                                         ),
-                                        onPressed: () => _setMatchDate(context),
-                                      )
-                                    : IconButton(
-                                        icon: Icon(
-                                          Icons.add,
-                                          color: CustomColors.kAccentColor,
-                                          size: 35,
-                                        ),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                MatchResultDialog(match),
-                                          );
-                                        },
-                                      ),
-                              ),
-                            ],
-                          ),
-                  ),
-                ],
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
               ),
             )
           ],
@@ -234,7 +240,8 @@ class MatchCard extends StatelessWidget {
             child: Text(
               name,
               style: CustomStyles.kPlayerNameStyle.copyWith(
-                color: isWinner ? null : CustomColors.kMainColor.withOpacity(0.5),
+                color:
+                    isWinner ? null : CustomColors.kMainColor.withOpacity(0.5),
               ),
             ),
           ),

@@ -28,7 +28,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Jugadores"),
+        title: Text("Jugadores", style: CustomStyles.kAppBarTitle,),
         actions: [
           IconButton(
             icon: Icon(Icons.add),

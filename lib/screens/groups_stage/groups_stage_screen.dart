@@ -3,6 +3,7 @@ import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
 import 'package:tournnis_admin/screens/groups_stage/components/groups_list.dart';
 import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class GroupStageScreen extends StatefulWidget {
   static const routeName = "/groups";
@@ -26,7 +27,7 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Grupos de platino"),
+        title: Text("Grupos de platino", style: CustomStyles.kAppBarTitle,),
         actions: [
           IconButton(
             icon: Icon(Icons.add),

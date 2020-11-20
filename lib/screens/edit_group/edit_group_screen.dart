@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/menu_button.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/screens/edit_group/components/add_player_dialog.dart';
@@ -11,30 +12,13 @@ import 'package:tournnis_admin/utils/custom_styles.dart';
 class EditGroupScreen extends StatelessWidget {
   static const routeName = "/edit-group";
 
-  Widget _buildOptionButton(String label, Function onTap,
-      {bool warning = false}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 50,
-        width: double.infinity,
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: CustomStyles.kResultStyle
-              .copyWith(color: warning ? Colors.red : Colors.white),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final GroupZone group = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Editar ${group.name}"),
+        title: Text("Editar ${group.name}", style: CustomStyles.kAppBarTitle,),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -44,7 +28,7 @@ class EditGroupScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildOptionButton("Cambiar nombre", () {
+              MenuButton("Cambiar nombre", () {
                 showDialog(
                         context: context,
                         builder: (context) => ChangeNameDialog(group))
@@ -52,7 +36,7 @@ class EditGroupScreen extends StatelessWidget {
                   if (success ?? false) Navigator.of(context).pop();
                 });
               }),
-              _buildOptionButton("Agregar Jugador", () {
+              MenuButton("Agregar Jugador", () {
                 showDialog(
                         context: context,
                         builder: (context) => AddPlayerDialog(group))
@@ -60,7 +44,7 @@ class EditGroupScreen extends StatelessWidget {
                   if (success ?? false) Navigator.of(context).pop();
                 });
               }),
-              _buildOptionButton("Eliminar Jugador", () {
+              MenuButton("Eliminar Jugador", () {
                 showDialog(
                         context: context,
                         builder: (context) => DeletePlayerDialog(group))
@@ -68,7 +52,7 @@ class EditGroupScreen extends StatelessWidget {
                   if (success ?? false) Navigator.of(context).pop();
                 });
               }),
-              _buildOptionButton(
+              MenuButton(
                 "Eliminar Grupo",
                 () {
                   showDialog(
@@ -111,7 +95,7 @@ class EditGroupScreen extends StatelessWidget {
                     if (deleted) Navigator.of(context).pop(true);
                   });
                 },
-                warning: true,
+                letterColor: Colors.red,
               ),
             ],
           ),

@@ -21,8 +21,22 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   final scoreController = TextEditingController();
   bool tapped = false;
 
+  String parseResult(List<int> res1, List<int> res2) {
+    String res = "${res1[0]}.${res2[0]} ${res1[1]}.${res2[1]}";
+    if (res1.length == 3) {
+      res = res + " ${res1[2]}.${res2[2]}";
+    }
+    return res;
+  }
+
   @override
   void initState() {
+    if (widget.match.hasEnded) {
+      setState(() {
+        scoreController.text =
+            parseResult(widget.match.result1, widget.match.result2);
+      });
+    }
     scoreController.addListener(() {
       setState(() {});
     });
@@ -39,37 +53,9 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: CustomColors.kMainColor,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            "Agregar resultado",
-            style: CustomStyles.kTitleStyle,
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: CustomColors.kAccentColor,
-            ),
-            onPressed: () {
-              final playerData = context.read<PlayersProvider>();
-              Navigator.popAndPushNamed(context, CreateMatchScreen.routeName,
-                  arguments: {
-                    "tid": widget.match.tid,
-                    "editData": {
-                      "pid1": widget.match.pid1,
-                      "pid2": widget.match.pid2,
-                      "name1": playerData.getPlayerName(widget.match.pid1),
-                      "name2": playerData.getPlayerName(widget.match.pid2),
-                      "mid": widget.match.id,
-                      "date": widget.match.date,
-                      "category": widget.match.category,
-                    }
-                  });
-            },
-          ),
-        ],
+      title: Text(
+        widget.match.hasEnded ? "Editar resultado" : "Agregar resultado",
+        style: CustomStyles.kTitleStyle,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -98,7 +84,11 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
           height: 40,
           child: FlatButton(
             child: Text(
-              tapped ? "Agregando..." : "Agregar",
+              tapped
+                  ? "Guardando..."
+                  : widget.match.hasEnded
+                      ? "Editar"
+                      : "Agregar",
               style: CustomStyles.kResultStyle.copyWith(
                   color: tapped || scoreController.text.isEmpty
                       ? Colors.white

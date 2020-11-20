@@ -57,7 +57,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar Jugador" : "Nuevo jugador"),
+        title: Text(isEdit ? "Editar Jugador" : "Nuevo jugador", style: CustomStyles.kAppBarTitle,),
       ),
       body: SafeArea(
         child: Padding(

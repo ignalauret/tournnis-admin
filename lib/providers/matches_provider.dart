@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
+import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/constants.dart';
@@ -248,8 +249,17 @@ class MatchesProvider extends ChangeNotifier {
       }),
     );
     if (response.statusCode == 200) {
+      int points1 = 0;
+      int points2 = 0;
+      // Get previous points
+      if(match.hasEnded) {
+        points1 = -1 * match.firstPlayerPoints;
+        points2 = -1 * match.secondPlayerPoints;
+      }
       addLocalResult(match.id, result1, result2);
-      await playersData.addMatchPoints(match);
+      points1 += match.firstPlayerPoints;
+      points2 += match.secondPlayerPoints;
+      await playersData.addMatchPoints(match, points1, points2);
       return true;
     } else {
       return false;
@@ -257,6 +267,23 @@ class MatchesProvider extends ChangeNotifier {
   }
 
   /* Getters */
+
+  int comparePlayers(String tid, int category, Player p1, Player p2) {
+    if(p1.getTournamentPointsOfCategory(tid, category) != p2.getTournamentPointsOfCategory(tid, category)) {
+      return p2.getTournamentPointsOfCategory(tid, category).compareTo(p1.getTournamentPointsOfCategory(tid, category));
+    }
+    final Map<String, int> matches1 = getPlayerMatchesFromTournament(p1.id, tid, category);
+    final Map<String, int> matches2 = getPlayerMatchesFromTournament(p2.id, tid, category);
+    // Compare wins
+    if(matches1["wins"] != matches2["wins"]) {
+      return matches2["wins"].compareTo(matches1["wins"]);
+    }
+    // Sets = 2 * wins + st. We know that wins1 == wins2...
+    if(matches1["superTiebreaks"] != matches2["superTiebreaks"]) {
+      return matches2["superTiebreaks"].compareTo(matches1["superTiebreaks"]);
+    }
+    return 0;
+  }
 
   Map<String, int> getPlayerMatchesFromTournament(
       String pid, String tid, int category) {

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 
 class PlayersProvider extends ChangeNotifier {
@@ -55,7 +57,8 @@ class PlayersProvider extends ChangeNotifier {
     player.name = editData["name"];
     player.club = editData["club"];
     player.handed = editData["handed"] == "r" ? Handed.Right : Handed.Left;
-    player.backhand = editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
+    player.backhand =
+        editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
     notifyListeners();
   }
 
@@ -137,11 +140,11 @@ class PlayersProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> addMatchPoints(TournamentMatch match) async {
-    await addPointsToPlayer(
-        match.pid1, match.firstPlayerPoints, match.category, match.tid);
+  Future<bool> addMatchPoints(
+      TournamentMatch match, int points1, int points2) async {
+    await addPointsToPlayer(match.pid1, points1, match.category, match.tid);
     return await addPointsToPlayer(
-        match.pid2, match.secondPlayerPoints, match.category, match.tid);
+        match.pid2, points2, match.category, match.tid);
   }
 
   Future<bool> addPointsToPlayer(
@@ -237,7 +240,8 @@ class PlayersProvider extends ChangeNotifier {
         1;
   }
 
-  Future<List<Player>> getTournamentRanking(String tid, int category) async {
+  Future<List<Player>> getTournamentRanking(
+      BuildContext context, String tid, int category) async {
     // Return if cached
     if (tournamentRankingCache.containsKey("$tid/$category")) {
       return tournamentRankingCache["$tid/$category"];
@@ -248,11 +252,9 @@ class PlayersProvider extends ChangeNotifier {
     //     (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
     // Sort by points.
     playersList.sort(
-      (p1, p2) => p2.getTournamentPointsOfCategory(tid, category).compareTo(
-            p1.getTournamentPointsOfCategory(tid, category),
-          ),
+      (p1, p2) =>
+          context.read<MatchesProvider>().comparePlayers(tid, category, p1, p2),
     );
-    print(playersList[0].id);
     // Cache
     tournamentRankingCache["$tid/$category"] = [...playersList];
     notifyListeners();
@@ -260,9 +262,9 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   Future<int> getPlayerRankingFromTournament(
-      String pid, String tid, int category) async {
+      BuildContext context, String pid, String tid, int category) async {
     if (!tournamentRankingCache.containsKey("$tid/$category")) {
-      await getTournamentRanking(tid, category);
+      await getTournamentRanking(context, tid, category);
     }
     return tournamentRankingCache["$tid/$category"]
             .indexWhere((player) => player.id == pid) +

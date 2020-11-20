@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   static const routeName = "/player-detail";
@@ -21,6 +22,7 @@ class PlayerDetailScreen extends StatelessWidget {
             context.select<PlayersProvider, String>(
               (data) => data.getPlayerName(pid),
             ),
+            style: CustomStyles.kAppBarTitle,
           ),
         ),
         actions: [

@@ -31,7 +31,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Seleccionar jugador"),
+        title: Text("Seleccionar jugador", style: CustomStyles.kAppBarTitle,),
         actions: [
           IconButton(
             icon: Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/menu_button.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
@@ -22,7 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(tName),
+        title: Text(
+          tName,
+          style: CustomStyles.kAppBarTitle,
+        ),
       ),
       backgroundColor: CustomColors.kMainColor,
       body: Container(
@@ -31,35 +35,20 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlatButton(
-              child: Text(
-                "Ver Partidos",
-                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(MatchesScreen.routeName, arguments: tid);
-              },
+            MenuButton(
+              "Partidos",
+              () => Navigator.of(context)
+                  .pushNamed(MatchesScreen.routeName, arguments: tid),
             ),
-            FlatButton(
-              child: Text(
-                "Ver Jugadores",
-                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(PlayersScreen.routeName, arguments: tid);
-              },
+            MenuButton(
+              "Jugadores",
+              () => Navigator.of(context)
+                  .pushNamed(PlayersScreen.routeName, arguments: tid),
             ),
-            FlatButton(
-              child: Text(
-                "Ver Grupos",
-                style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(GroupStageScreen.routeName, arguments: tid);
-              },
+            MenuButton(
+              "Grupos",
+              () => Navigator.of(context)
+                  .pushNamed(GroupStageScreen.routeName, arguments: tid),
             ),
           ],
         ),

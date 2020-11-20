@@ -8,6 +8,12 @@ class CustomStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const kAppBarTitle = TextStyle(
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
+
   static const kNormalStyle = TextStyle(
     color: Colors.white,
     fontSize: 15,
