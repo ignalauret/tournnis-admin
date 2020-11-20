@@ -14,7 +14,7 @@ class MenuButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 40,
-        width: 180,
+        width: MediaQuery.of(context).size.width * 0.6,
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,

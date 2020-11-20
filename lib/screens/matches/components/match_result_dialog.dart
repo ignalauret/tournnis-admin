@@ -20,6 +20,7 @@ class MatchResultDialog extends StatefulWidget {
 class _MatchResultDialogState extends State<MatchResultDialog> {
   final scoreController = TextEditingController();
   bool tapped = false;
+  bool error = false;
 
   String parseResult(List<int> res1, List<int> res2) {
     String res = "${res1[0]}.${res2[0]} ${res1[1]}.${res2[1]}";
@@ -49,6 +50,24 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
     super.dispose();
   }
 
+  bool checkResultFormat(String result) {
+    final sets = result.split(" ");
+    if (sets.length != 2 && sets.length != 3) {
+      return false;
+    }
+    for (String set in sets) {
+      final games = set.split(".");
+      if (games.length != 2) return false;
+      try {
+        final g1 = int.parse(games[0]);
+        final g2 = int.parse(games[1]);
+      } catch (e) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -65,6 +84,11 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
             label: "Resultado",
             hint: "Ej: 6.2 3.6 7.5",
           ),
+          if (error)
+            Text(
+              "Formato incorrecto",
+              style: TextStyle(color: Colors.red),
+            ),
         ],
       ),
       actions: [
@@ -102,16 +126,23 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
             onPressed: tapped || scoreController.text.isEmpty
                 ? null
                 : () {
-                    setState(() {
-                      tapped = true;
-                    });
-                    context
-                        .read<MatchesProvider>()
-                        .addResult(widget.match, scoreController.text,
-                            context.read<PlayersProvider>())
-                        .then((value) {
-                      Navigator.of(context).pop();
-                    });
+                    if (checkResultFormat(scoreController.text)) {
+                      setState(() {
+                        error = false;
+                        tapped = true;
+                      });
+                      context
+                          .read<MatchesProvider>()
+                          .addResult(widget.match, scoreController.text,
+                              context.read<PlayersProvider>())
+                          .then((value) {
+                        Navigator.of(context).pop();
+                      });
+                    } else {
+                      setState(() {
+                        error = true;
+                      });
+                    }
                   },
           ),
         ),
