@@ -28,9 +28,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  bool isEdit = false;
-  String editMid;
-
   Future<void> _selectDate() async {
     final DateTime picked = await showDatePicker(
       context: context,
@@ -62,81 +59,15 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    final Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    tid = data["tid"];
-    final Map<String, dynamic> editData = data["editData"];
-    if (editData != null) {
-      setState(() {
-        isEdit = true;
-        editMid = editData["mid"];
-        pid1 = editData["pid1"];
-        pid2 = editData["pid2"];
-        name1 = editData["name1"];
-        name2 = editData["name2"];
-        selectedDate = editData["date"];
-        selectedTime = TimeOfDay.fromDateTime(selectedDate);
-        selectedCategory = editData["category"];
-      });
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar partido" : "Nuevo partido", style: CustomStyles.kAppBarTitle,),
-        actions: [
-          if (isEdit)
-            IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(
-                      "Seguro que desea eliminar este partido?",
-                      style: CustomStyles.kResultStyle,
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: Text(
-                          "Cancelar",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text(
-                          "Eliminar",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          context
-                              .read<MatchesProvider>()
-                              .deleteMatch(context, editMid)
-                              .then((value) => Navigator.of(context).pop(true));
-                        },
-                      ),
-                    ],
-                  ),
-                ).then((deleted) {
-                  if (deleted) Navigator.of(context).pop();
-                });
-              },
-            ),
-        ],
+        title: Text(
+          "Nuevo partido",
+          style: CustomStyles.kAppBarTitle,
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -223,49 +154,31 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                 height: 20,
               ),
               ActionButton(
-                isEdit ? "Guardar" : "Agregar",
+                "Agregar",
                 () {
-                  if (isEdit) {
-                    context
-                        .read<MatchesProvider>()
-                        .editMatch(
-                            editMid,
-                            pid1,
-                            pid2,
-                            DateTime(
+                  context
+                      .read<MatchesProvider>()
+                      .createMatch(
+                        TournamentMatch(
+                          pid1: pid1,
+                          pid2: pid2,
+                          result1: null,
+                          result2: null,
+                          date: DateTime(
                               selectedDate.year,
                               selectedDate.month,
                               selectedDate.day,
                               selectedTime.hour,
-                              selectedTime.minute,
-                            ),
-                            selectedCategory)
-                        .then((value) => Navigator.of(context).pop());
-                  } else {
-                    context
-                        .read<MatchesProvider>()
-                        .createMatch(
-                          TournamentMatch(
-                            pid1: pid1,
-                            pid2: pid2,
-                            result1: null,
-                            result2: null,
-                            date: DateTime(
-                                selectedDate.year,
-                                selectedDate.month,
-                                selectedDate.day,
-                                selectedTime.hour,
-                                selectedTime.minute),
-                            tid: tid,
-                            isPlayOff: false,
-                            category: selectedCategory,
-                            playOffRound: null,
-                          ),
-                        )
-                        .then((value) {
-                      Navigator.of(context).pop();
-                    });
-                  }
+                              selectedTime.minute),
+                          tid: tid,
+                          isPlayOff: false,
+                          category: selectedCategory,
+                          playOffRound: null,
+                        ),
+                      )
+                      .then((value) {
+                    Navigator.of(context).pop();
+                  });
                 },
                 enabled: pid1 != null && pid2 != null,
               ),

@@ -22,26 +22,7 @@ class _CreateGroupState extends State<CreateGroup> {
   List<String> pids = [null, null, null, null];
   List<String> names = [null, null, null, null];
 
-  bool isEdit = false;
   String tid;
-
-  @override
-  void didChangeDependencies() {
-    final Map<String, dynamic> data = ModalRoute.of(context).settings.arguments;
-    tid = data["tid"];
-    final Map<String, dynamic> editData = data["editData"];
-    if (editData != null) {
-      setState(() {
-        isEdit = true;
-        nameController.text = editData["name"];
-        pids = editData["pids"];
-        names = editData["names"];
-        players = pids.length;
-        //selectedCategory = editData["category"];
-      });
-    }
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +31,10 @@ class _CreateGroupState extends State<CreateGroup> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar grupo" : "Nuevo grupo", style: CustomStyles.kAppBarTitle,),
+        title: Text(
+          "Nuevo grupo",
+          style: CustomStyles.kAppBarTitle,
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -134,25 +118,22 @@ class _CreateGroupState extends State<CreateGroup> {
                 height: 20,
               ),
               ActionButton(
-                isEdit ? "Guardar" : "Agregar",
+                "Agregar",
                 () {
-                  if (isEdit) {
-                  } else {
-                    context
-                        .read<GroupsProvider>()
-                        .createGroup(
-                          context,
-                          GroupZone(
-                            tid: tid,
-                            name: nameController.text,
-                            category: selectedCategory,
-                            playersIds: pids,
-                          ),
-                        )
-                        .then((value) {
-                      Navigator.of(context).pop();
-                    });
-                  }
+                  context
+                      .read<GroupsProvider>()
+                      .createGroup(
+                        context,
+                        GroupZone(
+                          tid: tid,
+                          name: nameController.text,
+                          category: selectedCategory,
+                          playersIds: pids,
+                        ),
+                      )
+                      .then((value) {
+                    Navigator.of(context).pop();
+                  });
                 },
                 enabled: !pids.any((pid) => pid == null) &&
                     nameController.text.isNotEmpty,

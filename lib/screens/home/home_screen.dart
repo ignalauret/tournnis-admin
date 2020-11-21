@@ -4,6 +4,7 @@ import 'package:tournnis_admin/components/menu_button.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
+import 'package:tournnis_admin/screens/play_offs/play_offs_screen.dart';
 import 'package:tournnis_admin/screens/players/players_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -49,6 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
               "Grupos",
               () => Navigator.of(context)
                   .pushNamed(GroupStageScreen.routeName, arguments: tid),
+            ),
+            MenuButton(
+              "Play Offs",
+                  () => Navigator.of(context)
+                  .pushNamed(PlayOffsScreen.routeName, arguments: tid),
             ),
           ],
         ),

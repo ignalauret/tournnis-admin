@@ -178,6 +178,7 @@ class PlayersProvider extends ChangeNotifier {
 
   /* Getters */
   String getPlayerName(String id) {
+    if(id == null) return " ";
     return getPlayerById(id).name;
   }
 
@@ -231,6 +232,7 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   Future<int> getPlayerGlobalRanking(String pid, int category) async {
+    if(pid == null) return 0;
     // If not cached, get ranking
     if (!globalRankingCache.containsKey(category)) {
       await getGlobalRanking(category);

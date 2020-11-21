@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/match_options_screen/match_options_screen.dart';
+import 'package:tournnis_admin/screens/match_options/match_options_screen.dart';
 import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
 import 'package:tournnis_admin/utils/TimeMethods.dart';
 import 'package:tournnis_admin/utils/colors.dart';

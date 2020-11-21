@@ -59,7 +59,7 @@ class TournamentMatch {
     return Constants.kLeaguePoints[2];
   }
 
-  String get categoryName {
+  static String getCategoryName(int category) {
     switch (category) {
       case 0:
         return "Platino";
@@ -70,6 +70,10 @@ class TournamentMatch {
       case 3:
         return "Bronce";
     }
+  }
+
+  String get categoryName {
+    return getCategoryName(this.category);
   }
 
   /* Parsers */

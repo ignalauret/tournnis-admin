@@ -4,7 +4,7 @@ import 'package:tournnis_admin/components/match_card.dart';
 import 'package:tournnis_admin/components/menu_button.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/screens/match_options_screen/components/delete_match_dialog.dart';
+import 'package:tournnis_admin/screens/match_options/components/delete_match_dialog.dart';
 import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
