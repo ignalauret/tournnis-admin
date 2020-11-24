@@ -53,9 +53,8 @@ class MatchCard extends StatelessWidget {
           children: [
             _buildHeader(match.date, match.categoryName, size),
             GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed(
-                  MatchOptionsScreen.routeName,
-                  arguments: match),
+              onTap: () => Navigator.of(context)
+                  .pushNamed(MatchOptionsScreen.routeName, arguments: match),
               child: Container(
                 height: 70,
                 width: size.width * 0.85,
@@ -67,30 +66,31 @@ class MatchCard extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildRankingsContainer(
-                        playersData.getPlayerGlobalRanking(
-                            match.pid1, match.category),
-                        playersData.getPlayerGlobalRanking(
-                            match.pid2, match.category)),
+                      playersData.getPlayerRankingFromTournament(
+                          context, match.pid1, match.tid, match.category),
+                      playersData.getPlayerRankingFromTournament(
+                          context, match.pid2, match.tid, match.category),
+                    ),
                     Expanded(
                       child: match.hasEnded
                           ? Column(
-                            children: [
-                              Expanded(
-                                child: _buildPlayerRow(
-                                  playersData.getPlayerName(match.pid1),
-                                  match.result1,
-                                  !match.isSecondWinner,
+                              children: [
+                                Expanded(
+                                  child: _buildPlayerRow(
+                                    playersData.getPlayerName(match.pid1),
+                                    match.result1,
+                                    !match.isSecondWinner,
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: _buildPlayerRow(
-                                  playersData.getPlayerName(match.pid2),
-                                  match.result2,
-                                  !match.isFirstWinner,
+                                Expanded(
+                                  child: _buildPlayerRow(
+                                    playersData.getPlayerName(match.pid2),
+                                    match.result2,
+                                    !match.isFirstWinner,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
+                              ],
+                            )
                           : Row(
                               children: [
                                 Expanded(
@@ -123,7 +123,8 @@ class MatchCard extends StatelessWidget {
                                             color: CustomColors.kAccentColor,
                                             size: 35,
                                           ),
-                                          onPressed: () => _setMatchDate(context),
+                                          onPressed: () =>
+                                              _setMatchDate(context),
                                         )
                                       : IconButton(
                                           icon: Icon(

@@ -1,6 +1,7 @@
 class GroupZone {
   String id;
   String name;
+  int index;
   List<String> playersIds;
   List<String> matchesIds;
   final int category;
@@ -8,6 +9,7 @@ class GroupZone {
 
   GroupZone(
       {this.id,
+      this.index,
       this.playersIds,
       this.matchesIds,
       this.category,
@@ -18,6 +20,7 @@ class GroupZone {
     return GroupZone(
       id: id,
       name: json["name"],
+      index: json["index"],
       category: json["category"],
       playersIds: List<String>.from(json["players"]),
       matchesIds: List<String>.from(json["matches"]),
@@ -28,6 +31,7 @@ class GroupZone {
   Map<String, dynamic> toJson() {
     return {
       "name": this.name,
+      "index": this.index,
       "category": this.category,
       "players": this.playersIds,
       "matches": this.matchesIds,

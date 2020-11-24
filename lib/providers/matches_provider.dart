@@ -22,6 +22,10 @@ class MatchesProvider extends ChangeNotifier {
     return [..._matches];
   }
 
+  List<TournamentMatch> get matchesSync {
+    return [..._matches];
+  }
+
   Future<void> getMatches() async {
     _matches = await fetchMatches();
   }
@@ -138,19 +142,21 @@ class MatchesProvider extends ChangeNotifier {
     return ids;
   }
 
-  Future<bool> editPlayerOfMatches(List<String> mids, String prevPid, String newPid) async {
-    for(String mid in mids) {
-      if(!await editPlayerOfMatch(mid, prevPid, newPid)) return false;
+  Future<bool> editPlayerOfMatches(
+      List<String> mids, String prevPid, String newPid) async {
+    for (String mid in mids) {
+      if (!await editPlayerOfMatch(mid, prevPid, newPid)) return false;
     }
     return true;
   }
 
-  Future<bool> editPlayerOfMatch(String mid, String prevPid, String newPid) async {
+  Future<bool> editPlayerOfMatch(
+      String mid, String prevPid, String newPid) async {
     final match = getMatchById(mid);
     Map<String, String> body;
     if (match.pid1 == prevPid) {
       body = {"pid1": newPid};
-    } else if (match.pid2 == prevPid){
+    } else if (match.pid2 == prevPid) {
       body = {"pid2": newPid};
     } else {
       return true;
@@ -159,7 +165,7 @@ class MatchesProvider extends ChangeNotifier {
       Constants.kDbPath + "matches/$mid.json",
       body: jsonEncode(body),
     );
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       editLocalPlayerOfMatch(mid, prevPid, newPid);
       return true;
     } else {
@@ -174,9 +180,11 @@ class MatchesProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       final match = getMatchById(mid);
       // If match has ended, remove points.
-      if(match.hasEnded) {
-        await context.read<PlayersProvider>().addPointsToPlayer(match.pid1, - 1 * match.firstPlayerPoints, match.category, match.tid);
-        await context.read<PlayersProvider>().addPointsToPlayer(match.pid2, -1 * match.secondPlayerPoints, match.category, match.tid);
+      if (match.hasEnded) {
+        await context.read<PlayersProvider>().addPointsToPlayer(match.pid1,
+            -1 * match.firstPlayerPoints, match.category, match.tid);
+        await context.read<PlayersProvider>().addPointsToPlayer(match.pid2,
+            -1 * match.secondPlayerPoints, match.category, match.tid);
       }
       // Delete match in local memory.
       removeLocalMatch(mid);
@@ -187,8 +195,8 @@ class MatchesProvider extends ChangeNotifier {
   }
 
   Future<bool> deleteMatches(BuildContext context, List<String> mids) async {
-    for(String mid in mids) {
-      if(!await deleteMatch(context, mid)) return false;
+    for (String mid in mids) {
+      if (!await deleteMatch(context, mid)) return false;
     }
     return true;
   }
@@ -252,7 +260,7 @@ class MatchesProvider extends ChangeNotifier {
       int points1 = 0;
       int points2 = 0;
       // Get previous points
-      if(match.hasEnded) {
+      if (match.hasEnded) {
         points1 = -1 * match.firstPlayerPoints;
         points2 = -1 * match.secondPlayerPoints;
       }
@@ -269,27 +277,58 @@ class MatchesProvider extends ChangeNotifier {
   /* Getters */
 
   int comparePlayers(String tid, int category, Player p1, Player p2) {
-    if(p1.getTournamentPointsOfCategory(tid, category) != p2.getTournamentPointsOfCategory(tid, category)) {
-      return p2.getTournamentPointsOfCategory(tid, category).compareTo(p1.getTournamentPointsOfCategory(tid, category));
+    if (p1.getTournamentPointsOfCategory(tid, category) !=
+        p2.getTournamentPointsOfCategory(tid, category)) {
+      return p2
+          .getTournamentPointsOfCategory(tid, category)
+          .compareTo(p1.getTournamentPointsOfCategory(tid, category));
     }
-    final Map<String, int> matches1 = getPlayerMatchesFromTournament(p1.id, tid, category);
-    final Map<String, int> matches2 = getPlayerMatchesFromTournament(p2.id, tid, category);
+    final Map<String, int> results1 =
+        getPlayerResultsFromTournament(p1.id, tid, category);
+    final Map<String, int> results2 =
+        getPlayerResultsFromTournament(p2.id, tid, category);
     // Compare wins
-    if(matches1["wins"] != matches2["wins"]) {
-      return matches2["wins"].compareTo(matches1["wins"]);
+    if (results1["wins"] != results2["wins"]) {
+      return results2["wins"].compareTo(results1["wins"]);
     }
-    // Sets = 2 * wins + st. We know that wins1 == wins2...
-    if(matches1["superTiebreaks"] != matches2["superTiebreaks"]) {
-      return matches2["superTiebreaks"].compareTo(matches1["superTiebreaks"]);
+    // Compare sets diff
+    if (results1["setDiff"] != results2["setDiff"]) {
+      return results2["setDiff"].compareTo(results1["setDiff"]);
     }
-    return 0;
+    return results2["gameDiff"].compareTo(results1["gameDiff"]);
   }
 
-  Map<String, int> getPlayerMatchesFromTournament(
+  int comparePlayersWithPid(BuildContext context, String tid, int category, String pid1, String pid2) {
+    final p1 = context.select<PlayersProvider, Player>((data) => data.getPlayerById(pid1));
+    final p2 = context.select<PlayersProvider, Player>((data) => data.getPlayerById(pid2));
+    return comparePlayers(tid, category, p1, p2);
+  }
+
+
+  List<TournamentMatch> getPlayerMatches(String pid) {
+    final matches = _matches
+        .where((match) => match.pid1 == pid || match.pid2 == pid)
+        .toList();
+    return matches;
+  }
+
+  List<TournamentMatch> getPlayerMatchesFromTournament(
+      String pid, String tid, int category) {
+    final matches = _matches
+        .where((match) =>
+            match.pid1 == pid ||
+            match.pid2 == pid && match.category == category && match.tid == tid)
+        .toList();
+    return matches;
+  }
+
+  Map<String, int> getPlayerResultsFromTournament(
       String pid, String tid, int category) {
     int wins = 0;
     int superTiebreaks = 0;
     int loses = 0;
+    int setDiff = 0;
+    int gameDiff = 0;
     for (TournamentMatch match in _matches) {
       if (!match.hasEnded || match.tid != tid || match.category != category)
         continue;
@@ -301,12 +340,16 @@ class MatchesProvider extends ChangeNotifier {
         } else {
           loses++;
         }
+        gameDiff += match.gamesDifferenceOfPlayer(pid);
+        setDiff += match.setsDifferenceOfPlayer(pid);
       }
     }
     return {
       "wins": wins,
       "superTiebreaks": superTiebreaks,
       "loses": loses,
+      "setDiff": setDiff,
+      "gameDiff": gameDiff,
     };
   }
 }

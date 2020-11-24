@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/match_card.dart';
 import 'package:tournnis_admin/models/player.dart';
+import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
+import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
@@ -14,6 +18,7 @@ class PlayerDetailScreen extends StatelessWidget {
       (data) => data.getPlayerById(pid),
     );
     return Scaffold(
+      backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
         title: FittedBox(
           fit: BoxFit.scaleDown,
@@ -42,7 +47,11 @@ class PlayerDetailScreen extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
           child: Column(
-            children: [],
+            children: context
+                .select<MatchesProvider, List<TournamentMatch>>(
+                    (data) => data.getPlayerMatches(pid))
+                .map((match) => MatchCard(match))
+                .toList(),
           ),
         ),
       ),

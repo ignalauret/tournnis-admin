@@ -59,6 +59,54 @@ class TournamentMatch {
     return Constants.kLeaguePoints[2];
   }
 
+  int setsWonByPlayer(String pid) {
+    if (pid == winnerId) {
+      return 2;
+    } else {
+      return result1.length - 2;
+    }
+  }
+
+  int setsLostByPlayer(String pid) {
+    if (pid == winnerId) {
+      return result1.length - 2;
+    } else {
+      return 2;
+    }
+  }
+
+  int setsDifferenceOfPlayer(String pid) {
+    if (!hasEnded) return 0;
+    return setsWonByPlayer(pid) - setsLostByPlayer(pid);
+  }
+
+  int gamesWonByPlayer(String pid) {
+    if (pid == this.pid1) {
+      return result1.fold<int>(
+          0, (previousValue, games) => previousValue + games);
+    } else if (pid == this.pid2) {
+      return result2.fold<int>(
+          0, (previousValue, games) => previousValue + games);
+    }
+    return null;
+  }
+
+  int gamesLostByPlayer(String pid) {
+    if (pid == this.pid1) {
+      return result2.fold<int>(
+          0, (previousValue, games) => previousValue + games);
+    } else if (pid == this.pid2) {
+      return result1.fold<int>(
+          0, (previousValue, games) => previousValue + games);
+    }
+    return null;
+  }
+
+  int gamesDifferenceOfPlayer(String pid) {
+    if (!hasEnded) return 0;
+    return gamesWonByPlayer(pid) - gamesLostByPlayer(pid);
+  }
+
   static String getCategoryName(int category) {
     switch (category) {
       case 0:

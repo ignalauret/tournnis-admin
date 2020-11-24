@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:tournnis_admin/models/play_off.dart';
 import 'package:tournnis_admin/utils/constants.dart';
@@ -39,6 +38,14 @@ class PlayOffsProvider extends ChangeNotifier {
   }
 
   PlayOff getPlayOff(String tid, int category) {
-    return _playOffs.firstWhere((poff) => poff.tid == tid && poff.category == category);
+    return _playOffs.firstWhere(
+      (poff) => poff.tid == tid && poff.category == category,
+      orElse: () => PlayOff(
+        tid: tid,
+        category: category,
+        matches: List.generate(15, (index) => index.toString()),
+        hasStarted: false,
+      ),
+    );
   }
 }

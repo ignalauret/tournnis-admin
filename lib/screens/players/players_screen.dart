@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
 import 'package:tournnis_admin/screens/players/components/ranking.dart';
-import 'package:tournnis_admin/screens/select_player/components/players_list.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
@@ -104,7 +103,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
                       ),
                     ),
                     Container(
-                      width: 30,
+                      width: 35,
                       height: 20,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(right: 5),

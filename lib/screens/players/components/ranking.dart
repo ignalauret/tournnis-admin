@@ -34,7 +34,7 @@ class Ranking extends StatelessWidget {
                 index + 1,
                 snapshot.data[index]
                     .getTournamentPointsOfCategory(tid, category),
-                context.watch<MatchesProvider>().getPlayerMatchesFromTournament(
+                context.watch<MatchesProvider>().getPlayerResultsFromTournament(
                     snapshot.data[index].id, tid, category),
               ),
               itemCount: snapshot.data.length,
@@ -140,7 +140,7 @@ class RankingPlayerCard extends StatelessWidget {
           ),
         ),
         Container(
-          width: 30,
+          width: 35,
           height: 30,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 5),

@@ -56,10 +56,23 @@ class GroupsProvider extends ChangeNotifier {
             (entry) => GroupZone.fromJson(entry.key, entry.value),
           )
           .toList();
+      temp.sort((g1, g2) => g1.index.compareTo(g2.index));
       return temp;
     } else {
       return null;
     }
+  }
+
+  List<String> getGroupsWinners(BuildContext context, String tid, int category) {
+    final List<String> pids = [];
+    final matchesData = context.watch<MatchesProvider>();
+    for(int i = 0; i < _groups.length; i++) {
+      if(_groups[i].tid != tid || _groups[i].category != category) continue;
+      final players = [..._groups[i].playersIds];
+      players.sort((p1, p2) => matchesData.comparePlayersWithPid(context, tid, category, p1, p2));
+      pids.addAll(players.sublist(0,2));
+    }
+    return pids;
   }
 
   Future<bool> createGroup(BuildContext context, GroupZone group) async {

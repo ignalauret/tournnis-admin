@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
+import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
@@ -14,10 +15,16 @@ class GroupTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final playerData = context.watch<PlayersProvider>();
     final List<String> orderedPids = group.playersIds
-      ..sort((pid1, pid2) => playerData
-          .getPlayerTournamentPoints(pid2, group.tid, group.category)
-          .compareTo(playerData.getPlayerTournamentPoints(
-              pid1, group.tid, group.category)));
+      ..sort(
+        (pid1, pid2) => context.select<MatchesProvider, int>(
+          (data) => data.comparePlayers(
+            group.tid,
+            group.category,
+            playerData.getPlayerById(pid1),
+            playerData.getPlayerById(pid2),
+          ),
+        ),
+      );
 
     return Container(
       decoration: BoxDecoration(
@@ -58,8 +65,8 @@ class GroupTable extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: FutureBuilder<int>(
-              future: playersData.getPlayerGlobalRanking(
-                  orderedPids[index], group.category),
+              future: playersData.getPlayerRankingFromTournament(
+                  context, orderedPids[index], group.tid, group.category),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Text(

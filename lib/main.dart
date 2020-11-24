@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
+import 'package:tournnis_admin/providers/play_offs_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
@@ -45,6 +46,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<TournamentsProvider>(
           create: (context) => TournamentsProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider<PlayOffsProvider>(
+          create: (context) => PlayOffsProvider(),
           lazy: false,
         ),
       ],
