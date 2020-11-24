@@ -173,7 +173,6 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           tid: tid,
                           isPlayOff: false,
                           category: selectedCategory,
-                          playOffRound: null,
                         ),
                       )
                       .then((value) {

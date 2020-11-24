@@ -11,7 +11,6 @@ class TournamentMatch {
   final String tid; // Tournament ID.
   final bool isPlayOff; // If is a play off match or a round match.
   int category;
-  final int playOffRound; // If isPLayOff then what round is it.
   final int playOffIndex;
   final bool isPredicted;
 
@@ -25,7 +24,6 @@ class TournamentMatch {
     @required this.tid,
     this.isPlayOff,
     @required this.category,
-    this.playOffRound,
     this.playOffIndex,
     this.isPredicted = false,
   });
@@ -130,7 +128,7 @@ class TournamentMatch {
 
   /* Parsers */
   factory TournamentMatch.fromJson(String id, Map<String, dynamic> json) {
-    final bool isPlayOff = json["playOffRound"] != null;
+    final bool isPlayOff = json["playOffIndex"] != null;
     return TournamentMatch(
       id: id,
       pid1: json["pid1"],
@@ -140,7 +138,7 @@ class TournamentMatch {
       date: json["date"] == null ? null : DateTime.parse(json["date"]),
       tid: json["tid"],
       isPlayOff: isPlayOff,
-      playOffRound: json["playOffRound"],
+      playOffIndex: json["playOffIndex"],
       category: json["category"],
       isPredicted: false,
     );
@@ -156,7 +154,7 @@ class TournamentMatch {
       "date": this.date == null ? null : this.date.toString(),
       "tid": this.tid,
       "category": this.category,
-      "playOffRound": this.playOffRound,
+      "playOffIndex": this.playOffIndex,
     };
   }
 }

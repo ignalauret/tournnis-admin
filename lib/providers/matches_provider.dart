@@ -133,7 +133,6 @@ class MatchesProvider extends ChangeNotifier {
         tid: group.tid,
         isPlayOff: false,
         category: group.category,
-        playOffRound: null,
       );
       final id = await createMatch(match);
       if (id == null) return null;

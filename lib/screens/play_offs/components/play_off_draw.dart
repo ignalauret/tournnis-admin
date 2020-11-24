@@ -5,6 +5,7 @@ import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
+import 'package:tournnis_admin/screens/edit_play_off/edit_play_off_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 import 'package:tournnis_admin/utils/utils.dart';
@@ -37,6 +38,14 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                   TournamentMatch.getCategoryName(playOff.category),
           style: CustomStyles.kAppBarTitle,
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(EditPlayOffScreen.routeName, arguments: playOff);
+              }),
+        ],
       ),
       body: FutureBuilder<List<Player>>(
         future: context.select<PlayersProvider, Future<List<Player>>>(
@@ -49,13 +58,13 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
               final players = groupsData.getGroupsWinners(
                   context, playOff.tid, playOff.category);
               final List<TournamentMatch> matches = [];
-              for (int i = 0; i < 7; i++) {
+              for (int i = 0; i < 1; i++) {
                 matches.add(
                   TournamentMatch(
                     tid: playOff.tid,
                     category: playOff.category,
-                    playOffRound: i,
                     isPredicted: true,
+                    isPlayOff: true,
                   ),
                 );
               }
@@ -68,19 +77,20 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     category: playOff.category,
                     tid: playOff.tid,
                     isPredicted: true,
+                    isPlayOff: true,
                   ),
                 ),
               );
               playOff.predictedMatches = matches;
             } else {
               final List<TournamentMatch> matches = [];
-              for (int i = 0; i < 7; i++) {
+              for (int i = 0; i < 1; i++) {
                 matches.add(
                   TournamentMatch(
                     tid: playOff.tid,
                     category: playOff.category,
-                    playOffRound: i,
                     isPredicted: true,
+                    isPlayOff: true,
                   ),
                 );
               }
@@ -93,6 +103,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     category: playOff.category,
                     tid: playOff.tid,
                     isPredicted: true,
+                    isPlayOff: true,
                   ),
                 ),
               );

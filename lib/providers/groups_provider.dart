@@ -138,7 +138,6 @@ class GroupsProvider extends ChangeNotifier {
         tid: group.tid,
         isPlayOff: false,
         category: group.category,
-        playOffRound: null,
       ));
       if (mid != null) {
         group.matchesIds.add(mid);

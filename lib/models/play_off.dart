@@ -16,7 +16,7 @@ class PlayOff {
       id: id,
       tid: json["tid"],
       category: json["category"],
-      matches: List<String>.of(json["matches"]),
+      matches: List<String>.from(json["matches"]),
       hasStarted: json["hasStarted"],
     );
   }
