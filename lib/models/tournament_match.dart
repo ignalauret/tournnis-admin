@@ -12,18 +12,22 @@ class TournamentMatch {
   final bool isPlayOff; // If is a play off match or a round match.
   int category;
   final int playOffRound; // If isPLayOff then what round is it.
+  final int playOffIndex;
+  final bool isPredicted;
 
   TournamentMatch({
     this.id,
-    @required this.pid1,
-    @required this.pid2,
-    @required this.result1,
-    @required this.result2,
-    @required this.date,
+    this.pid1,
+    this.pid2,
+    this.result1,
+    this.result2,
+    this.date,
     @required this.tid,
-    @required this.isPlayOff,
+    this.isPlayOff,
     @required this.category,
-    @required this.playOffRound,
+    this.playOffRound,
+    this.playOffIndex,
+    this.isPredicted = false,
   });
 
   /* Getters */
@@ -138,6 +142,7 @@ class TournamentMatch {
       isPlayOff: isPlayOff,
       playOffRound: json["playOffRound"],
       category: json["category"],
+      isPredicted: false,
     );
   }
 

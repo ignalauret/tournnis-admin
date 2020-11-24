@@ -1,13 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/match_card.dart';
 import 'package:tournnis_admin/models/play_off.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -59,6 +55,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     tid: playOff.tid,
                     category: playOff.category,
                     playOffRound: i,
+                    isPredicted: true,
                   ),
                 );
               }
@@ -70,6 +67,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     pid2: players[kGroupMatchOrder[2 * index + 1]],
                     category: playOff.category,
                     tid: playOff.tid,
+                    isPredicted: true,
                   ),
                 ),
               );
@@ -82,6 +80,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     tid: playOff.tid,
                     category: playOff.category,
                     playOffRound: i,
+                    isPredicted: true,
                   ),
                 );
               }
@@ -93,6 +92,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
                     pid2: snapshot.data[kMatchOrder[2 * index + 1]].id,
                     category: playOff.category,
                     tid: playOff.tid,
+                    isPredicted: true,
                   ),
                 ),
               );
@@ -106,130 +106,6 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
           }
         },
       ),
-
-      // body: playOff.hasStarted
-      //     ? DiagonalScrollView(
-      //         maxHeight: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      //         maxWidth: (size.width * 0.85 + 20) * playOff.nRounds,
-      //         child: Container(
-      //           height: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      //           width: (size.width * 0.85 + 20) * playOff.nRounds,
-      //           child: Row(
-      //             children: List.generate(
-      //                 playOff.nRounds,
-      //                 (index) => _buildRoundColumn(matchesData, playOff,
-      //                     playOff.nRounds - index - 1)).toList(),
-      //           ),
-      //         ),
-      //       )
-      //     : FutureBuilder(
-      //         future: context.select<PlayersProvider, Future<List<Player>>>(
-      //             (data) => data.getTournamentRanking(
-      //                 context, playOff.tid, playOff.category)),
-      //         builder: (context, snapshot) {
-      //           if (snapshot.hasData) {
-      //             return DiagonalScrollView(
-      //               maxHeight: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      //               maxWidth: (size.width * 0.85 + 20) * playOff.nRounds,
-      //               child: Container(
-      //                 height: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      //                 width: (size.width * 0.85 + 20) * playOff.nRounds,
-      //                 child: Row(
-      //                   children: List.generate(
-      //                       playOff.nRounds,
-      //                       (index) => _buildPredictedRoundColumn(snapshot.data,
-      //                           playOff, playOff.nRounds - index - 1)).toList(),
-      //                 ),
-      //               ),
-      //             );
-      //           } else {
-      //             return Center(
-      //               child: CircularProgressIndicator(),
-      //             );
-      //           }
-      //         },
-      //       ),
     );
-  }
-
-  Column _buildRoundColumn(
-      MatchesProvider matchesData, PlayOff playOff, int round) {
-    return Column(
-      children: playOff
-          .getMatchesOfRound(round)
-          .map(
-            (mid) => Container(
-              height: 110,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: MatchCard(matchesData.getMatchById(mid)),
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  Column _buildPredictedRoundColumn(
-      List<Player> ranking, PlayOff playOff, int round) {
-    if (round == playOff.nRounds - 1) {
-      final nMatches = Utils.pow2(playOff.nRounds - 1);
-      return Column(
-        children: [
-          Container(
-            height: 30,
-            child: Text(
-              kRoundNames[round],
-              style: CustomStyles.kTitleStyle,
-            ),
-          ),
-          ...List.generate(
-            nMatches,
-            (index) => Container(
-              height: 110,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: MatchCard(
-                TournamentMatch(
-                  pid1: ranking[kMatchOrder[2 * index]].id,
-                  pid2: ranking[kMatchOrder[2 * index + 1]].id,
-                  category: playOff.category,
-                  tid: playOff.tid,
-                ),
-              ),
-            ),
-          ).toList(),
-        ],
-      );
-    } else {
-      return Column(
-        children: [
-          Container(
-            height: 30,
-            child: Text(
-              kRoundNames[round],
-              style: CustomStyles.kTitleStyle,
-            ),
-          ),
-          ...playOff
-              .getMatchesOfRound(round)
-              .map(
-                (mid) => Container(
-                  height: 110,
-                  margin: EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 55.0 +
-                          (playOff.nRounds - round - 2) * 110 +
-                          max(0, (playOff.nRounds - round - 3)) * 110),
-                  child: MatchCard(
-                    TournamentMatch(
-                      tid: playOff.tid,
-                      category: playOff.category,
-                      playOffRound: round,
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ],
-      );
-    }
   }
 }

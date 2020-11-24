@@ -51,7 +51,7 @@ class MatchCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5),
         child: Column(
           children: [
-            _buildHeader(match.date, match.categoryName, size),
+            _buildHeader(match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
               onTap: () => Navigator.of(context)
                   .pushNamed(MatchOptionsScreen.routeName, arguments: match),
@@ -72,7 +72,7 @@ class MatchCard extends StatelessWidget {
                           context, match.pid2, match.tid, match.category),
                     ),
                     Expanded(
-                      child: match.hasEnded
+                      child: match.hasEnded || match.pid1 == null || match.pid2 == null || match.isPredicted
                           ? Column(
                               children: [
                                 Expanded(
@@ -154,7 +154,7 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Container _buildHeader(DateTime date, String category, Size size) {
+  Container _buildHeader(DateTime date, String category, Size size, bool isPredicted) {
     return Container(
       height: 30,
       width: size.width * 0.85,
@@ -171,7 +171,7 @@ class MatchCard extends StatelessWidget {
             ),
           ),
           Spacer(),
-          Text(
+          if(!isPredicted) Text(
             category,
             style: CustomStyles.kCategoryStyle,
           ),
