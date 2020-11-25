@@ -54,8 +54,11 @@ class MatchCard extends StatelessWidget {
             _buildHeader(
                 match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
-              onTap: () => Navigator.of(context)
-                  .pushNamed(MatchOptionsScreen.routeName, arguments: match),
+              onTap: match.isPredicted
+                  ? null
+                  : () => Navigator.of(context).pushNamed(
+                      MatchOptionsScreen.routeName,
+                      arguments: match),
               child: Container(
                 height: 70,
                 width: size.width * 0.85,
@@ -83,14 +86,18 @@ class MatchCard extends StatelessWidget {
                                   child: _buildPlayerRow(
                                     playersData.getPlayerName(match.pid1),
                                     match.result1,
-                                    !match.isSecondWinner,
+                                    match.isPredicted
+                                        ? false
+                                        : !match.isSecondWinner,
                                   ),
                                 ),
                                 Expanded(
                                   child: _buildPlayerRow(
                                     playersData.getPlayerName(match.pid2),
                                     match.result2,
-                                    !match.isFirstWinner,
+                                    match.isPredicted
+                                        ? false
+                                        : !match.isFirstWinner,
                                   ),
                                 ),
                               ],
