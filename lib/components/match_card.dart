@@ -51,7 +51,8 @@ class MatchCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 5),
         child: Column(
           children: [
-            _buildHeader(match.date, match.categoryName, size, match.isPredicted),
+            _buildHeader(
+                match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
               onTap: () => Navigator.of(context)
                   .pushNamed(MatchOptionsScreen.routeName, arguments: match),
@@ -72,7 +73,10 @@ class MatchCard extends StatelessWidget {
                           context, match.pid2, match.tid, match.category),
                     ),
                     Expanded(
-                      child: match.hasEnded || match.pid1 == null || match.pid2 == null || match.isPredicted
+                      child: match.hasEnded ||
+                              match.pid1 == null ||
+                              match.pid2 == null ||
+                              match.isPredicted
                           ? Column(
                               children: [
                                 Expanded(
@@ -154,7 +158,8 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Container _buildHeader(DateTime date, String category, Size size, bool isPredicted) {
+  Container _buildHeader(
+      DateTime date, String category, Size size, bool isPredicted) {
     return Container(
       height: 30,
       width: size.width * 0.85,
@@ -164,17 +169,23 @@ class MatchCard extends StatelessWidget {
             width: 35,
           ),
           Text(
-            date == null ? "Por organizar" : TimeMethods.parseDate(date),
+            isPredicted
+                ? "Predicción"
+                : date == null
+                    ? "Por organizar"
+                    : TimeMethods.parseDate(date),
             style: CustomStyles.kResultStyle.copyWith(
               color: Colors.white,
+              fontStyle: isPredicted ? FontStyle.italic : null,
               letterSpacing: -0.5,
             ),
           ),
           Spacer(),
-          if(!isPredicted) Text(
-            category,
-            style: CustomStyles.kCategoryStyle,
-          ),
+          if (!isPredicted)
+            Text(
+              category,
+              style: CustomStyles.kCategoryStyle,
+            ),
           SizedBox(
             width: 8,
           ),

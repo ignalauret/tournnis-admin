@@ -58,7 +58,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
               final players = groupsData.getGroupsWinners(
                   context, playOff.tid, playOff.category);
               final List<TournamentMatch> matches = [];
-              for (int i = 0; i < 1; i++) {
+              for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
                 matches.add(
                   TournamentMatch(
                     tid: playOff.tid,
@@ -84,7 +84,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
               playOff.predictedMatches = matches;
             } else {
               final List<TournamentMatch> matches = [];
-              for (int i = 0; i < 1; i++) {
+              for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
                 matches.add(
                   TournamentMatch(
                     tid: playOff.tid,

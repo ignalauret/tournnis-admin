@@ -46,7 +46,7 @@ class PlayerDetailScreen extends StatelessWidget {
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          child: Column(
+          child: ListView(
             children: context
                 .select<MatchesProvider, List<TournamentMatch>>(
                     (data) => data.getPlayerMatches(pid))

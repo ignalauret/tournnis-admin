@@ -51,7 +51,7 @@ class PlayOffsProvider extends ChangeNotifier {
       orElse: () => PlayOff(
         tid: tid,
         category: category,
-        matches: List.generate(3, (index) => index.toString()),
+        matches: List.generate(15, (index) => index.toString()),
         hasStarted: false,
       ),
     );
