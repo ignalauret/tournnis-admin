@@ -4,7 +4,6 @@ import 'package:tournnis_admin/components/custom_text_field.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/utils/colors.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
@@ -59,8 +58,8 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
       final games = set.split(".");
       if (games.length != 2) return false;
       try {
-        final g1 = int.parse(games[0]);
-        final g2 = int.parse(games[1]);
+        int.parse(games[0]);
+        int.parse(games[1]);
       } catch (e) {
         return false;
       }

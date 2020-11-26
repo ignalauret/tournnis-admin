@@ -132,11 +132,7 @@ class GroupsProvider extends ChangeNotifier {
       final mid = await matchData.createMatch(TournamentMatch(
         pid1: pid,
         pid2: otherPid,
-        result1: null,
-        result2: null,
-        date: null,
         tid: group.tid,
-        isPlayOff: false,
         category: group.category,
       ));
       if (mid != null) {

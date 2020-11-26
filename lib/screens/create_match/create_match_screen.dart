@@ -59,6 +59,12 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    tid = ModalRoute.of(context).settings.arguments;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(

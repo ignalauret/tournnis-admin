@@ -35,8 +35,8 @@ class _MatchesScreenState extends State<MatchesScreen> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).pushNamed(CreateMatchScreen.routeName,
-                  arguments: {"tid": tid});
+              Navigator.of(context)
+                  .pushNamed(CreateMatchScreen.routeName, arguments: tid);
             },
           ),
         ],

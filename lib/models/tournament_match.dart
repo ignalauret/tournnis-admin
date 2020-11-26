@@ -7,6 +7,7 @@ class TournamentMatch {
   String pid2; // Player 2 ID.
   List<int> result1;
   List<int> result2;
+  int isWo;
   DateTime date;
   final String tid; // Tournament ID.
   final bool isPlayOff; // If is a play off match or a round match.
@@ -20,6 +21,7 @@ class TournamentMatch {
     this.pid2,
     this.result1,
     this.result2,
+    this.isWo,
     this.date,
     @required this.tid,
     this.isPlayOff,
@@ -135,6 +137,7 @@ class TournamentMatch {
       pid2: json["pid2"],
       result1: json["result1"] == null ? null : List<int>.from(json["result1"]),
       result2: json["result2"] == null ? null : List<int>.from(json["result2"]),
+      isWo: json["isWo"] == null ? 0 : json["isWo"],
       date: json["date"] == null ? null : DateTime.parse(json["date"]),
       tid: json["tid"],
       isPlayOff: isPlayOff,
@@ -151,6 +154,7 @@ class TournamentMatch {
       "pid2": this.pid2,
       "result1": this.result1,
       "result2": this.result2,
+      "isWo": this.isWo,
       "date": this.date == null ? null : this.date.toString(),
       "tid": this.tid,
       "category": this.category,
