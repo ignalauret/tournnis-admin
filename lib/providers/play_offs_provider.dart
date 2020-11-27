@@ -98,7 +98,7 @@ class PlayOffsProvider extends ChangeNotifier {
         .deleteMatches(context, playOff.matches);
     if (success) {
       final response =
-          await http.delete(Constants.kDbPath + "/playoffs/${playOff.id}.json");
+          await http.delete(Constants.kDbPath + "/playOffs/${playOff.id}.json");
       if (response.statusCode == 200) {
         removeLocalPlayOff(playOff.id);
         return true;
