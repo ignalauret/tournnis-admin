@@ -132,8 +132,11 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
                       });
                       context
                           .read<MatchesProvider>()
-                          .addResult(widget.match, scoreController.text,
-                              context.read<PlayersProvider>())
+                          .addResult(
+                            context,
+                            widget.match,
+                            scoreController.text,
+                          )
                           .then((value) {
                         Navigator.of(context).pop();
                       });

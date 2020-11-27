@@ -45,7 +45,6 @@ class MatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Consumer<PlayersProvider>(
       builder: (context, playersData, _) => Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
@@ -54,7 +53,7 @@ class MatchCard extends StatelessWidget {
             _buildHeader(
                 match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
-              onTap: match.isPredicted
+              onTap: match.isPredicted || match.pid1 == null || match.pid2 == null
                   ? null
                   : () => Navigator.of(context).pushNamed(
                       MatchOptionsScreen.routeName,

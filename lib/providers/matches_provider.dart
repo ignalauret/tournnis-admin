@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:tournnis_admin/models/group_zone.dart';
 import 'package:tournnis_admin/models/player.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/play_offs_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/utils/constants.dart';
+import 'package:tournnis_admin/utils/utils.dart';
 
 class MatchesProvider extends ChangeNotifier {
   MatchesProvider() {
@@ -61,6 +63,17 @@ class MatchesProvider extends ChangeNotifier {
   void editLocalPlayerOfMatch(String mid, String prevPid, String newPid) {
     final match = getMatchById(mid);
     if (match.pid1 == prevPid) {
+      match.pid1 = newPid;
+    } else {
+      match.pid2 = newPid;
+    }
+    notifyListeners();
+  }
+
+  void editLocalPlayerOfMatchAtPosition(
+      String mid, int position, String newPid) {
+    final match = getMatchById(mid);
+    if (position == 0) {
       match.pid1 = newPid;
     } else {
       match.pid2 = newPid;
@@ -161,11 +174,31 @@ class MatchesProvider extends ChangeNotifier {
       return true;
     }
     final response = await http.patch(
-      Constants.kDbPath + "matches/$mid.json",
+      Constants.kDbPath + "/matches/$mid.json",
       body: jsonEncode(body),
     );
     if (response.statusCode == 200) {
       editLocalPlayerOfMatch(mid, prevPid, newPid);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editPlayerOfMatchAtPosition(
+      String mid, int position, String newPid) async {
+    Map<String, String> body;
+    if (position == 0) {
+      body = {"pid1": newPid};
+    } else {
+      body = {"pid2": newPid};
+    }
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/$mid.json",
+      body: jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      editLocalPlayerOfMatchAtPosition(mid, position, newPid);
       return true;
     } else {
       return false;
@@ -200,27 +233,6 @@ class MatchesProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> editMatch(
-      String mid, String pid1, String pid2, DateTime date, int category) async {
-    final editData = {
-      "pid1": pid1,
-      "pid2": pid2,
-      "date": date.toString(),
-      "category": category,
-    };
-    final response = await http.patch(
-      Constants.kDbPath + "/matches/$mid.json",
-      body: jsonEncode(editData),
-    );
-
-    if (response.statusCode == 200) {
-      editLocalMatch(mid, editData);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   Future<bool> addDate(TournamentMatch match, DateTime date) async {
     final response = await http.patch(
       Constants.kDbPath + "/matches/${match.id}.json",
@@ -237,7 +249,11 @@ class MatchesProvider extends ChangeNotifier {
   }
 
   Future<bool> addResult(
-      TournamentMatch match, String result, PlayersProvider playersData) async {
+    BuildContext context,
+    TournamentMatch match,
+    String result,
+  ) async {
+    // Parse result
     final List<int> result1 = [];
     final List<int> result2 = [];
     final sets = result.split(" ");
@@ -256,18 +272,35 @@ class MatchesProvider extends ChangeNotifier {
       }),
     );
     if (response.statusCode == 200) {
-      int points1 = 0;
-      int points2 = 0;
-      // Get previous points
-      if (match.hasEnded) {
-        points1 = -1 * match.firstPlayerPoints;
-        points2 = -1 * match.secondPlayerPoints;
+      if (match.isPlayOff) {
+        // If play off, add winner to next match.
+        final playOffMatches = context
+            .read<PlayOffsProvider>()
+            .getPlayOff(match.tid, match.category)
+            .matches;
+        addLocalResult(match.id, result1, result2);
+        final success = await editPlayerOfMatchAtPosition(
+          playOffMatches[Utils.getNextMatchIndex(match.playOffIndex)],
+          Utils.getNextMatchPosition(match.playOffIndex),
+          match.winnerId,
+        );
+        return success;
+      } else {
+        // If not play off, add points to player.
+        int points1 = 0;
+        int points2 = 0;
+        // Get previous points
+        if (match.hasEnded) {
+          points1 = -1 * match.firstPlayerPoints;
+          points2 = -1 * match.secondPlayerPoints;
+        }
+        addLocalResult(match.id, result1, result2);
+        points1 += match.firstPlayerPoints;
+        points2 += match.secondPlayerPoints;
+        return await context
+            .read<PlayersProvider>()
+            .addMatchPoints(match, points1, points2);
       }
-      addLocalResult(match.id, result1, result2);
-      points1 += match.firstPlayerPoints;
-      points2 += match.secondPlayerPoints;
-      await playersData.addMatchPoints(match, points1, points2);
-      return true;
     } else {
       return false;
     }
@@ -297,12 +330,14 @@ class MatchesProvider extends ChangeNotifier {
     return results2["gameDiff"].compareTo(results1["gameDiff"]);
   }
 
-  int comparePlayersWithPid(BuildContext context, String tid, int category, String pid1, String pid2) {
-    final p1 = context.select<PlayersProvider, Player>((data) => data.getPlayerById(pid1));
-    final p2 = context.select<PlayersProvider, Player>((data) => data.getPlayerById(pid2));
+  int comparePlayersWithPid(BuildContext context, String tid, int category,
+      String pid1, String pid2) {
+    final p1 = context
+        .select<PlayersProvider, Player>((data) => data.getPlayerById(pid1));
+    final p2 = context
+        .select<PlayersProvider, Player>((data) => data.getPlayerById(pid2));
     return comparePlayers(tid, category, p1, p2);
   }
-
 
   List<TournamentMatch> getPlayerMatches(String pid) {
     final matches = _matches

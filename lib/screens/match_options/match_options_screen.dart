@@ -71,7 +71,7 @@ class MatchOptionsScreen extends StatelessWidget {
                   builder: (context) => MatchResultDialog(match),
                 ),
               ),
-            if (match.category != 0)
+            if (match.category != 0 && !match.isPlayOff)
               MenuButton(
                 "Eliminar partido",
                 () {

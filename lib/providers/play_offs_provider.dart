@@ -29,6 +29,11 @@ class PlayOffsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeLocalPlayOff(String poid) {
+    _playOffs.removeWhere((poff) => poff.id == poid);
+    notifyListeners();
+  }
+
   Future<List<PlayOff>> fetchPlayOffs() async {
     final response = await http.get(Constants.kDbPath + "/playOffs.json");
     if (response.statusCode == 200) {
@@ -82,6 +87,24 @@ class PlayOffsProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       addLocalPlayOff(playOff);
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deletePlayOff(BuildContext context, PlayOff playOff) async {
+    final success = await context
+        .read<MatchesProvider>()
+        .deleteMatches(context, playOff.matches);
+    if (success) {
+      final response =
+          await http.delete(Constants.kDbPath + "/playoffs/${playOff.id}.json");
+      if (response.statusCode == 200) {
+        removeLocalPlayOff(playOff.id);
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }

@@ -30,7 +30,18 @@ class EditPlayOffScreen extends StatelessWidget {
               width: double.infinity,
             ),
             playOff.hasStarted
-                ? MenuButton("Reemplazar jugador", () {})
+                ? MenuButton(
+                    "Cancelar PlayOff",
+                    () {
+                      context
+                          .read<PlayOffsProvider>()
+                          .deletePlayOff(context, playOff)
+                          .then(
+                            (value) => Navigator.of(context).pop(),
+                          );
+                    },
+                    letterColor: Colors.red,
+                  )
                 : MenuButton("Iniciar PlayOff", () {
                     context
                         .read<PlayOffsProvider>()
