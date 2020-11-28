@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/providers/tournaments_provider.dart';
-import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
-import 'package:tournnis_admin/screens/matches/matches_screen.dart';
-import 'package:tournnis_admin/screens/play_offs/play_offs_screen.dart';
-import 'package:tournnis_admin/screens/players/players_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/menu_button.dart';
+import '../../providers/tournaments_provider.dart';
+import '../../screens/groups_stage/groups_stage_screen.dart';
+import '../../screens/matches/matches_screen.dart';
+import '../../screens/play_offs/play_offs_screen.dart';
+import '../../screens/players/players_screen.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "/home";

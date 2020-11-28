@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/text_data_card.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/screens/select_player/select_player_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../components/text_data_card.dart';
+import '../../../models/group_zone.dart';
+import '../../../providers/groups_provider.dart';
+import '../../../screens/select_player/select_player_screen.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class AddPlayerDialog extends StatefulWidget {
   AddPlayerDialog(this.group);
+
   final GroupZone group;
   @override
   _AddPlayerDialogState createState() => _AddPlayerDialogState();
@@ -19,8 +21,8 @@ class AddPlayerDialog extends StatefulWidget {
 class _AddPlayerDialogState extends State<AddPlayerDialog> {
   String name;
   String pid;
-
   bool tapped = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

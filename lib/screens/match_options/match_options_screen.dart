@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/match_card.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/screens/match_options/components/delete_match_dialog.dart';
-import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/match_card.dart';
+import '../../components/menu_button.dart';
+import '../../models/tournament_match.dart';
+import '../../providers/matches_provider.dart';
+import '../../screens/match_options/components/delete_match_dialog.dart';
+import '../../screens/matches/components/match_result_dialog.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class MatchOptionsScreen extends StatelessWidget {
   static const routeName = "/match-options";

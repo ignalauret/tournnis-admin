@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/components/search_bar.dart';
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
-import 'package:tournnis_admin/screens/select_player/components/players_list.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/search_bar.dart';
+import '../../models/player.dart';
+import '../../screens/create_player/create_player_screen.dart';
+import '../../screens/select_player/components/players_list.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class SelectPlayerScreen extends StatefulWidget {
   static const routeName = "/select-player";

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/screens/edit_group/components/add_player_dialog.dart';
-import 'package:tournnis_admin/screens/edit_group/components/change_name_dialog.dart';
-import 'package:tournnis_admin/screens/edit_group/components/delete_player_dialog.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/menu_button.dart';
+import '../../models/group_zone.dart';
+import '../../providers/groups_provider.dart';
+import '../../screens/edit_group/components/add_player_dialog.dart';
+import '../../screens/edit_group/components/change_name_dialog.dart';
+import '../../screens/edit_group/components/delete_player_dialog.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class EditGroupScreen extends StatelessWidget {
   static const routeName = "/edit-group";

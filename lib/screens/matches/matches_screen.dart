@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/components/category_selector.dart';
-import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
-import 'package:tournnis_admin/screens/matches/components/matches_list.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/category_selector.dart';
+import '../../screens/create_match/create_match_screen.dart';
+import '../../screens/matches/components/matches_list.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class MatchesScreen extends StatefulWidget {
   static const routeName = "/matches";

@@ -1,5 +1,5 @@
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/utils/utils.dart';
+import '../models/tournament_match.dart';
+import '../utils/utils.dart';
 
 class PlayOff {
   String id;

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/play_off.dart';
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/edit_play_off/edit_play_off_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
-import 'package:tournnis_admin/utils/utils.dart';
+
+import '../../../models/play_off.dart';
+import '../../../models/player.dart';
+import '../../../models/tournament_match.dart';
+import '../../../providers/groups_provider.dart';
+import '../../../providers/players_provider.dart';
+import '../../../screens/edit_play_off/edit_play_off_screen.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/custom_styles.dart';
+import '../../../utils/utils.dart';
 
 import 'draw.dart';
 
@@ -27,6 +28,64 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
   Widget build(BuildContext context) {
     final PlayOff playOff = ModalRoute.of(context).settings.arguments;
     final GroupsProvider groupsData = context.watch<GroupsProvider>();
+
+    void _createGroupZoneDraw(GroupsProvider groupsData) {
+      final players =
+          groupsData.getGroupsWinners(context, playOff.tid, playOff.category);
+      final List<TournamentMatch> matches = [];
+      for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
+        matches.add(
+          TournamentMatch(
+            tid: playOff.tid,
+            category: playOff.category,
+            isPredicted: true,
+            isPlayOff: true,
+          ),
+        );
+      }
+      matches.addAll(
+        List.generate(
+          Utils.pow2(playOff.nRounds - 1),
+          (index) => TournamentMatch(
+            pid1: players[kGroupMatchOrder[2 * index]],
+            pid2: players[kGroupMatchOrder[2 * index + 1]],
+            category: playOff.category,
+            tid: playOff.tid,
+            isPredicted: true,
+            isPlayOff: true,
+          ),
+        ),
+      );
+      playOff.predictedMatches = matches;
+    }
+
+    void _createLeagueDraw(List<Player> ranking) {
+      final List<TournamentMatch> matches = [];
+      for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
+        matches.add(
+          TournamentMatch(
+            tid: playOff.tid,
+            category: playOff.category,
+            isPredicted: true,
+            isPlayOff: true,
+          ),
+        );
+      }
+      matches.addAll(
+        List.generate(
+          Utils.pow2(playOff.nRounds - 1),
+          (index) => TournamentMatch(
+            pid1: ranking[kMatchOrder[2 * index]].id,
+            pid2: ranking[kMatchOrder[2 * index + 1]].id,
+            category: playOff.category,
+            tid: playOff.tid,
+            isPredicted: true,
+            isPlayOff: true,
+          ),
+        ),
+      );
+      playOff.predictedMatches = matches;
+    }
 
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
@@ -55,59 +114,9 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (playOff.category == 0) {
-              final players = groupsData.getGroupsWinners(
-                  context, playOff.tid, playOff.category);
-              final List<TournamentMatch> matches = [];
-              for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
-                matches.add(
-                  TournamentMatch(
-                    tid: playOff.tid,
-                    category: playOff.category,
-                    isPredicted: true,
-                    isPlayOff: true,
-                  ),
-                );
-              }
-              matches.addAll(
-                List.generate(
-                  Utils.pow2(playOff.nRounds - 1),
-                  (index) => TournamentMatch(
-                    pid1: players[kGroupMatchOrder[2 * index]],
-                    pid2: players[kGroupMatchOrder[2 * index + 1]],
-                    category: playOff.category,
-                    tid: playOff.tid,
-                    isPredicted: true,
-                    isPlayOff: true,
-                  ),
-                ),
-              );
-              playOff.predictedMatches = matches;
+              _createGroupZoneDraw(groupsData);
             } else {
-              final List<TournamentMatch> matches = [];
-              for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
-                matches.add(
-                  TournamentMatch(
-                    tid: playOff.tid,
-                    category: playOff.category,
-                    isPredicted: true,
-                    isPlayOff: true,
-                  ),
-                );
-              }
-              matches.addAll(
-                List.generate(
-                  Utils.pow2(playOff.nRounds - 1),
-                  (index) => TournamentMatch(
-                    pid1: snapshot.data[kMatchOrder[2 * index]].id,
-                    pid2: snapshot.data[kMatchOrder[2 * index + 1]].id,
-                    category: playOff.category,
-                    tid: playOff.tid,
-                    isPredicted: true,
-                    isPlayOff: true,
-                  ),
-                ),
-              );
-              playOff.predictedMatches = matches;
+              _createLeagueDraw(snapshot.data);
             }
             return Draw(playOff);
           } else {

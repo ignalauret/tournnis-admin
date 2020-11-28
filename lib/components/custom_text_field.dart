@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../utils/colors.dart';
+import '../utils/custom_styles.dart';
 
 class CustomTextField extends StatelessWidget {
   CustomTextField({
@@ -16,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   final String hint;
   final Color letterColor;
   final Color hintColor;
+
   @override
   Widget build(BuildContext context) {
     return TextField(

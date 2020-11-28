@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/action_button.dart';
-import 'package:tournnis_admin/components/custom_text_field.dart';
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/action_button.dart';
+import '../../components/custom_text_field.dart';
+import '../../models/player.dart';
+import '../../providers/players_provider.dart';
+import '../../utils/colors.dart';
+import '../../utils/constants.dart';
+import '../../utils/custom_styles.dart';
 
 class CreatePlayerScreen extends StatefulWidget {
   static const routeName = "/create-player";
@@ -33,16 +34,17 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
 
   @override
   void didChangeDependencies() {
-    if(player == null) {
+    if (player == null) {
       player = ModalRoute.of(context).settings.arguments;
-      if(player != null) {
+      if (player != null) {
         setState(() {
           isEdit = true;
           nameController.text = player.name;
           clubController.text = player.club;
-          selectedHand = player.handed == Handed.Right ? "Derecha" : "Izquierda";
+          selectedHand =
+              player.handed == Handed.Right ? "Derecha" : "Izquierda";
           selectedBackhand =
-          player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
+              player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
         });
       }
     }
@@ -57,7 +59,10 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       backgroundColor: CustomColors.kMainColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(isEdit ? "Editar Jugador" : "Nuevo jugador", style: CustomStyles.kAppBarTitle,),
+        title: Text(
+          isEdit ? "Editar Jugador" : "Nuevo jugador",
+          style: CustomStyles.kAppBarTitle,
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -84,31 +89,21 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      _buildSelector(
-                        "Derecha",
-                        "Izquierda",
-                        selectedHand,
-                        (hand) {
-                          setState(() {
-                            selectedHand = hand;
-                          });
-                        },
-                        size,
-                      ),
+                      _buildSelector("Derecha", "Izquierda", selectedHand,
+                          (hand) {
+                        setState(() {
+                          selectedHand = hand;
+                        });
+                      }, size),
                       SizedBox(
                         height: 20,
                       ),
-                      _buildSelector(
-                        "Dos manos",
-                        "Una mano",
-                        selectedBackhand,
-                        (backhand) {
-                          setState(() {
-                            selectedBackhand = backhand;
-                          });
-                        },
-                        size,
-                      ),
+                      _buildSelector("Dos manos", "Una mano", selectedBackhand,
+                          (backhand) {
+                        setState(() {
+                          selectedBackhand = backhand;
+                        });
+                      }, size),
                     ],
                   ),
                 ),

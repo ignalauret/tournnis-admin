@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/components/category_selector.dart';
-import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
-import 'package:tournnis_admin/screens/players/components/ranking.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/category_selector.dart';
+import '../../screens/create_player/create_player_screen.dart';
+import '../../screens/players/components/ranking.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class PlayersScreen extends StatefulWidget {
   static const routeName = "/players";
@@ -27,7 +28,10 @@ class _PlayersScreenState extends State<PlayersScreen> {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Jugadores", style: CustomStyles.kAppBarTitle,),
+        title: Text(
+          "Jugadores",
+          style: CustomStyles.kAppBarTitle,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -47,7 +51,7 @@ class _PlayersScreenState extends State<PlayersScreen> {
               CategorySelector(
                 selectedCat: selectedCategory,
                 select: selectCategory,
-                options: [0,1,2,3],
+                options: [0, 1, 2, 3],
               ),
               Container(
                 child: Row(
@@ -72,46 +76,10 @@ class _PlayersScreenState extends State<PlayersScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        "W",
-                        style: CustomStyles.kSubtitleStyle,
-                      ),
-                    ),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        "3S",
-                        style: CustomStyles.kSubtitleStyle,
-                      ),
-                    ),
-                    Container(
-                      width: 20,
-                      height: 20,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        "L",
-                        style: CustomStyles.kSubtitleStyle,
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 20,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(right: 5),
-                      child: Text(
-                        "PTS",
-                        style: CustomStyles.kSubtitleStyle,
-                      ),
-                    ),
+                    _buildStatTitle(title: "W"),
+                    _buildStatTitle(title: "3S"),
+                    _buildStatTitle(title: "L"),
+                    _buildStatTitle(title: "PTS", width: 35),
                     SizedBox(
                       width: 5,
                     ),
@@ -124,6 +92,20 @@ class _PlayersScreenState extends State<PlayersScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container _buildStatTitle(
+      {String title, double width = 20, double height = 20}) {
+    return Container(
+      width: width,
+      height: height,
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(right: 5),
+      child: Text(
+        title,
+        style: CustomStyles.kSubtitleStyle,
       ),
     );
   }

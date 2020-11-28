@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/models/play_off.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/play_offs_provider.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/menu_button.dart';
+import '../../models/play_off.dart';
+import '../../models/tournament_match.dart';
+import '../../providers/play_offs_provider.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class EditPlayOffScreen extends StatelessWidget {
   static const routeName = "/edit-play-off";

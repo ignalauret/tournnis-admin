@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:tournnis_admin/models/play_off.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/utils/constants.dart';
+
+import '../models/play_off.dart';
+import '../models/tournament_match.dart';
+import '../providers/matches_provider.dart';
+import '../utils/constants.dart';
 
 class PlayOffsProvider extends ChangeNotifier {
   PlayOffsProvider() {
@@ -24,6 +25,18 @@ class PlayOffsProvider extends ChangeNotifier {
     _playOffs = await fetchPlayOffs();
   }
 
+  PlayOff getPlayOff(String tid, int category) {
+    return _playOffs.firstWhere(
+          (poff) => poff.tid == tid && poff.category == category,
+      orElse: () => PlayOff(
+        tid: tid,
+        category: category,
+        matches: List.generate(15, (index) => index.toString()),
+        hasStarted: false,
+      ),
+    );
+  }
+
   void addLocalPlayOff(PlayOff playOff) {
     _playOffs.add(playOff);
     notifyListeners();
@@ -34,6 +47,7 @@ class PlayOffsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /* CRUD Functions */
   Future<List<PlayOff>> fetchPlayOffs() async {
     final response = await http.get(Constants.kDbPath + "/playOffs.json");
     if (response.statusCode == 200) {
@@ -48,18 +62,6 @@ class PlayOffsProvider extends ChangeNotifier {
     } else {
       return null;
     }
-  }
-
-  PlayOff getPlayOff(String tid, int category) {
-    return _playOffs.firstWhere(
-      (poff) => poff.tid == tid && poff.category == category,
-      orElse: () => PlayOff(
-        tid: tid,
-        category: category,
-        matches: List.generate(15, (index) => index.toString()),
-        hasStarted: false,
-      ),
-    );
   }
 
   Future<bool> createPlayOff(BuildContext context, PlayOff playOff) async {

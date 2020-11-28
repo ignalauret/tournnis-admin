@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/utils/constants.dart';
+
+import '../models/player.dart';
+import '../models/tournament_match.dart';
+import '../providers/matches_provider.dart';
+import '../utils/constants.dart';
 
 class PlayersProvider extends ChangeNotifier {
   PlayersProvider() {
@@ -22,6 +23,37 @@ class PlayersProvider extends ChangeNotifier {
 
   Future<void> getPlayers() async {
     _players = await fetchPlayers();
+    notifyListeners();
+  }
+
+  void addLocalPlayer(Player player) {
+    _players.add(player);
+    notifyListeners();
+  }
+
+  void removeLocalPlayer(String pid) {
+    _players.removeWhere((player) => player.id == pid);
+    notifyListeners();
+  }
+
+  void editLocalPlayer(String pid, Map<String, dynamic> editData) {
+    final player = getPlayerById(pid);
+    player.name = editData["name"];
+    player.club = editData["club"];
+    player.handed = editData["handed"] == "r" ? Handed.Right : Handed.Left;
+    player.backhand =
+    editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
+    notifyListeners();
+  }
+
+  void setLocalPlayerPoints(String id, int category, int points) {
+    getPlayerById(id).globalCategoryPoints[category] = points;
+    notifyListeners();
+  }
+
+  void setLocalPlayerTournamentPoints(
+      String pid, String tid, int category, int points) {
+    getPlayerById(pid).tournamentCategoryPoints[category][tid] = points;
     notifyListeners();
   }
 
@@ -42,37 +74,6 @@ class PlayersProvider extends ChangeNotifier {
     }
   }
 
-  void addLocalPlayer(Player player) {
-    _players.add(player);
-    notifyListeners();
-  }
-
-  void removeLocalPlayer(String pid) {
-    _players.removeWhere((player) => player.id == pid);
-    notifyListeners();
-  }
-
-  void editLocalPlayer(String pid, Map<String, dynamic> editData) {
-    final player = getPlayerById(pid);
-    player.name = editData["name"];
-    player.club = editData["club"];
-    player.handed = editData["handed"] == "r" ? Handed.Right : Handed.Left;
-    player.backhand =
-        editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
-    notifyListeners();
-  }
-
-  void setPlayerPoints(String id, int category, int points) {
-    getPlayerById(id).globalCategoryPoints[category] = points;
-    notifyListeners();
-  }
-
-  void setPlayerTournamentPoints(
-      String pid, String tid, int category, int points) {
-    getPlayerById(pid).tournamentCategoryPoints[category][tid] = points;
-    notifyListeners();
-  }
-
   Future<bool> createPlayer(
       {String name, String club, Backhand backhand, Handed hand}) async {
     final player = Player(
@@ -81,9 +82,6 @@ class PlayersProvider extends ChangeNotifier {
       nationality: "Argentina",
       backhand: backhand,
       handed: hand,
-      birth: DateTime(1990, 10, 10),
-      profileUrl: "assets/img/ignacio_lauret_profile.png",
-      imageUrl: "assets/img/ignacio_lauret_image.png",
       globalCategoryPoints: [0, 0, 0, 0],
       tournamentCategoryPoints: [
         {"default": 0},
@@ -160,14 +158,14 @@ class PlayersProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       // Add points in local memory.
-      setPlayerPoints(pid, category, newPoints);
+      setLocalPlayerPoints(pid, category, newPoints);
       // try adding points to tournament in DB.
       final response2 = await http.patch(
         Constants.kDbPath + "/players/$pid/tournamentPoints/$category.json",
         body: jsonEncode({"$tid": newTournamentPoints}),
       );
       if (response2.statusCode == 200) {
-        setPlayerTournamentPoints(pid, tid, category, newTournamentPoints);
+        setLocalPlayerTournamentPoints(pid, tid, category, newTournamentPoints);
         return true;
       }
       return false;
@@ -201,46 +199,46 @@ class PlayersProvider extends ChangeNotifier {
   /* Ranking */
 
   final Map<String, List<Player>> tournamentRankingCache = {};
-  final Map<int, List<Player>> globalRankingCache = {};
+  //final Map<int, List<Player>> globalRankingCache = {};
 
   void refreshTournamentCache() {
     tournamentRankingCache.clear();
   }
 
-  void refreshGlobalCache() {
-    globalRankingCache.clear();
-  }
+  // void refreshGlobalCache() {
+  //   globalRankingCache.clear();
+  // }
 
-  Future<List<Player>> getGlobalRanking(int category) async {
-    // Return if cached
-    if (globalRankingCache.containsKey(category)) {
-      return globalRankingCache[category];
-    }
-    final playersList = await players;
-    // Remove players with no points.
-    playersList
-        .removeWhere((player) => player.getPointsOfCategory(category) == 0);
-    // Sort by category global points.
-    playersList.sort(
-      (p1, p2) => p2.getPointsOfCategory(category).compareTo(
-            p1.getPointsOfCategory(category),
-          ),
-    );
-    globalRankingCache[category] = [...playersList];
-    notifyListeners();
-    return playersList;
-  }
-
-  Future<int> getPlayerGlobalRanking(String pid, int category) async {
-    if (pid == null) return 0;
-    // If not cached, get ranking
-    if (!globalRankingCache.containsKey(category)) {
-      await getGlobalRanking(category);
-    }
-    return globalRankingCache[category]
-            .indexWhere((player) => player.id == pid) +
-        1;
-  }
+  // Future<List<Player>> getGlobalRanking(int category) async {
+  //   // Return if cached
+  //   if (globalRankingCache.containsKey(category)) {
+  //     return globalRankingCache[category];
+  //   }
+  //   final playersList = await players;
+  //   // Remove players with no points.
+  //   playersList
+  //       .removeWhere((player) => player.getPointsOfCategory(category) == 0);
+  //   // Sort by category global points.
+  //   playersList.sort(
+  //     (p1, p2) => p2.getPointsOfCategory(category).compareTo(
+  //           p1.getPointsOfCategory(category),
+  //         ),
+  //   );
+  //   globalRankingCache[category] = [...playersList];
+  //   notifyListeners();
+  //   return playersList;
+  // }
+  //
+  // Future<int> getPlayerGlobalRanking(String pid, int category) async {
+  //   if (pid == null) return 0;
+  //   // If not cached, get ranking
+  //   if (!globalRankingCache.containsKey(category)) {
+  //     await getGlobalRanking(category);
+  //   }
+  //   return globalRankingCache[category]
+  //           .indexWhere((player) => player.id == pid) +
+  //       1;
+  // }
 
   Future<List<Player>> getTournamentRanking(
       BuildContext context, String tid, int category) async {
@@ -249,7 +247,7 @@ class PlayersProvider extends ChangeNotifier {
       return tournamentRankingCache["$tid/$category"];
     }
     final playersList = await players;
-    // Remove players that dont have points.
+    // Remove players that don't have points.
     // playersList.removeWhere(
     //     (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
     // Sort by points.

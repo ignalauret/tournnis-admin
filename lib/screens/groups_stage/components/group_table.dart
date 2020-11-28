@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../models/group_zone.dart';
+import '../../../providers/matches_provider.dart';
+import '../../../providers/players_provider.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class GroupTable extends StatelessWidget {
   GroupTable(this.group);
@@ -13,36 +14,36 @@ class GroupTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerData = context.watch<PlayersProvider>();
-    final List<String> orderedPids = group.playersIds
-      ..sort(
-        (pid1, pid2) => context.select<MatchesProvider, int>(
-          (data) => data.comparePlayers(
-            group.tid,
-            group.category,
-            playerData.getPlayerById(pid1),
-            playerData.getPlayerById(pid2),
+    return Consumer2<MatchesProvider, PlayersProvider>(
+      builder: (context, matchesData, playersData, _) {
+        final List<String> orderedPids = group.playersIds
+          ..sort(
+            (pid1, pid2) => matchesData.comparePlayers(
+              group.tid,
+              group.category,
+              playersData.getPlayerById(pid1),
+              playersData.getPlayerById(pid2),
+            ),
+          );
+        return Container(
+          decoration: BoxDecoration(
+            color: CustomColors.kWhiteColor,
+            borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
           ),
-        ),
-      );
-
-    return Container(
-      decoration: BoxDecoration(
-        color: CustomColors.kWhiteColor,
-        borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
-      ),
-      child: Column(
-        children: List.generate(group.playersIds.length, (index) => index)
-            .map(
-              (index) => _buildPlayerRow(
-                context,
-                index,
-                orderedPids,
-                playerData,
-              ),
-            )
-            .toList(),
-      ),
+          child: Column(
+            children: List.generate(group.playersIds.length, (index) => index)
+                .map(
+                  (index) => _buildPlayerRow(
+                    context,
+                    index,
+                    orderedPids,
+                    playersData,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      },
     );
   }
 

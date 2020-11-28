@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/match_card.dart';
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/match_card.dart';
+import '../../models/player.dart';
+import '../../models/tournament_match.dart';
+import '../../providers/matches_provider.dart';
+import '../../providers/players_provider.dart';
+import '../../screens/create_player/create_player_screen.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   static const routeName = "/player-detail";

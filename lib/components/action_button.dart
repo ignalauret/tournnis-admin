@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
+
+import '../utils/colors.dart';
+import '../utils/constants.dart';
 
 class ActionButton extends StatefulWidget {
   ActionButton(this.label, this.onTap, {this.enabled = true});

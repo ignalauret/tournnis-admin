@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/utils/constants.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/tournament_match.dart';
+import '../providers/matches_provider.dart';
+import '../utils/constants.dart';
 import '../models/group_zone.dart';
 
 class GroupsProvider extends ChangeNotifier {
@@ -27,6 +28,18 @@ class GroupsProvider extends ChangeNotifier {
   GroupZone getGroupById(String id) {
     if (id == null) return null;
     return _groups.firstWhere((group) => group.id == id, orElse: () => null);
+  }
+
+  List<String> getGroupsWinners(BuildContext context, String tid, int category) {
+    final List<String> pids = [];
+    final matchesData = context.watch<MatchesProvider>();
+    for(int i = 0; i < _groups.length; i++) {
+      if(_groups[i].tid != tid || _groups[i].category != category) continue;
+      final players = [..._groups[i].playersIds];
+      players.sort((p1, p2) => matchesData.comparePlayersWithPid(context, tid, category, p1, p2));
+      pids.addAll(players.sublist(0,2));
+    }
+    return pids;
   }
 
   void addLocalGroup(GroupZone group) {
@@ -63,17 +76,7 @@ class GroupsProvider extends ChangeNotifier {
     }
   }
 
-  List<String> getGroupsWinners(BuildContext context, String tid, int category) {
-    final List<String> pids = [];
-    final matchesData = context.watch<MatchesProvider>();
-    for(int i = 0; i < _groups.length; i++) {
-      if(_groups[i].tid != tid || _groups[i].category != category) continue;
-      final players = [..._groups[i].playersIds];
-      players.sort((p1, p2) => matchesData.comparePlayersWithPid(context, tid, category, p1, p2));
-      pids.addAll(players.sublist(0,2));
-    }
-    return pids;
-  }
+
 
   Future<bool> createGroup(BuildContext context, GroupZone group) async {
     final ids =

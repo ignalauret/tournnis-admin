@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:tournnis_admin/models/tournament.dart';
-import 'package:tournnis_admin/utils/constants.dart';
+
+import '../models/tournament.dart';
+import '../utils/constants.dart';
 
 class TournamentsProvider extends ChangeNotifier {
-  
   List<Tournament> _tournaments;
 
   Future<List<Tournament>> get tournaments async {
@@ -16,15 +16,6 @@ class TournamentsProvider extends ChangeNotifier {
 
   Future<void> getTournaments() async {
     _tournaments = await fetchTournaments();
-  }
-
-  Tournament getTournamentById(String tid) {
-    if (tid == null) return null;
-    return _tournaments.firstWhere((tournament) => tournament.id == tid, orElse: () => null);
-  }
-
-  String getTournamentName(String tid) {
-    return getTournamentById(tid).name;
   }
 
   void addLocalTournament(Tournament group) {
@@ -46,11 +37,24 @@ class TournamentsProvider extends ChangeNotifier {
       final List<Tournament> temp = responseData.entries
           .map(
             (entry) => Tournament.fromJson(entry.key, entry.value),
-      )
+          )
           .toList();
       return temp;
     } else {
       return null;
     }
+  }
+
+  /* Getters */
+
+  Tournament getTournamentById(String tid) {
+    if (tid == null) return null;
+    return _tournaments.firstWhere((tournament) => tournament.id == tid,
+        orElse: () => null);
+  }
+
+  String getTournamentName(String tid) {
+    if(tid == null) return null;
+    return getTournamentById(tid).name;
   }
 }

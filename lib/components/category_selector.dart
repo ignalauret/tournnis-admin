@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
 
-const Categories = ["Platino", "Oro", "Plata", "Bronce", "Todas"];
+import '../utils/colors.dart';
+import '../utils/custom_styles.dart';
+
+const kCategories = ["Platino", "Oro", "Plata", "Bronce", "Todas"];
 
 class CategorySelector extends StatelessWidget {
   CategorySelector({this.select, this.selectedCat, this.options});
+
   CategorySelector.withAll({this.select, this.selectedCat})
       : options = [4, 0, 1, 2, 3];
 
@@ -23,7 +25,7 @@ class CategorySelector extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           ...options.map(
-            (index) => _buildCategoryButton(Categories[index], index),
+            (index) => _buildCategoryButton(kCategories[index], index),
           ),
         ],
       ),

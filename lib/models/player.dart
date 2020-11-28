@@ -7,7 +7,7 @@ class Player {
   Player({
     this.id,
     @required this.name,
-    @required this.birth,
+    this.birth,
     @required this.globalCategoryPoints,
     @required this.tournamentCategoryPoints,
     @required this.nationality,

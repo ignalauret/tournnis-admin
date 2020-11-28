@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/action_button.dart';
-import 'package:tournnis_admin/components/custom_text_field.dart';
-import 'package:tournnis_admin/components/text_data_card.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/screens/select_player/select_player_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/action_button.dart';
+import '../../components/custom_text_field.dart';
+import '../../components/text_data_card.dart';
+import '../../models/group_zone.dart';
+import '../../providers/groups_provider.dart';
+import '../../screens/select_player/select_player_screen.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class CreateGroup extends StatefulWidget {
   static const routeName = "/create-group";
@@ -21,8 +22,19 @@ class _CreateGroupState extends State<CreateGroup> {
   int players = 4;
   List<String> pids = [null, null, null, null];
   List<String> names = [null, null, null, null];
-
   String tid;
+
+  @override
+  void didChangeDependencies() {
+    tid = ModalRoute.of(context).settings.arguments;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,50 +73,7 @@ class _CreateGroupState extends State<CreateGroup> {
                       SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                players--;
-                                pids.removeLast();
-                                names.removeLast();
-                              });
-                            },
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              child: Icon(
-                                Icons.remove,
-                                color: CustomColors.kAccentColor,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "$players Jugadores",
-                            style: CustomStyles.kTitleStyle,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                players++;
-                                pids.add(null);
-                                names.add(null);
-                              });
-                            },
-                            child: Container(
-                              height: 30,
-                              width: 30,
-                              child: Icon(
-                                Icons.add,
-                                color: CustomColors.kAccentColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildPlayersTitle(),
                       ...List.generate(names.length, (index) => index)
                           .map(
                             (i) => _buildPlayerSelector(size, i),
@@ -142,6 +111,53 @@ class _CreateGroupState extends State<CreateGroup> {
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildPlayersTitle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              players--;
+              pids.removeLast();
+              names.removeLast();
+            });
+          },
+          child: Container(
+            height: 30,
+            width: 30,
+            child: Icon(
+              Icons.remove,
+              color: CustomColors.kAccentColor,
+            ),
+          ),
+        ),
+        Text(
+          "$players Jugadores",
+          style: CustomStyles.kTitleStyle,
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              players++;
+              pids.add(null);
+              names.add(null);
+            });
+          },
+          child: Container(
+            height: 30,
+            width: 30,
+            child: Icon(
+              Icons.add,
+              color: CustomColors.kAccentColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

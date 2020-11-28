@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/custom_text_field.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../components/custom_text_field.dart';
+import '../../../models/group_zone.dart';
+import '../../../providers/groups_provider.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class ChangeNameDialog extends StatefulWidget {
   ChangeNameDialog(this.group);
+
   final GroupZone group;
   @override
   _ChangeNameDialogState createState() => _ChangeNameDialogState();
@@ -16,7 +18,6 @@ class ChangeNameDialog extends StatefulWidget {
 
 class _ChangeNameDialogState extends State<ChangeNameDialog> {
   final controller = TextEditingController();
-
   bool tapped = false;
 
   @override

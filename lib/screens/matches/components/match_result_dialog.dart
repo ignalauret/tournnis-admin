@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/custom_text_field.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../components/custom_text_field.dart';
+import '../../../models/tournament_match.dart';
+import '../../../providers/matches_provider.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class MatchResultDialog extends StatefulWidget {
   MatchResultDialog(this.match);

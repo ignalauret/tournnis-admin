@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+import '../utils/constants.dart';
+import '../utils/custom_styles.dart';
 
 class TextDataCard extends StatelessWidget {
   TextDataCard({

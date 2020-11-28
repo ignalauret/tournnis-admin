@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/match_options/match_options_screen.dart';
-import 'package:tournnis_admin/screens/matches/components/match_result_dialog.dart';
-import 'package:tournnis_admin/utils/TimeMethods.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../models/tournament_match.dart';
+import '../providers/matches_provider.dart';
+import '../providers/players_provider.dart';
+import '../screens/match_options/match_options_screen.dart';
+import '../screens/matches/components/match_result_dialog.dart';
+import '../utils/time_methods.dart';
+import '../utils/colors.dart';
+import '../utils/constants.dart';
+import '../utils/custom_styles.dart';
 
 class MatchCard extends StatelessWidget {
   MatchCard(this.match);
@@ -53,11 +54,12 @@ class MatchCard extends StatelessWidget {
             _buildHeader(
                 match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
-              onTap: match.isPredicted || match.pid1 == null || match.pid2 == null
-                  ? null
-                  : () => Navigator.of(context).pushNamed(
-                      MatchOptionsScreen.routeName,
-                      arguments: match),
+              onTap:
+                  match.isPredicted || match.pid1 == null || match.pid2 == null
+                      ? null
+                      : () => Navigator.of(context).pushNamed(
+                          MatchOptionsScreen.routeName,
+                          arguments: match),
               child: Container(
                 height: 70,
                 width: size.width * 0.85,
@@ -123,34 +125,7 @@ class MatchCard extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  width: 70,
-                                  height: 70,
-                                  child: match.date == null
-                                      ? IconButton(
-                                          icon: Icon(
-                                            Icons.calendar_today,
-                                            color: CustomColors.kAccentColor,
-                                            size: 35,
-                                          ),
-                                          onPressed: () =>
-                                              _setMatchDate(context),
-                                        )
-                                      : IconButton(
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: CustomColors.kAccentColor,
-                                            size: 35,
-                                          ),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  MatchResultDialog(match),
-                                            );
-                                          },
-                                        ),
-                                ),
+                                _buildMatchAction(context, match),
                               ],
                             ),
                     ),
@@ -281,6 +256,35 @@ class MatchCard extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+
+  Container _buildMatchAction(BuildContext context, TournamentMatch match) {
+    return Container(
+      width: 70,
+      height: 70,
+      child: match.date == null
+          ? IconButton(
+              icon: Icon(
+                Icons.calendar_today,
+                color: CustomColors.kAccentColor,
+                size: 35,
+              ),
+              onPressed: () => _setMatchDate(context),
+            )
+          : IconButton(
+              icon: Icon(
+                Icons.add,
+                color: CustomColors.kAccentColor,
+                size: 35,
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => MatchResultDialog(match),
+                );
+              },
+            ),
     );
   }
 }

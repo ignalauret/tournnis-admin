@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/providers/play_offs_provider.dart';
-import 'package:tournnis_admin/screens/play_offs/components/play_off_draw.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../components/menu_button.dart';
+import '../../providers/play_offs_provider.dart';
+import '../../screens/play_offs/components/play_off_draw.dart';
+import '../../utils/colors.dart';
+import '../../utils/custom_styles.dart';
 
 class PlayOffsScreen extends StatefulWidget {
   static const routeName = "/play-offs";

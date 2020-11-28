@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/screens/select_player/components/players_list.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../models/group_zone.dart';
+import '../../../providers/groups_provider.dart';
+import '../../../providers/players_provider.dart';
+import '../../../screens/select_player/components/players_list.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class DeletePlayerDialog extends StatefulWidget {
   DeletePlayerDialog(this.group);
+
   final GroupZone group;
   @override
   _DeletePlayerDialogState createState() => _DeletePlayerDialogState();
@@ -17,8 +19,8 @@ class DeletePlayerDialog extends StatefulWidget {
 
 class _DeletePlayerDialogState extends State<DeletePlayerDialog> {
   String selectedPid;
-
   bool tapped = false;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/menu_button.dart';
-import 'package:tournnis_admin/models/tournament.dart';
-import 'package:tournnis_admin/providers/tournaments_provider.dart';
-import 'package:tournnis_admin/screens/home/home_screen.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../utils/custom_styles.dart';
+import '../../components/menu_button.dart';
+import '../../models/tournament.dart';
+import '../../providers/tournaments_provider.dart';
+import '../../screens/home/home_screen.dart';
+import '../../utils/colors.dart';
 
 class SelectTournamentScreen extends StatelessWidget {
   @override
@@ -13,7 +14,10 @@ class SelectTournamentScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
-        title: Text("Tournnis"),
+        title: Text(
+          "Tournnis",
+          style: CustomStyles.kAppBarTitle,
+        ),
       ),
       body: SafeArea(
         child: FutureBuilder<List<Tournament>>(

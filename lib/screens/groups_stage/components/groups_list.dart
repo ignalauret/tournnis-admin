@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/providers/groups_provider.dart';
-import 'package:tournnis_admin/screens/group_matches/group_matches_screen.dart';
-import 'package:tournnis_admin/screens/groups_stage/components/group_table.dart';
-import 'package:tournnis_admin/utils/colors.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
+
+import '../../../models/group_zone.dart';
+import '../../../providers/groups_provider.dart';
+import '../../../screens/group_matches/group_matches_screen.dart';
+import '../../../screens/groups_stage/components/group_table.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/constants.dart';
+import '../../../utils/custom_styles.dart';
 
 class GroupsList extends StatelessWidget {
   GroupsList(this.selectedCategory, this.tid);

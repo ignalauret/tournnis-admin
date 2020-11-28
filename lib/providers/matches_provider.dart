@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/models/group_zone.dart';
-import 'package:tournnis_admin/models/player.dart';
-import 'package:tournnis_admin/models/tournament_match.dart';
-import 'package:tournnis_admin/providers/play_offs_provider.dart';
-import 'package:tournnis_admin/providers/players_provider.dart';
-import 'package:tournnis_admin/utils/constants.dart';
-import 'package:tournnis_admin/utils/utils.dart';
+
+import '../models/group_zone.dart';
+import '../models/player.dart';
+import '../models/tournament_match.dart';
+import '../providers/play_offs_provider.dart';
+import '../providers/players_provider.dart';
+import '../utils/constants.dart';
+import '../utils/utils.dart';
 
 class MatchesProvider extends ChangeNotifier {
   MatchesProvider() {
@@ -39,6 +39,23 @@ class MatchesProvider extends ChangeNotifier {
 
   List<TournamentMatch> getMatchesById(List<String> ids) {
     return ids.map((id) => getMatchById(id)).toList();
+  }
+
+  List<TournamentMatch> getPlayerMatches(String pid) {
+    final matches = _matches
+        .where((match) => match.pid1 == pid || match.pid2 == pid)
+        .toList();
+    return matches;
+  }
+
+  List<TournamentMatch> getPlayerMatchesFromTournament(
+      String pid, String tid, int category) {
+    final matches = _matches
+        .where((match) =>
+    match.pid1 == pid ||
+        match.pid2 == pid && match.category == category && match.tid == tid)
+        .toList();
+    return matches;
   }
 
   void addLocalMatch(TournamentMatch match) {
@@ -154,57 +171,6 @@ class MatchesProvider extends ChangeNotifier {
     return ids;
   }
 
-  Future<bool> editPlayerOfMatches(
-      List<String> mids, String prevPid, String newPid) async {
-    for (String mid in mids) {
-      if (!await editPlayerOfMatch(mid, prevPid, newPid)) return false;
-    }
-    return true;
-  }
-
-  Future<bool> editPlayerOfMatch(
-      String mid, String prevPid, String newPid) async {
-    final match = getMatchById(mid);
-    Map<String, String> body;
-    if (match.pid1 == prevPid) {
-      body = {"pid1": newPid};
-    } else if (match.pid2 == prevPid) {
-      body = {"pid2": newPid};
-    } else {
-      return true;
-    }
-    final response = await http.patch(
-      Constants.kDbPath + "/matches/$mid.json",
-      body: jsonEncode(body),
-    );
-    if (response.statusCode == 200) {
-      editLocalPlayerOfMatch(mid, prevPid, newPid);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future<bool> editPlayerOfMatchAtPosition(
-      String mid, int position, String newPid) async {
-    Map<String, String> body;
-    if (position == 0) {
-      body = {"pid1": newPid};
-    } else {
-      body = {"pid2": newPid};
-    }
-    final response = await http.patch(
-      Constants.kDbPath + "/matches/$mid.json",
-      body: jsonEncode(body),
-    );
-    if (response.statusCode == 200) {
-      editLocalPlayerOfMatchAtPosition(mid, position, newPid);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   Future<bool> deleteMatch(BuildContext context, String mid) async {
     // Try deleting match in DB.
     final response =
@@ -231,6 +197,46 @@ class MatchesProvider extends ChangeNotifier {
       if (!await deleteMatch(context, mid)) return false;
     }
     return true;
+  }
+
+  Future<bool> editPlayerOfMatches(
+      List<String> mids, String prevPid, String newPid) async {
+    for (String mid in mids) {
+      if (!await editPlayerOfMatch(mid, prevPid, newPid)) return false;
+    }
+    return true;
+  }
+
+  Future<bool> editPlayerOfMatch(
+      String mid, String prevPid, String newPid) async {
+    final match = getMatchById(mid);
+    if (match.pid1 == prevPid) {
+      return await editPlayerOfMatchAtPosition(mid, 0, newPid);
+    } else if (match.pid2 == prevPid) {
+      return await editPlayerOfMatchAtPosition(mid, 1, newPid);
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> editPlayerOfMatchAtPosition(
+      String mid, int position, String newPid) async {
+    Map<String, String> body;
+    if (position == 0) {
+      body = {"pid1": newPid};
+    } else {
+      body = {"pid2": newPid};
+    }
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/$mid.json",
+      body: jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      editLocalPlayerOfMatchAtPosition(mid, position, newPid);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<bool> addDate(TournamentMatch match, DateTime date) async {
@@ -337,23 +343,6 @@ class MatchesProvider extends ChangeNotifier {
     final p2 = context
         .select<PlayersProvider, Player>((data) => data.getPlayerById(pid2));
     return comparePlayers(tid, category, p1, p2);
-  }
-
-  List<TournamentMatch> getPlayerMatches(String pid) {
-    final matches = _matches
-        .where((match) => match.pid1 == pid || match.pid2 == pid)
-        .toList();
-    return matches;
-  }
-
-  List<TournamentMatch> getPlayerMatchesFromTournament(
-      String pid, String tid, int category) {
-    final matches = _matches
-        .where((match) =>
-            match.pid1 == pid ||
-            match.pid2 == pid && match.category == category && match.tid == tid)
-        .toList();
-    return matches;
   }
 
   Map<String, int> getPlayerResultsFromTournament(

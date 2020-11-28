@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:diagonal_scrollview/diagonal_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/match_card.dart';
-import 'package:tournnis_admin/models/play_off.dart';
-import 'package:tournnis_admin/providers/matches_provider.dart';
-import 'package:tournnis_admin/utils/custom_styles.dart';
-import 'package:tournnis_admin/utils/utils.dart';
+
+import '../../../components/match_card.dart';
+import '../../../models/play_off.dart';
+import '../../../providers/matches_provider.dart';
+import '../../../utils/custom_styles.dart';
+import '../../../utils/utils.dart';
 
 const kRoundNames = [
   "Final",
@@ -15,6 +16,8 @@ const kRoundNames = [
   "Cuartos de final",
   "Octavos de final"
 ];
+
+const kMatchCardMargin = 10.0;
 
 class Draw extends StatelessWidget {
   Draw(this.playOff);
@@ -26,10 +29,10 @@ class Draw extends StatelessWidget {
     final matchesProvider = context.watch<MatchesProvider>();
     return DiagonalScrollView(
       maxHeight: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      maxWidth: (size.width * 0.85 + 20) * playOff.nRounds,
+      maxWidth: (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
       child: Container(
         height: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-        width: (size.width * 0.85 + 20) * playOff.nRounds,
+        width: (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
         child: Row(
           children: List.generate(
             playOff.nRounds,
@@ -54,7 +57,7 @@ Column _buildRoundColumn(
           (mid) => Container(
             height: 110,
             margin: EdgeInsets.symmetric(
-              horizontal: 10,
+              horizontal: 2 * kMatchCardMargin,
               vertical: max(
                   0,
                   55.0 +
@@ -84,7 +87,7 @@ Column _buildPredictedRoundColumn(PlayOff playOff, int round) {
             (match) => Container(
               height: 110,
               margin: EdgeInsets.symmetric(
-                horizontal: 10,
+                horizontal: kMatchCardMargin,
                 vertical: max(
                     0,
                     55.0 +
