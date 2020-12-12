@@ -12,6 +12,7 @@ class Player {
     @required this.tournamentCategoryPoints,
     @required this.nationality,
     @required this.club,
+    this.racket,
     this.profileUrl,
     this.imageUrl,
     this.backhand = Backhand.TwoHanded,
@@ -20,12 +21,13 @@ class Player {
 
   String id;
   String name;
-  final DateTime birth;
+  DateTime birth;
   final List<int> globalCategoryPoints; // [points [int]]
   final List<Map<String, int>>
       tournamentCategoryPoints; // [{category [int] : points [int]}]
   final String profileUrl;
   final String imageUrl;
+  String racket;
   Backhand backhand;
   Handed handed;
   final String nationality;
@@ -88,6 +90,7 @@ class Player {
       club: playerData["club"],
       profileUrl: playerData["profileUrl"],
       imageUrl: playerData["coverUrl"],
+      racket: playerData["racket"],
       handed: parseHand(playerData["handed"]),
       backhand: parseBackhand(playerData["backhand"]),
       globalCategoryPoints: List<int>.from(playerData["points"]),
@@ -102,6 +105,7 @@ class Player {
       "name": name,
       "club": club,
       "nationality": nationality,
+      "racket": racket,
       "backhand": getParsedBackhand(),
       "handed": getParsedHand(),
       "birth": birth.toString(),

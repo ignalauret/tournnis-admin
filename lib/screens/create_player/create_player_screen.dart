@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/text_data_card.dart';
 
 import '../../components/action_button.dart';
 import '../../components/custom_text_field.dart';
@@ -18,7 +20,9 @@ class CreatePlayerScreen extends StatefulWidget {
 class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   final nameController = TextEditingController();
   final clubController = TextEditingController();
+  final racketController = TextEditingController();
 
+  DateTime birthDate = DateTime(1980, 1, 1);
   String selectedHand = "Derecha";
   String selectedBackhand = "Dos manos";
 
@@ -41,15 +45,33 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
           isEdit = true;
           nameController.text = player.name;
           clubController.text = player.club;
+          racketController.text = player.racket;
           selectedHand =
               player.handed == Handed.Right ? "Derecha" : "Izquierda";
           selectedBackhand =
               player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
+          birthDate = player.birth;
         });
       }
     }
 
     super.didChangeDependencies();
+  }
+
+  Future<void> _selectDate() async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: birthDate,
+      firstDate: DateTime(1940, 8),
+      lastDate: DateTime(2020),
+      helpText: "Elegir fecha",
+      confirmText: "Confirmar",
+      cancelText: "Cancelar",
+    );
+    if (picked != null && picked != birthDate)
+      setState(() {
+        birthDate = picked;
+      });
   }
 
   @override
@@ -87,6 +109,23 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         hint: "Ingrese el nombre del club",
                       ),
                       SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: racketController,
+                        label: "Raqueta",
+                        hint: "Ingrese la raqueta del jugador",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextDataCard(
+                        title: "Fecha de nacimiento",
+                        data: DateFormat("d/M/y").format(birthDate),
+                        size: size,
+                        onTap: _selectDate,
+                      ),
+                      SizedBox(
                         height: 20,
                       ),
                       _buildSelector("Derecha", "Izquierda", selectedHand,
@@ -115,15 +154,17 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     context
                         .read<PlayersProvider>()
                         .editPlayer(
-                          player.id,
-                          nameController.text,
-                          clubController.text,
-                          selectedHand == "Derecha"
+                          pid: player.id,
+                          name: nameController.text,
+                          club: clubController.text,
+                          hand: selectedHand == "Derecha"
                               ? Handed.Right
                               : Handed.Left,
-                          selectedBackhand == "Dos manos"
+                          backhand: selectedBackhand == "Dos manos"
                               ? Backhand.TwoHanded
                               : Backhand.OneHanded,
+                          birthDate: birthDate,
+                          racket: racketController.text,
                         )
                         .then(
                           (value) => Navigator.of(context).pop(),
@@ -140,6 +181,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           backhand: selectedBackhand == "Dos manos"
                               ? Backhand.TwoHanded
                               : Backhand.OneHanded,
+                          birthDate: birthDate,
+                          racket: racketController.text,
                         )
                         .then((value) {
                       Navigator.of(context).pop();

@@ -43,6 +43,8 @@ class PlayersProvider extends ChangeNotifier {
     player.handed = editData["handed"] == "r" ? Handed.Right : Handed.Left;
     player.backhand =
     editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
+    player.birth = DateTime.parse(editData["birth"]);
+    player.racket = editData["racket"];
     notifyListeners();
   }
 
@@ -75,12 +77,14 @@ class PlayersProvider extends ChangeNotifier {
   }
 
   Future<bool> createPlayer(
-      {String name, String club, Backhand backhand, Handed hand}) async {
+      {String name, String club, Backhand backhand, Handed hand, DateTime birthDate, String racket}) async {
     final player = Player(
       name: name,
       club: club,
       nationality: "Argentina",
+      birth: birthDate,
       backhand: backhand,
+      racket: racket,
       handed: hand,
       globalCategoryPoints: [0, 0, 0, 0],
       tournamentCategoryPoints: [
@@ -118,13 +122,15 @@ class PlayersProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> editPlayer(String pid, String name, String club, Handed hand,
-      Backhand backhand) async {
+  Future<bool> editPlayer({String pid, String name, String club, Handed hand,
+      Backhand backhand, DateTime birthDate, String racket}) async {
     final editData = {
       "name": name,
       "club": club,
       "handed": hand == Handed.Right ? "r" : "l",
       "backhand": backhand == Backhand.OneHanded ? 1 : 2,
+      "birth": birthDate.toString(),
+      "racket": racket,
     };
     final response = await http.patch(
       Constants.kDbPath + "/players/$pid.json",

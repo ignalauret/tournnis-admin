@@ -41,19 +41,29 @@ class MatchesProvider extends ChangeNotifier {
     return ids.map((id) => getMatchById(id)).toList();
   }
 
-  List<TournamentMatch> getPlayerMatches(String pid) {
+  List<TournamentMatch> getAllPlayerMatches(String pid) {
     final matches = _matches
         .where((match) => match.pid1 == pid || match.pid2 == pid)
         .toList();
     return matches;
   }
 
+  List<TournamentMatch> getPlayerMatches(
+      String pid, String tid, int category) {
+    return _matches
+        .where((match) =>
+            (match.pid1 == pid || match.pid2 == pid) &&
+            match.tid == tid &&
+            match.category == category)
+        .toList();
+  }
+
   List<TournamentMatch> getPlayerMatchesFromTournament(
       String pid, String tid, int category) {
     final matches = _matches
         .where((match) =>
-    match.pid1 == pid ||
-        match.pid2 == pid && match.category == category && match.tid == tid)
+            match.pid1 == pid ||
+            match.pid2 == pid && match.category == category && match.tid == tid)
         .toList();
     return matches;
   }

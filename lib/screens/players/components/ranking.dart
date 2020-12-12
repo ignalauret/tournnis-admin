@@ -36,6 +36,7 @@ class Ranking extends StatelessWidget {
                     .getTournamentPointsOfCategory(tid, category),
                 context.watch<MatchesProvider>().getPlayerResultsFromTournament(
                     snapshot.data[index].id, tid, category),
+                tid,
               ),
               itemCount: snapshot.data.length,
             );
@@ -51,18 +52,20 @@ class Ranking extends StatelessWidget {
 }
 
 class RankingPlayerCard extends StatelessWidget {
-  RankingPlayerCard(this.player, this.ranking, this.points, this.results);
+  RankingPlayerCard(
+      this.player, this.ranking, this.points, this.results, this.tid);
   final Player player;
   final int ranking;
   final int points;
+  final String tid;
   final Map<String, int> results;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(PlayerDetailScreen.routeName, arguments: player.id);
+        Navigator.of(context).pushNamed(PlayerDetailScreen.routeName,
+            arguments: {"pid": player.id, "tid": tid});
       },
       child: Card(
         color: CustomColors.kWhiteColor,

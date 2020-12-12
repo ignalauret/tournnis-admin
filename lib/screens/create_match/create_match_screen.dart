@@ -32,7 +32,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime(2020, 8),
       lastDate: DateTime(2101),
       helpText: "Elegir fecha",
       confirmText: "Confirmar",
