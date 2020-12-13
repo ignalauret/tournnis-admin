@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/profile_picture.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
 
 import '../../components/action_button.dart';
@@ -25,6 +30,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   DateTime birthDate = DateTime(1980, 1, 1);
   String selectedHand = "Derecha";
   String selectedBackhand = "Dos manos";
+  String selectedImageUrl;
 
   bool isEdit = false;
   Player player;
@@ -50,6 +56,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
               player.handed == Handed.Right ? "Derecha" : "Izquierda";
           selectedBackhand =
               player.backhand == Backhand.OneHanded ? "Una mano" : "Dos manos";
+          selectedImageUrl = player.imageUrl;
           birthDate = player.birth;
         });
       }
@@ -128,21 +135,79 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      _buildSelector("Derecha", "Izquierda", selectedHand,
-                          (hand) {
-                        setState(() {
-                          selectedHand = hand;
-                        });
-                      }, size),
+                      _buildSelector(
+                        "Derecha",
+                        "Izquierda",
+                        selectedHand,
+                        (hand) {
+                          setState(() {
+                            selectedHand = hand;
+                          });
+                        },
+                        size,
+                      ),
                       SizedBox(
                         height: 20,
                       ),
-                      _buildSelector("Dos manos", "Una mano", selectedBackhand,
-                          (backhand) {
-                        setState(() {
-                          selectedBackhand = backhand;
-                        });
-                      }, size),
+                      _buildSelector(
+                        "Dos manos",
+                        "Una mano",
+                        selectedBackhand,
+                        (backhand) {
+                          setState(() {
+                            selectedBackhand = backhand;
+                          });
+                        },
+                        size,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      FlatButton(
+                        onPressed: () async {
+                          // Get image
+                          final image = await ImagePicker()
+                              .getImage(source: ImageSource.gallery);
+                          print(image.path);
+                          if (image == null) return;
+                          // Upload image
+                          final request = http.MultipartRequest(
+                            "POST",
+                            Uri.parse(
+                                "https://api.cloudinary.com/v1_1/tournnis/image/upload"),
+                          );
+
+                          request.files.add(
+                            await http.MultipartFile.fromPath(
+                              'file',
+                              image.path,
+                            ),
+                          );
+                          request.fields.addAll({
+                            "cloud_name": "tournnis",
+                            "upload_preset": "unsigned_upload"
+                          });
+                          final response = await request.send();
+                          final data = await response.stream.bytesToString();
+                          final mapData = jsonDecode(data);
+                          setState(() {
+                            selectedImageUrl = mapData["url"];
+                          });
+                        },
+                        child: Text(
+                          selectedImageUrl == null ? "Subir imágen" : "Cambiar imágen",
+                          style: CustomStyles.kResultStyle
+                              .copyWith(color: CustomColors.kAccentColor),
+                        ),
+                      ),
+                      if (selectedImageUrl != null)
+                        ProfilePicture(
+                          imagePath: selectedImageUrl,
+                          diameter: size.width * 0.5,
+                        ),
+                      SizedBox(
+                        height: 20,
+                      ),
                     ],
                   ),
                 ),
@@ -165,6 +230,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                               : Backhand.OneHanded,
                           birthDate: birthDate,
                           racket: racketController.text,
+                          imageUrl: selectedImageUrl,
                         )
                         .then(
                           (value) => Navigator.of(context).pop(),
@@ -183,6 +249,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                               : Backhand.OneHanded,
                           birthDate: birthDate,
                           racket: racketController.text,
+                          imageUrl: selectedImageUrl,
                         )
                         .then((value) {
                       Navigator.of(context).pop();

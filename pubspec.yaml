@@ -25,6 +25,7 @@ dependencies:
   http:
   intl:
   diagonal_scrollview:
+  image_picker:
   flutter:
     sdk: flutter
 
