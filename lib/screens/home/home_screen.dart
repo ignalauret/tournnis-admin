@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/screens/notices/notices_screen.dart';
 
 import '../../components/menu_button.dart';
 import '../../providers/tournaments_provider.dart';
@@ -54,8 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             MenuButton(
               "Play Offs",
-                  () => Navigator.of(context)
+              () => Navigator.of(context)
                   .pushNamed(PlayOffsScreen.routeName, arguments: tid),
+            ),
+            MenuButton(
+              "Noticias",
+              () => Navigator.of(context)
+                  .pushNamed(NoticesScreen.routeName, arguments: tid),
             ),
           ],
         ),

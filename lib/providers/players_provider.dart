@@ -161,6 +161,25 @@ class PlayersProvider extends ChangeNotifier {
     }
   }
 
+  Future<String> uploadImage(String path) async {
+    final request = http.MultipartRequest(
+      "POST",
+      Uri.parse(Constants.kCloudinaryUploadPath),
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        path,
+      ),
+    );
+    request.fields
+        .addAll({"cloud_name": "tournnis", "upload_preset": "profile_upload"});
+    final response = await request.send();
+    final data = await response.stream.bytesToString();
+    return jsonDecode(data)["url"];
+  }
+
   Future<bool> addMatchPoints(
       TournamentMatch match, int points1, int points2) async {
     await addPointsToPlayer(match.pid1, points1, match.category, match.tid);

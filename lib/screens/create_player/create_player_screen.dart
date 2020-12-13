@@ -81,6 +81,42 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       });
   }
 
+  void _submit() {
+    if (isEdit)
+      context
+          .read<PlayersProvider>()
+          .editPlayer(
+            pid: player.id,
+            name: nameController.text,
+            club: clubController.text,
+            hand: selectedHand == "Derecha" ? Handed.Right : Handed.Left,
+            backhand: selectedBackhand == "Dos manos"
+                ? Backhand.TwoHanded
+                : Backhand.OneHanded,
+            birthDate: birthDate,
+            racket: racketController.text,
+            imageUrl: selectedImageUrl,
+          )
+          .then(
+            (value) => Navigator.of(context).pop(),
+          );
+    else
+      context
+          .read<PlayersProvider>()
+          .createPlayer(
+            name: nameController.text,
+            club: clubController.text,
+            hand: selectedHand == "Derecha" ? Handed.Right : Handed.Left,
+            backhand: selectedBackhand == "Dos manos"
+                ? Backhand.TwoHanded
+                : Backhand.OneHanded,
+            birthDate: birthDate,
+            racket: racketController.text,
+            imageUrl: selectedImageUrl,
+          )
+          .then((value) => Navigator.of(context).pop());
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -107,34 +143,26 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         label: "Nombre",
                         hint: "Ingrese el nombre del jugador",
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       CustomTextField(
                         controller: clubController,
                         label: "Club",
                         hint: "Ingrese el nombre del club",
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       CustomTextField(
                         controller: racketController,
                         label: "Raqueta",
                         hint: "Ingrese la raqueta del jugador",
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       TextDataCard(
                         title: "Fecha de nacimiento",
                         data: DateFormat("d/M/y").format(birthDate),
                         size: size,
                         onTap: _selectDate,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 30),
                       _buildSelector(
                         "Derecha",
                         "Izquierda",
@@ -146,9 +174,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         },
                         size,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       _buildSelector(
                         "Dos manos",
                         "Una mano",
@@ -160,101 +186,16 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         },
                         size,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FlatButton(
-                        onPressed: () async {
-                          // Get image
-                          final image = await ImagePicker()
-                              .getImage(source: ImageSource.gallery);
-                          print(image.path);
-                          if (image == null) return;
-                          // Upload image
-                          final request = http.MultipartRequest(
-                            "POST",
-                            Uri.parse(
-                                "https://api.cloudinary.com/v1_1/tournnis/image/upload"),
-                          );
-
-                          request.files.add(
-                            await http.MultipartFile.fromPath(
-                              'file',
-                              image.path,
-                            ),
-                          );
-                          request.fields.addAll({
-                            "cloud_name": "tournnis",
-                            "upload_preset": "unsigned_upload"
-                          });
-                          final response = await request.send();
-                          final data = await response.stream.bytesToString();
-                          final mapData = jsonDecode(data);
-                          setState(() {
-                            selectedImageUrl = mapData["url"];
-                          });
-                        },
-                        child: Text(
-                          selectedImageUrl == null ? "Subir imágen" : "Cambiar imágen",
-                          style: CustomStyles.kResultStyle
-                              .copyWith(color: CustomColors.kAccentColor),
-                        ),
-                      ),
-                      if (selectedImageUrl != null)
-                        ProfilePicture(
-                          imagePath: selectedImageUrl,
-                          diameter: size.width * 0.5,
-                        ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
+                      _buildImageSection(size),
+                      SizedBox(height: 20),
                     ],
                   ),
                 ),
               ),
               ActionButton(
                 isEdit ? "Guardar" : "Agregar",
-                () {
-                  if (isEdit)
-                    context
-                        .read<PlayersProvider>()
-                        .editPlayer(
-                          pid: player.id,
-                          name: nameController.text,
-                          club: clubController.text,
-                          hand: selectedHand == "Derecha"
-                              ? Handed.Right
-                              : Handed.Left,
-                          backhand: selectedBackhand == "Dos manos"
-                              ? Backhand.TwoHanded
-                              : Backhand.OneHanded,
-                          birthDate: birthDate,
-                          racket: racketController.text,
-                          imageUrl: selectedImageUrl,
-                        )
-                        .then(
-                          (value) => Navigator.of(context).pop(),
-                        );
-                  else
-                    context
-                        .read<PlayersProvider>()
-                        .createPlayer(
-                          name: nameController.text,
-                          club: clubController.text,
-                          hand: selectedHand == "Derecha"
-                              ? Handed.Right
-                              : Handed.Left,
-                          backhand: selectedBackhand == "Dos manos"
-                              ? Backhand.TwoHanded
-                              : Backhand.OneHanded,
-                          birthDate: birthDate,
-                          racket: racketController.text,
-                          imageUrl: selectedImageUrl,
-                        )
-                        .then((value) {
-                      Navigator.of(context).pop();
-                    });
-                },
+                _submit,
                 enabled: nameController.text.isNotEmpty &&
                     clubController.text.isNotEmpty,
               ),
@@ -272,9 +213,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildSelectorButton(option1, option1 == selected, select, size),
-        SizedBox(
-          width: 20,
-        ),
+        SizedBox(width: 20),
         _buildSelectorButton(option2, option2 == selected, select, size),
       ],
     );
@@ -305,6 +244,36 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Column _buildImageSection(Size size) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FlatButton(
+          onPressed: () async {
+            final image =
+                await ImagePicker().getImage(source: ImageSource.gallery);
+            if (image == null) return;
+            final url =
+                await context.read<PlayersProvider>().uploadImage(image.path);
+            setState(() {
+              selectedImageUrl = url;
+            });
+          },
+          child: Text(
+            selectedImageUrl == null ? "Subir imágen" : "Cambiar imágen",
+            style: CustomStyles.kResultStyle
+                .copyWith(color: CustomColors.kAccentColor),
+          ),
+        ),
+        if (selectedImageUrl != null)
+          ProfilePicture(
+            imagePath: selectedImageUrl,
+            diameter: size.width * 0.5,
+          ),
+      ],
     );
   }
 }

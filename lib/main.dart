@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
+import 'package:tournnis_admin/providers/notices_provider.dart';
 import 'package:tournnis_admin/providers/play_offs_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
@@ -15,6 +16,7 @@ import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
 import 'package:tournnis_admin/screens/home/home_screen.dart';
 import 'package:tournnis_admin/screens/match_options/match_options_screen.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
+import 'package:tournnis_admin/screens/notices/notices_screen.dart';
 import 'package:tournnis_admin/screens/play_offs/components/play_off_draw.dart';
 import 'package:tournnis_admin/screens/play_offs/play_offs_screen.dart';
 import 'package:tournnis_admin/screens/player_detail/player_detail_screen.dart';
@@ -53,6 +55,10 @@ class MyApp extends StatelessWidget {
           create: (context) => PlayOffsProvider(),
           lazy: false,
         ),
+        ChangeNotifierProvider<NoticesProvider>(
+          create: (context) => NoticesProvider(),
+          lazy: false,
+        ),
       ],
       child: MaterialApp(
         title: 'Tournnis',
@@ -69,13 +75,16 @@ class MyApp extends StatelessWidget {
         home: SelectTournamentScreen(),
         routes: {
           HomeScreen.routeName: (context) => HomeScreen(),
+          // Matches
           MatchesScreen.routeName: (context) => MatchesScreen(),
           MatchOptionsScreen.routeName: (context) => MatchOptionsScreen(),
           CreateMatchScreen.routeName: (context) => CreateMatchScreen(),
+          // Groups
           GroupStageScreen.routeName: (context) => GroupStageScreen(),
           CreateGroup.routeName: (context) => CreateGroup(),
           EditGroupScreen.routeName: (context) => EditGroupScreen(),
           GroupMatchesScreen.routeName: (context) => GroupMatchesScreen(),
+          // Players
           SelectPlayerScreen.routeName: (context) => SelectPlayerScreen(),
           PlayersScreen.routeName: (context) => PlayersScreen(),
           CreatePlayerScreen.routeName: (context) => CreatePlayerScreen(),
@@ -83,6 +92,8 @@ class MyApp extends StatelessWidget {
           PlayOffsScreen.routeName: (context) => PlayOffsScreen(),
           PlayOffDraw.routeName: (context) => PlayOffDraw(),
           EditPlayOffScreen.routeName: (context) => EditPlayOffScreen(),
+          // Notices
+          NoticesScreen.routeName: (context) => NoticesScreen(),
         },
       ),
     );
