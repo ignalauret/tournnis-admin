@@ -42,14 +42,6 @@ class NoticesProvider extends ChangeNotifier {
       final List<Notice> temp = [];
       temp.addAll(tempNotices);
       temp.addAll(tempSponsors);
-      // for (int i = 0; i < tempNotices.length; i++) {
-      //   temp.add(tempNotices.values.elementAt(i));
-      //   if (i % Constants.kSponsorImageFrequency ==
-      //       Constants.kSponsorImageFrequency - 1) {
-      //     temp.add(tempSponsors.values
-      //         .elementAt(Random().nextInt(tempSponsors.length)));
-      //   }
-      // }
       return temp;
     } else {
       return [];

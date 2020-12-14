@@ -114,10 +114,11 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addLocalResult(String id, List<int> result1, List<int> result2) {
+  void addLocalResult(String id, List<int> result1, List<int> result2, int isWo) {
     final match = getMatchById(id);
     match.result1 = result1;
     match.result2 = result2;
+    match.isWo = isWo;
     notifyListeners();
   }
 
@@ -272,19 +273,30 @@ class MatchesProvider extends ChangeNotifier {
     // Parse result
     final List<int> result1 = [];
     final List<int> result2 = [];
-    final sets = result.split(" ");
-    for (String set in sets) {
-      final games = set.split(".");
-      result1.add(int.parse(games[0]));
-      result2.add(int.parse(games[1]));
+    int isWo = 0;
+    if(result == "1") {
+      result1.addAll([0,0]);
+      result2.addAll([6,6]);
+      isWo = 1;
+    } else if (result == "2") {
+      result1.addAll([6,6]);
+      result2.addAll([0,0]);
+      isWo = 2;
+    } else {
+      final sets = result.split(" ");
+      for (String set in sets) {
+        final games = set.split(".");
+        result1.add(int.parse(games[0]));
+        result2.add(int.parse(games[1]));
+      }
     }
-
     // Try updating result in DB
     final response = await http.patch(
       Constants.kDbPath + "/matches/${match.id}.json",
       body: jsonEncode({
         "result1": result1,
         "result2": result2,
+        "isWo": isWo,
       }),
     );
     if (response.statusCode == 200) {
@@ -294,7 +306,7 @@ class MatchesProvider extends ChangeNotifier {
             .read<PlayOffsProvider>()
             .getPlayOff(match.tid, match.category)
             .matches;
-        addLocalResult(match.id, result1, result2);
+        addLocalResult(match.id, result1, result2, isWo);
         final success = await editPlayerOfMatchAtPosition(
           playOffMatches[Utils.getNextMatchIndex(match.playOffIndex)],
           Utils.getNextMatchPosition(match.playOffIndex),
@@ -310,7 +322,7 @@ class MatchesProvider extends ChangeNotifier {
           points1 = -1 * match.firstPlayerPoints;
           points2 = -1 * match.secondPlayerPoints;
         }
-        addLocalResult(match.id, result1, result2);
+        addLocalResult(match.id, result1, result2, isWo);
         points1 += match.firstPlayerPoints;
         points2 += match.secondPlayerPoints;
         return await context

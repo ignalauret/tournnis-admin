@@ -58,8 +58,9 @@ class MatchCard extends StatelessWidget {
                   match.isPredicted || match.pid1 == null || match.pid2 == null
                       ? null
                       : () => Navigator.of(context).pushNamed(
-                          MatchOptionsScreen.routeName,
-                          arguments: match),
+                            MatchOptionsScreen.routeName,
+                            arguments: match,
+                          ),
               child: Container(
                 height: 70,
                 width: size.width * 0.85,
@@ -86,19 +87,21 @@ class MatchCard extends StatelessWidget {
                                 Expanded(
                                   child: _buildPlayerRow(
                                     playersData.getPlayerName(match.pid1),
-                                    match.result1,
+                                    match.isWo != 0 ? null : match.result1,
                                     match.isPredicted
                                         ? false
                                         : !match.isSecondWinner,
+                                    match.isWo == 1,
                                   ),
                                 ),
                                 Expanded(
                                   child: _buildPlayerRow(
                                     playersData.getPlayerName(match.pid2),
-                                    match.result2,
+                                    match.isWo != 0 ? null : match.result2,
                                     match.isPredicted
                                         ? false
                                         : !match.isFirstWinner,
+                                    match.isWo == 2,
                                   ),
                                 ),
                               ],
@@ -113,6 +116,7 @@ class MatchCard extends StatelessWidget {
                                           playersData.getPlayerName(match.pid1),
                                           match.result1,
                                           !match.isSecondWinner,
+                                          match.isWo == 1,
                                         ),
                                       ),
                                       Expanded(
@@ -120,6 +124,7 @@ class MatchCard extends StatelessWidget {
                                           playersData.getPlayerName(match.pid2),
                                           match.result2,
                                           !match.isFirstWinner,
+                                          match.isWo == 2,
                                         ),
                                       ),
                                     ],
@@ -220,7 +225,7 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Row _buildPlayerRow(String name, List<int> score, bool isWinner) {
+  Row _buildPlayerRow(String name, List<int> score, bool isWinner, bool wo) {
     return Row(
       children: [
         SizedBox(
@@ -239,7 +244,15 @@ class MatchCard extends StatelessWidget {
             ),
           ),
         ),
-        if (score != null)
+        if (wo)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              "W.O.",
+              style: CustomStyles.kResultStyle.copyWith(color: CustomColors.kMainColor.withOpacity(0.5)),
+            ),
+          ),
+        if (score != null && !wo)
           ...score.map(
             (score) => Container(
               height: 35,

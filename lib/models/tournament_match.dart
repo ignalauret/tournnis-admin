@@ -22,7 +22,7 @@ class TournamentMatch {
     this.pid2,
     this.result1,
     this.result2,
-    this.isWo,
+    this.isWo = 0, // 0: not WO, 1: WO player 1, 2: WO player 2
     this.date,
     @required this.tid,
     this.isPlayOff,
@@ -122,6 +122,8 @@ class TournamentMatch {
         return "Plata";
       case 3:
         return "Bronce";
+      default:
+        return null;
     }
   }
 
