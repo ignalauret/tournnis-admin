@@ -17,7 +17,7 @@ const kRoundNames = [
   "Octavos de final"
 ];
 
-const kMatchCardMargin = 10.0;
+const kMatchCardMargin = 20.0;
 
 class Draw extends StatelessWidget {
   Draw(this.playOff);
@@ -57,7 +57,7 @@ Column _buildRoundColumn(
           (mid) => Container(
             height: 110,
             margin: EdgeInsets.symmetric(
-              horizontal: 2 * kMatchCardMargin,
+              horizontal: kMatchCardMargin,
               vertical: max(
                   0,
                   55.0 +
