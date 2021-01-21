@@ -14,6 +14,11 @@ class TournamentsProvider extends ChangeNotifier {
     return [..._tournaments];
   }
 
+  Future<List<String>> get tids async {
+    if (_tournaments == null) await getTournaments();
+    return _tournaments.map((tournament) => tournament.id).toList();
+  }
+
   Future<void> getTournaments() async {
     _tournaments = await fetchTournaments();
   }

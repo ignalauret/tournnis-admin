@@ -26,12 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
           tName,
           style: CustomStyles.kAppBarTitle,
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       body: Container(
         height: double.infinity,
         width: double.infinity,

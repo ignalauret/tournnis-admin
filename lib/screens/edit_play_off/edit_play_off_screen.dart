@@ -15,11 +15,19 @@ class EditPlayOffScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final PlayOff playOff = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
           "Editar " + TournamentMatch.getCategoryName(playOff.category),
           style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(

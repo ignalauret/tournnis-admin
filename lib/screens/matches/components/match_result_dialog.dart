@@ -50,7 +50,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   }
 
   bool checkResultFormat(String result) {
-    if(result == "1" || result == "2") return true;
+    if (result == "1" || result == "2") return true;
     final sets = result.split(" ");
     if (sets.length != 2 && sets.length != 3) {
       return false;
@@ -71,7 +71,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       title: Text(
         widget.match.hasEnded ? "Editar resultado" : "Agregar resultado",
         style: CustomStyles.kTitleStyle,
@@ -97,7 +97,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
           child: FlatButton(
             child: Text(
               "Cancelar",
-              style: CustomStyles.kResultStyle.copyWith(color: Colors.white70),
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.grey),
             ),
             onPressed: () {
               Navigator.of(context).pop();
@@ -115,13 +115,12 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
                       : "Agregar",
               style: CustomStyles.kResultStyle.copyWith(
                   color: tapped || scoreController.text.isEmpty
-                      ? Colors.white
+                      ? CustomColors.kAccentColor.withOpacity(0.5)
                       : CustomColors.kAccentColor),
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
             ),
-            disabledColor: Colors.white38,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             onPressed: tapped || scoreController.text.isEmpty
                 ? null

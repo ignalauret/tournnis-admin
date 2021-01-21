@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/components/category_selector.dart';
-import 'package:tournnis_admin/components/profile_picture.dart';
+import 'package:tournnis_admin/components/category_tab_bar.dart';
+import 'package:tournnis_admin/components/match_card.dart';
+import 'package:tournnis_admin/models/tournament_match.dart';
+import 'package:tournnis_admin/providers/matches_provider.dart';
+import 'package:tournnis_admin/providers/tournaments_provider.dart';
+import 'package:tournnis_admin/screens/player_detail/components/player_info_section.dart';
 
-import '../../components/match_card.dart';
 import '../../models/player.dart';
-import '../../providers/matches_provider.dart';
-import '../../providers/players_provider.dart';
-import '../../screens/create_player/create_player_screen.dart';
 import '../../utils/colors.dart';
 import '../../utils/custom_styles.dart';
+import 'components/player_tournament_stats_section.dart';
 
 class PlayerDetailScreen extends StatefulWidget {
   static const routeName = "/player-detail";
@@ -22,225 +23,110 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
-    final String pid = args["pid"];
-    final String tid = args["tid"];
-    final player = context.select<PlayersProvider, Player>(
-      (data) => data.getPlayerById(pid),
-    );
-    final playerRecord = context.select<MatchesProvider, Map<String, int>>(
-        (data) => data.getPlayerResultsFromTournament(
-            player.id, tid, selectedCategory));
+    final Player player = args["player"];
+
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
-        title: FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            context.select<PlayersProvider, String>(
-              (data) => data.getPlayerName(pid),
-            ),
-            style: CustomStyles.kAppBarTitle,
+        backgroundColor: CustomColors.kAppBarColor,
+        elevation: 0,
+        title: Container(
+          child: Row(
+            children: [
+              Spacer(),
+              Text(
+                "PERFIL",
+                style: CustomStyles.kAppBarTitle,
+              ),
+              SizedBox(
+                width: 5,
+              ),
+            ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.of(context).pushNamed(
-                CreatePlayerScreen.routeName,
-                arguments: player,
-              );
-            },
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
           ),
-        ],
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SafeArea(
-        child: ListView(
-          children: [
-            Container(
-              height: size.height * 0.5,
-              width: size.width,
-              padding: const EdgeInsets.all(10),
-              color: Colors.black26,
-              child: Column(
-                children: [
-                  _buildImageSection(
-                      size: size,
-                      imageUrl: player.imageUrl,
-                      name: player.name,
-                      age: player.age),
-                  Spacer(),
-                  _buildPlayerInfoSection(
-                    hand: player.hand,
-                    backhand: player.backhandType,
-                    racket: player.racket == null || player.racket.isEmpty ? "-" : player.racket,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: CategorySelector(
-                options: [0, 1, 2, 3],
-                selectedCat: selectedCategory,
-                select: (cat) {
+        child: DefaultTabController(
+          length: 4,
+          child: ListView(
+            children: [
+              PlayerInfoSection(player),
+              CategoryTabBar(
+                onSelect: (val) {
                   setState(() {
-                    selectedCategory = cat;
+                    selectedCategory = val;
                   });
                 },
               ),
-            ),
-            FutureBuilder<int>(
-              future: context
-                  .watch<PlayersProvider>()
-                  .getPlayerRankingFromTournament(
-                      context, player.id, tid, selectedCategory),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    child: snapshot.data == 0
-                        ? Container(
-                            height: 150,
-                            child: Center(
-                              child: Text(
-                                "No jugó esta categoría",
-                                style: CustomStyles.kSubtitleStyle,
-                              ),
-                            ),
-                          )
-                        : _buildStatsSection(
-                            snapshot.data.toString(),
-                            player
-                                .getTournamentPointsOfCategory(
-                                    tid, selectedCategory)
-                                .toString(),
-                            "0",
-                            "${playerRecord["wins"]}-${playerRecord["loses"] + playerRecord["superTiebreaks"]}",
-                          ),
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-            ...context
-                .watch<MatchesProvider>()
-                .getPlayerMatches(player.id, tid, selectedCategory)
-                .map((match) => MatchCard(match)),
-          ],
+              PlayerTournamentStatsSection(player, selectedCategory),
+              _buildPlayerMatches(player),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildImageSection(
-      {Size size, String imageUrl, String name, int age}) {
-    return Container(
-      child: Column(
-        children: [
-          ProfilePicture(imagePath: imageUrl, diameter: size.height * 0.3),
-          SizedBox(
-            height: 15,
-          ),
-          Text(
-            name,
-            style: CustomStyles.kAppBarTitle,
-          ),
-          Text(
-            "$age años",
-            style: CustomStyles.kResultStyle
-                .copyWith(color: CustomColors.kAccentColor),
-          ),
-        ],
-      ),
-    );
+  FutureBuilder _buildPlayerMatches(Player player) {
+    final List<TournamentMatch> matches = context
+        .watch<MatchesProvider>()
+        .getMatchesOfPlayerOnCategory(player.id, selectedCategory);
+    return FutureBuilder<List<String>>(
+        future: context.watch<TournamentsProvider>().tids,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: snapshot.data
+                  .map((tid) => TournamentMatchList(
+                        tid,
+                        matches.where((match) => match.tid == tid).toList(),
+                      ))
+                  .toList(),
+            );
+          } else {
+            return Container(
+              height: 150,
+              width: double.infinity,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
   }
+}
 
-  Widget _buildPlayerInfoSection(
-      {String hand, String backhand, String racket}) {
+class TournamentMatchList extends StatelessWidget {
+  TournamentMatchList(this.tid, this.matches);
+  final String tid;
+  final List<TournamentMatch> matches;
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        children: [
-          _buildPlayerInfo("Mano hábil", hand),
-          _buildPlayerInfo("Revés", backhand),
-          _buildPlayerInfo("Raqueta", racket),
-        ],
-      ),
-    );
-  }
-
-  Expanded _buildPlayerInfo(String label, String value) {
-    return Expanded(
-      child: Container(
-        height: 40,
-        child: Column(
-          children: [
-            FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label,
-                  style: CustomStyles.kSubtitleStyle,
-                )),
-            FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  value,
-                  style: CustomStyles.kNormalStyle,
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatsSection(
-      String ranking, String points, String titles, String record) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildStat("Ranking", ranking),
-              _buildStat("Puntos", points),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildStat("Títulos", titles),
-              _buildStat("Récord", record),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStat(String label, String value) {
-    return Container(
-      margin: const EdgeInsets.all(15),
-      child: Column(
-        children: [
-          Text(value,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
-              )),
-          Text(
-            label,
-            style: CustomStyles.kResultStyle
-                .copyWith(color: CustomColors.kAccentColor),
-          ),
-        ],
-      ),
+      child: matches.isEmpty
+          ? null
+          : Column(
+              children: [
+                SizedBox(height: 5),
+                Text(
+                  context.select<TournamentsProvider, String>(
+                    (data) => data.getTournamentName(tid),
+                  ),
+                  style: CustomStyles.kTitleStyle,
+                ),
+                SizedBox(height: 5),
+                ...matches.map((match) => MatchCard(match)).toList(),
+              ],
+            ),
     );
   }
 }

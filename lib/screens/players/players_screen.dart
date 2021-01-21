@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tournnis_admin/components/category_tab_bar.dart';
 
 import '../../components/category_selector.dart';
 import '../../screens/create_player/create_player_screen.dart';
@@ -24,88 +25,52 @@ class _PlayersScreenState extends State<PlayersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
           "Jugadores",
           style: CustomStyles.kAppBarTitle,
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+              color: CustomColors.kAccentColor,
+            ),
             onPressed: () {
               Navigator.of(context).pushNamed(CreatePlayerScreen.routeName);
             },
-          )
+          ),
         ],
       ),
       body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              CategorySelector(
-                selectedCat: selectedCategory,
-                select: selectCategory,
-                options: [0, 1, 2, 3],
-              ),
-              Container(
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 5,
+        child: DefaultTabController(
+          length: 4,
+          child: Container(
+            child: Column(
+              children: [
+                CategoryTabBar(),
+                Expanded(
+                  child: TabBarView(
+                    children: List.generate(
+                      4,
+                      (index) => Ranking(index),
                     ),
-                    SizedBox(
-                      height: 20,
-                      width: 35,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Nombre",
-                          style: CustomStyles.kSubtitleStyle,
-                        ),
-                      ),
-                    ),
-                    _buildStatTitle(title: "W"),
-                    _buildStatTitle(title: "3S"),
-                    _buildStatTitle(title: "L"),
-                    _buildStatTitle(title: "PTS", width: 35),
-                    SizedBox(
-                      width: 5,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Ranking(tid, selectedCategory),
-              ),
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Container _buildStatTitle(
-      {String title, double width = 20, double height = 20}) {
-    return Container(
-      width: width,
-      height: height,
-      alignment: Alignment.center,
-      margin: const EdgeInsets.only(right: 5),
-      child: Text(
-        title,
-        style: CustomStyles.kSubtitleStyle,
       ),
     );
   }

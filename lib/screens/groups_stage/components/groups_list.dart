@@ -27,16 +27,23 @@ class GroupsList extends StatelessWidget {
                   group.tid == tid)
               .toList();
           groupsList.sort((g1, g2) => g1.index.compareTo(g2.index));
-          return ListView.builder(
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () => Navigator.of(context).pushNamed(
-                GroupMatchesScreen.routeName,
-                arguments: groupsList[index],
-              ),
-              child: GroupsListItem(groupsList[index]),
-            ),
-            itemCount: groupsList.length,
-          );
+          return groupsList.isEmpty
+              ? Center(
+                  child: Text(
+                    "Esta categoría no ha comenzado aún",
+                    style: CustomStyles.kSubtitleStyle,
+                  ),
+                )
+              : ListView.builder(
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      GroupMatchesScreen.routeName,
+                      arguments: groupsList[index],
+                    ),
+                    child: GroupsListItem(groupsList[index], false),
+                  ),
+                  itemCount: groupsList.length,
+                );
         } else {
           return Center(
             child: CircularProgressIndicator(),
@@ -48,20 +55,20 @@ class GroupsList extends StatelessWidget {
 }
 
 class GroupsListItem extends StatelessWidget {
-  GroupsListItem(this.group);
+  GroupsListItem(this.group, this.tapPlayers);
   final GroupZone group;
+  final bool tapPlayers;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: CustomColors.kMainColor,
         borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
       ),
       child: Column(
         children: [
           _buildHeader(group.name, group.categoryName),
-          GroupTable(group),
+          GroupTable(group, tapPlayers),
           SizedBox(
             height: 10,
           ),
@@ -82,7 +89,7 @@ class GroupsListItem extends StatelessWidget {
           Text(
             name,
             style: CustomStyles.kResultStyle.copyWith(
-              color: Colors.white,
+              color: CustomColors.kAccentColor,
               letterSpacing: -0.5,
             ),
           ),

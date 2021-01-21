@@ -27,7 +27,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       title: Text(
         "Agregar Jugador",
         style: CustomStyles.kTitleStyle,
@@ -64,7 +64,7 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
           child: FlatButton(
             child: Text(
               "Cancelar",
-              style: CustomStyles.kResultStyle.copyWith(color: Colors.white70),
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.grey),
             ),
             onPressed: () {
               Navigator.of(context).pop(false);
@@ -76,12 +76,14 @@ class _AddPlayerDialogState extends State<AddPlayerDialog> {
           child: FlatButton(
             child: Text(
               tapped ? "Guardando..." : "Guardar",
-              style: CustomStyles.kResultStyle.copyWith(color: tapped || name == null ? Colors.white : CustomColors.kAccentColor),
+              style: CustomStyles.kResultStyle.copyWith(
+                  color: tapped || name == null
+                      ? CustomColors.kAccentColor.withOpacity(0.5)
+                      : CustomColors.kAccentColor),
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
             ),
-            disabledColor: Colors.white38,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             onPressed: tapped || name == null
                 ? null

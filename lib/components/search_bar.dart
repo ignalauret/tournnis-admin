@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class SearchBar extends StatelessWidget {
   SearchBar({this.hint, this.onChanged});
@@ -11,24 +13,32 @@ class SearchBar extends StatelessWidget {
     return Container(
       child: TextField(
         style: const TextStyle(
-          color: Colors.white,
+          color: CustomColors.kAccentColor,
           fontSize: 17,
         ),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: Colors.white70,
-            fontSize: 17,
+          hintStyle: CustomStyles.kNormalStyle
+              .copyWith(color: CustomColors.kAccentColor.withOpacity(0.5)),
+          alignLabelWithHint: true,
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: CustomColors.kAccentColor,
+            ),
           ),
-          border: InputBorder.none,
-          focusedErrorBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: CustomColors.kAccentColor,
+            ),
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: CustomColors.kAccentColor,
+            ),
+          ),
           prefixIcon: const Icon(
             Icons.search,
-            color: Colors.white70,
+            color: CustomColors.kAccentColor,
           ),
         ),
         onChanged: onChanged,

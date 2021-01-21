@@ -20,11 +20,19 @@ class NoticesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
           "Noticias",
           style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(
@@ -42,7 +50,7 @@ class NoticesScreen extends StatelessWidget {
                     child: Text(
                       "Subir noticia",
                       style: CustomStyles.kResultStyle
-                          .copyWith(color: CustomColors.kAccentColor),
+                          .copyWith(color: CustomColors.kMainColor),
                     ),
                   ),
                 ),
@@ -54,7 +62,7 @@ class NoticesScreen extends StatelessWidget {
                     child: Text(
                       "Subir sponsor",
                       style: CustomStyles.kResultStyle
-                          .copyWith(color: CustomColors.kAccentColor),
+                          .copyWith(color: CustomColors.kMainColor),
                     ),
                   ),
                 ),
@@ -71,7 +79,7 @@ class NoticesScreen extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              backgroundColor: CustomColors.kMainColor,
+                              backgroundColor: CustomColors.kBackgroundColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                     Constants.kCardBorderRadius),

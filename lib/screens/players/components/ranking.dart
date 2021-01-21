@@ -10,36 +10,58 @@ import 'package:tournnis_admin/utils/constants.dart';
 import 'package:tournnis_admin/utils/custom_styles.dart';
 
 class Ranking extends StatelessWidget {
-  Ranking(this.tid, this.category);
-  final String tid;
+  Ranking(this.category);
   final int category;
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<PlayersProvider>().refreshTournamentCache();
-        await context
-            .read<PlayersProvider>()
-            .getTournamentRanking(context, tid, category);
+        context.read<PlayersProvider>().refreshGlobalCache();
+        await context.read<PlayersProvider>().getGlobalRanking(category);
       },
       child: FutureBuilder<List<Player>>(
-        future: context
-            .watch<PlayersProvider>()
-            .getTournamentRanking(context, tid, category),
+        future: context.watch<PlayersProvider>().getGlobalRanking(category),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemBuilder: (context, index) => RankingPlayerCard(
-                snapshot.data[index],
-                index + 1,
-                snapshot.data[index]
-                    .getTournamentPointsOfCategory(tid, category),
-                context.watch<MatchesProvider>().getPlayerResultsFromTournament(
-                    snapshot.data[index].id, tid, category),
-                tid,
-              ),
-              itemCount: snapshot.data.length,
-            );
+            return snapshot.data.isEmpty
+                ? Center(
+                    child: Text(
+                      "Esta categoría no ha comenzado aún",
+                      style: CustomStyles.kSubtitleStyle,
+                    ),
+                  )
+                : Column(
+                    children: [
+                      _buildSubtitles(),
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  PlayerDetailScreen.routeName,
+                                  arguments: {
+                                    "player": snapshot.data[index],
+                                  });
+                            },
+                            child: RankingPlayerCard(
+                              snapshot.data[index],
+                              index + 1,
+                              snapshot.data[index]
+                                  .getPointsOfCategory(category),
+                              context
+                                  .watch<MatchesProvider>()
+                                  .getPlayerTournamentHistory(
+                                    snapshot.data[index].id,
+                                    category,
+                                  ),
+                            ),
+                          ),
+                          itemCount: snapshot.data.length,
+                        ),
+                      ),
+                    ],
+                  );
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -49,31 +71,86 @@ class Ranking extends StatelessWidget {
       ),
     );
   }
+
+  Container _buildSubtitles() {
+    return Container(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 5,
+          ),
+          SizedBox(
+            height: 20,
+            width: 35,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Nombre",
+                style: CustomStyles.kSubtitleStyle,
+              ),
+            ),
+          ),
+          Container(
+            width: 25,
+            height: 20,
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(right: 5),
+            child: Text(
+              "TJ",
+              style: CustomStyles.kSubtitleStyle,
+            ),
+          ),
+          Container(
+            width: 25,
+            height: 20,
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(right: 5),
+            child: Text(
+              "TG",
+              style: CustomStyles.kSubtitleStyle,
+            ),
+          ),
+          Container(
+            width: 35,
+            height: 20,
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(right: 5),
+            child: Text(
+              "PTS",
+              style: CustomStyles.kSubtitleStyle,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class RankingPlayerCard extends StatelessWidget {
-  RankingPlayerCard(
-      this.player, this.ranking, this.points, this.results, this.tid);
+  RankingPlayerCard(this.player, this.ranking, this.points, this.results);
   final Player player;
   final int ranking;
   final int points;
-  final String tid;
   final Map<String, int> results;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pushNamed(PlayerDetailScreen.routeName,
-            arguments: {"pid": player.id, "tid": tid});
-      },
-      child: Card(
-        color: CustomColors.kWhiteColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
-        ),
-        child: _buildPlayerRow(player, ranking, points, results),
+    return Card(
+      color: CustomColors.kMainColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
       ),
+      child: _buildPlayerRow(player, ranking, points, results),
     );
   }
 
@@ -113,32 +190,22 @@ class RankingPlayerCard extends StatelessWidget {
           ),
         ),
         Container(
-          width: 20,
+          width: 25,
           height: 30,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 5),
           child: Text(
-            results["wins"].toString(),
+            results["played"].toString(),
             style: CustomStyles.kResultStyle,
           ),
         ),
         Container(
-          width: 20,
+          width: 25,
           height: 30,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 5),
           child: Text(
-            results["superTiebreaks"].toString(),
-            style: CustomStyles.kResultStyle,
-          ),
-        ),
-        Container(
-          width: 20,
-          height: 30,
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(right: 5),
-          child: Text(
-            results["loses"].toString(),
+            results["titles"].toString(),
             style: CustomStyles.kResultStyle,
           ),
         ),

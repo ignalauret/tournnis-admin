@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tournnis_admin/utils/colors.dart';
 import '../utils/constants.dart';
 import '../utils/custom_styles.dart';
 
@@ -25,7 +26,7 @@ class TextDataCard extends StatelessWidget {
           child: Text(
             title,
             style: CustomStyles.kResultStyle.copyWith(
-              color: Colors.white70,
+              color: CustomColors.kAccentColor.withOpacity(0.5),
             ),
           ),
         ),
@@ -38,7 +39,7 @@ class TextDataCard extends StatelessWidget {
               left: 20,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: CustomColors.kAccentColor,
               borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
             ),
             alignment: Alignment.centerLeft,

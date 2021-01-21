@@ -32,7 +32,7 @@ class _ActionButtonState extends State<ActionButton> {
         height: 70,
         width: size.width * 0.7,
         decoration: BoxDecoration(
-          color: widget.enabled && !tapped ? CustomColors.kAccentColor : Colors.white70,
+          color: widget.enabled && !tapped ? CustomColors.kMainColor : CustomColors.kMainColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
         ),
         alignment: Alignment.center,

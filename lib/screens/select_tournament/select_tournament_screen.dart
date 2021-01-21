@@ -12,10 +12,11 @@ class SelectTournamentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
-          "Tournnis",
+          "Torneos",
           style: CustomStyles.kAppBarTitle,
         ),
       ),

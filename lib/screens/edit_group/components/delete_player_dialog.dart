@@ -24,7 +24,7 @@ class _DeletePlayerDialogState extends State<DeletePlayerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       title: Text(
         "Eliminar Jugador",
         style: CustomStyles.kTitleStyle,
@@ -59,7 +59,7 @@ class _DeletePlayerDialogState extends State<DeletePlayerDialog> {
           child: FlatButton(
             child: Text(
               "Cancelar",
-              style: CustomStyles.kResultStyle.copyWith(color: Colors.white70),
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.grey),
             ),
             onPressed: () {
               Navigator.of(context).pop(false);
@@ -70,10 +70,10 @@ class _DeletePlayerDialogState extends State<DeletePlayerDialog> {
           height: 40,
           child: FlatButton(
             child: Text(
-              tapped ? "Guardando..." : "Guardar",
+              tapped ? "Eliminando..." : "Eliminar",
               style: CustomStyles.kResultStyle.copyWith(
                   color: tapped || selectedPid == null
-                      ? Colors.white
+                      ? CustomColors.kAccentColor.withOpacity(0.5)
                       : CustomColors.kAccentColor),
             ),
             shape: RoundedRectangleBorder(

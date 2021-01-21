@@ -5,7 +5,8 @@ import '../utils/constants.dart';
 import '../utils/custom_styles.dart';
 
 class MenuButton extends StatelessWidget {
-  MenuButton(this.label, this.onTap, {this.letterColor = CustomColors.kMainColor});
+  MenuButton(this.label, this.onTap,
+      {this.letterColor = CustomColors.kWhiteColor});
 
   final String label;
   final Function onTap;
@@ -20,7 +21,7 @@ class MenuButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.6,
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: CustomColors.kMainColor,
           borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
         ),
         alignment: Alignment.center,
@@ -29,8 +30,7 @@ class MenuButton extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             label,
-            style:
-                CustomStyles.kResultStyle.copyWith(color: letterColor),
+            style: CustomStyles.kResultStyle.copyWith(color: letterColor),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/components/category_selector.dart';
 
 import '../../components/action_button.dart';
 import '../../components/custom_text_field.dart';
@@ -40,12 +41,20 @@ class _CreateGroupState extends State<CreateGroup> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
-          "Nuevo grupo",
+          "Nuevo Grupo",
           style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(
@@ -57,14 +66,15 @@ class _CreateGroupState extends State<CreateGroup> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // CategorySelector(
-                      //   selectedCat: selectedCategory,
-                      //   select: (cat) {
-                      //     setState(() {
-                      //       selectedCategory = cat;
-                      //     });
-                      //   },
-                      // ),
+                      CategorySelector(
+                        selectedCat: selectedCategory,
+                        select: (cat) {
+                          setState(() {
+                            selectedCategory = cat;
+                          });
+                        },
+                        options: [0, 1, 2, 3],
+                      ),
                       CustomTextField(
                         controller: nameController,
                         label: "Nombre",

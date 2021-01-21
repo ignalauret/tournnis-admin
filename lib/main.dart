@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
           // Matches
           MatchesScreen.routeName: (context) => MatchesScreen(),
           MatchOptionsScreen.routeName: (context) => MatchOptionsScreen(),
-          CreateMatchScreen.routeName: (context) => CreateMatchScreen(),
+          //CreateMatchScreen.routeName: (context) => CreateMatchScreen(),
           // Groups
           GroupStageScreen.routeName: (context) => GroupStageScreen(),
           CreateGroup.routeName: (context) => CreateGroup(),

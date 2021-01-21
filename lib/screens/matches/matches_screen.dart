@@ -1,56 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:tournnis_admin/components/category_tab_bar.dart';
+import 'package:tournnis_admin/components/category_tab_bar.dart';
+import 'package:tournnis_admin/utils/colors.dart';
+import 'package:tournnis_admin/utils/custom_styles.dart';
 
-import '../../components/category_selector.dart';
-import '../../screens/create_match/create_match_screen.dart';
-import '../../screens/matches/components/matches_list.dart';
-import '../../utils/colors.dart';
-import '../../utils/custom_styles.dart';
+import 'components/matches_list.dart';
 
-class MatchesScreen extends StatefulWidget {
+class MatchesScreen extends StatelessWidget {
   static const routeName = "/matches";
 
-  @override
-  _MatchesScreenState createState() => _MatchesScreenState();
-}
-
-class _MatchesScreenState extends State<MatchesScreen> {
-  int selectedCategory = 4;
-
-  void selectCategory(int cat) {
-    setState(() {
-      selectedCategory = cat;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final String tid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
           "Partidos",
           style: CustomStyles.kAppBarTitle,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamed(CreateMatchScreen.routeName, arguments: tid);
-            },
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
           ),
-        ],
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            CategorySelector.withAll(
-              selectedCat: selectedCategory,
-              select: selectCategory,
-            ),
-            Expanded(child: MatchesList(selectedCategory, tid)),
-          ],
+        child: DefaultTabController(
+          length: 5,
+          child: Column(
+            children: [
+              CategoryTabBar.withAll(),
+              Expanded(
+                child: TabBarView(
+                  children: List.generate(
+                    5,
+                    (index) => MatchesList(
+                      index == 0 ? 4 : index - 1,
+                      tid,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

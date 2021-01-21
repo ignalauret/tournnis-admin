@@ -397,4 +397,91 @@ class MatchesProvider extends ChangeNotifier {
       "gameDiff": gameDiff,
     };
   }
+
+  List<TournamentMatch> getMatchesOfPlayerOnCategory(String pid, int category) {
+    final matches = _matches
+        .where((match) =>
+    (match.pid1 == pid || match.pid2 == pid) &&
+        match.category == category)
+        .toList();
+    matches.sort((m1, m2) => m2.date.compareTo(m1.date));
+    return matches;
+  }
+
+  int getPlayerTournamentsOnCategory(String pid, int category) {
+    final List<String> tournaments = [];
+    final matches = getMatchesOfPlayerOnCategory(pid, category);
+    for (TournamentMatch match in matches) {
+      if (!tournaments.contains(match.tid)) {
+        tournaments.add(match.tid);
+      }
+    }
+    return tournaments.length;
+  }
+
+  int getPlayerTitlesOnCategory(String pid, int category) {
+    int count = 0;
+    final matches = getMatchesOfPlayerOnCategory(pid, category);
+    for (TournamentMatch match in matches) {
+      if (match.playOffIndex == 0 && match.winnerId == pid) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  Map<String, int> getPlayerTournamentHistory(String pid, int category) {
+    return {
+      "played": getPlayerTournamentsOnCategory(pid, category),
+      "titles": getPlayerTitlesOnCategory(pid, category),
+    };
+  }
+
+  Map<String, int> getPlayerAnnualResultsOnCategory(String pid, int category) {
+    int wins = 0;
+    int superTiebreaks = 0;
+    int loses = 0;
+    int setsWon = 0;
+    int setsLost = 0;
+    int setDiff = 0;
+    int gameDiff = 0;
+    int gamesWon = 0;
+    int gamesLost = 0;
+    int tiebreaksWon = 0;
+    int tiebreaksLost = 0;
+    for (TournamentMatch match in _matches) {
+      if (!match.hasEnded || match.category != category) continue;
+      if (match.pid1 == pid || match.pid2 == pid) {
+        if (match.winnerId == pid) {
+          wins++;
+        } else if (match.result1.length == 3) {
+          superTiebreaks++;
+        } else {
+          loses++;
+        }
+        setDiff += match.setsDifferenceOfPlayer(pid);
+        setsWon += match.setsWonByPlayer(pid);
+        setsLost += match.setsLostByPlayer(pid);
+        gameDiff += match.gamesDifferenceOfPlayer(pid);
+        gamesWon += match.gamesWonByPlayer(pid);
+        gamesLost += match.gamesLostByPlayer(pid);
+        tiebreaksWon += match.tiebreaksWonByPlayer(pid);
+        tiebreaksLost += match.tiebreaksLostByPlayer(pid);
+      }
+    }
+    return {
+      "wins": wins,
+      "superTiebreaks": superTiebreaks,
+      "loses": loses,
+      "setDiff": setDiff,
+      "gameDiff": gameDiff,
+      "winSets": setsWon,
+      "loseSets": setsLost,
+      "winGames": gamesWon,
+      "loseGames": gamesLost,
+      "winTiebreaks": tiebreaksWon,
+      "loseTiebreaks": tiebreaksLost,
+      "totalMatches": wins + loses + superTiebreaks,
+    };
+  }
 }

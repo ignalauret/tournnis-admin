@@ -21,6 +21,7 @@ const kMatchCardMargin = 20.0;
 
 class Draw extends StatelessWidget {
   Draw(this.playOff);
+
   final PlayOff playOff;
 
   @override
@@ -46,58 +47,67 @@ class Draw extends StatelessWidget {
       ),
     );
   }
-}
 
-Column _buildRoundColumn(
-    MatchesProvider matchesData, PlayOff playOff, int round) {
-  return Column(
-    children: playOff
-        .getMatchesOfRound(round)
-        .map(
-          (mid) => Container(
-            height: 110,
-            margin: EdgeInsets.symmetric(
-              horizontal: kMatchCardMargin,
-              vertical: max(
-                  0,
-                  55.0 +
-                      (playOff.nRounds - round - 2) * 110 +
-                      max(0, (playOff.nRounds - round - 3)) * 110),
-            ),
-            child: MatchCard(matchesData.getMatchById(mid)),
+  Column _buildRoundColumn(
+      MatchesProvider matchesData, PlayOff playOff, int round) {
+    return Column(
+      children: [
+        Container(
+          height: 30,
+          child: Text(
+            kRoundNames[round],
+            style: CustomStyles.kTitleStyle,
           ),
-        )
-        .toList(),
-  );
-}
-
-Column _buildPredictedRoundColumn(PlayOff playOff, int round) {
-  return Column(
-    children: [
-      Container(
-        height: 30,
-        child: Text(
-          kRoundNames[round],
-          style: CustomStyles.kTitleStyle,
         ),
-      ),
-      ...playOff
-          .getPredictedMatchesOfRound(round)
-          .map(
-            (match) => Container(
-              height: 110,
-              margin: EdgeInsets.symmetric(
-                horizontal: kMatchCardMargin,
-                vertical: max(
-                    0,
-                    55.0 +
-                        (playOff.nRounds - round - 2) * 110 +
-                        max(0, (playOff.nRounds - round - 3)) * 110),
+        ...playOff
+            .getMatchesOfRound(round)
+            .map(
+              (mid) => Container(
+                height: 100,
+                margin: EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: max(
+                      0,
+                      50.0 +
+                          (playOff.nRounds - round - 2) * 100 +
+                          max(0, (playOff.nRounds - round - 3)) * 100),
+                ),
+                child: MatchCard(matchesData.getMatchById(mid)),
               ),
-              child: MatchCard(match),
-            ),
-          )
-          .toList(),
-    ],
-  );
+            )
+            .toList(),
+      ],
+    );
+  }
+
+  Column _buildPredictedRoundColumn(PlayOff playOff, int round) {
+    return Column(
+      children: [
+        Container(
+          height: 30,
+          child: Text(
+            kRoundNames[round],
+            style: CustomStyles.kTitleStyle,
+          ),
+        ),
+        ...playOff
+            .getPredictedMatchesOfRound(round)
+            .map(
+              (match) => Container(
+                height: 100,
+                margin: EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: max(
+                      0,
+                      50.0 +
+                          (playOff.nRounds - round - 2) * 100 +
+                          max(0, (playOff.nRounds - round - 3)) * 100),
+                ),
+                child: MatchCard(match),
+              ),
+            )
+            .toList(),
+      ],
+    );
+  }
 }

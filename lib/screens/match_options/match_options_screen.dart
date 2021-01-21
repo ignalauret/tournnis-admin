@@ -46,9 +46,20 @@ class MatchOptionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TournamentMatch match = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
-        title: Text("Partido", style: CustomStyles.kAppBarTitle,),
+        backgroundColor: CustomColors.kAppBarColor,
+        title: Text(
+          "Partido",
+          style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -72,19 +83,19 @@ class MatchOptionsScreen extends StatelessWidget {
                   builder: (context) => MatchResultDialog(match),
                 ),
               ),
-            if (match.category != 0 && !match.isPlayOff)
-              MenuButton(
-                "Eliminar partido",
-                () {
-                  showDialog(
-                          context: context,
-                          builder: (context) => DeleteMatchDialog(match))
-                      .then((deleted) {
-                    if (deleted) Navigator.of(context).pop();
-                  });
-                },
-                letterColor: Colors.red,
-              ),
+            // if (match.category != 0 && !match.isPlayOff)
+            //   MenuButton(
+            //     "Eliminar partido",
+            //     () {
+            //       showDialog(
+            //               context: context,
+            //               builder: (context) => DeleteMatchDialog(match))
+            //           .then((deleted) {
+            //         if (deleted) Navigator.of(context).pop();
+            //       });
+            //     },
+            //     letterColor: Colors.red,
+            //   ),
             Spacer(),
           ],
         ),

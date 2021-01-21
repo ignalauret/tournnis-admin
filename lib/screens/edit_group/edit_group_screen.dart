@@ -17,9 +17,20 @@ class EditGroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GroupZone group = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
-        title: Text("Editar ${group.name}", style: CustomStyles.kAppBarTitle,),
+        backgroundColor: CustomColors.kAppBarColor,
+        title: Text(
+          "Editar ${group.name}",
+          style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SafeArea(
         child: SizedBox(
@@ -61,7 +72,7 @@ class EditGroupScreen extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: Text(
                         "Seguro que desea eliminar este grupo?",
-                        style: CustomStyles.kResultStyle,
+                        style: CustomStyles.kNormalStyle,
                       ),
                       actions: [
                         FlatButton(

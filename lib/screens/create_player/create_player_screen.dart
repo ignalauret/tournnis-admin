@@ -121,12 +121,20 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kWhiteColor,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
-          isEdit ? "Editar Jugador" : "Nuevo jugador",
+          isEdit ? "Editar jugador" : "Crear jugador",
           style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(

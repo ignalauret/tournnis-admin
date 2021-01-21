@@ -98,11 +98,9 @@ class TournamentMatch {
 
   int gamesLostByPlayer(String pid) {
     if (pid == this.pid1) {
-      return result2.fold<int>(
-          0, (previousValue, games) => previousValue + games);
+      return gamesWonByPlayer(this.pid2);
     } else if (pid == this.pid2) {
-      return result1.fold<int>(
-          0, (previousValue, games) => previousValue + games);
+      return gamesWonByPlayer(this.pid1);
     }
     return null;
   }
@@ -111,6 +109,32 @@ class TournamentMatch {
     if (!hasEnded) return 0;
     return gamesWonByPlayer(pid) - gamesLostByPlayer(pid);
   }
+
+  int tiebreaksWonByPlayer(String pid) {
+    if (!hasEnded) return 0;
+    int count = 0;
+    if (pid == this.pid1) {
+      for (int i = 0; i < result1.length; i++) {
+        if (result1[i] == 7 && result2[i] == 6) count++;
+      }
+    } else if (pid == this.pid2) {
+      for (int i = 0; i < result1.length; i++) {
+        if (result2[i] == 7 && result1[i] == 6) count++;
+      }
+    }
+    return count;
+  }
+
+  int tiebreaksLostByPlayer(String pid) {
+    if (!hasEnded) return 0;
+    if (pid == this.pid1) {
+      return tiebreaksWonByPlayer(this.pid2);
+    } else if (pid == this.pid2) {
+      return tiebreaksWonByPlayer(this.pid1);
+    }
+    return null;
+  }
+
 
   static String getCategoryName(int category) {
     switch (category) {

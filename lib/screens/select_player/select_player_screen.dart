@@ -29,10 +29,21 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Seleccionar jugador", style: CustomStyles.kAppBarTitle,),
+        backgroundColor: CustomColors.kAppBarColor,
+        title: Text(
+          "Seleccionar jugador",
+          style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
             icon: Icon(
@@ -61,7 +72,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                   children: [
                     Container(
                       height: 60,
-                      width: size.width * 0.7,
+                      width: size.width - 40,
                       alignment: Alignment.center,
                       child: SearchBar(
                         hint: "Buscar jugador",

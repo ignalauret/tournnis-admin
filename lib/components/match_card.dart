@@ -62,20 +62,20 @@ class MatchCard extends StatelessWidget {
                             arguments: match,
                           ),
               child: Container(
-                height: 70,
+                height: 60,
                 width: size.width * 0.85,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: CustomColors.kMainColor,
                   borderRadius:
                       BorderRadius.circular(Constants.kCardBorderRadius),
                 ),
                 child: Row(
                   children: [
                     _buildRankingsContainer(
-                      playersData.getPlayerRankingFromTournament(
-                          context, match.pid1, match.tid, match.category),
-                      playersData.getPlayerRankingFromTournament(
-                          context, match.pid2, match.tid, match.category),
+                      playersData.getPlayerGlobalRanking(
+                          match.pid1, match.category),
+                      playersData.getPlayerGlobalRanking(
+                          match.pid2, match.category),
                     ),
                     Expanded(
                       child: match.hasEnded ||
@@ -147,7 +147,7 @@ class MatchCard extends StatelessWidget {
   Container _buildHeader(
       DateTime date, String category, Size size, bool isPredicted) {
     return Container(
-      height: 30,
+      height: 25,
       width: size.width * 0.85,
       child: Row(
         children: [
@@ -161,17 +161,16 @@ class MatchCard extends StatelessWidget {
                     ? "Por organizar"
                     : TimeMethods.parseDate(date),
             style: CustomStyles.kResultStyle.copyWith(
-              color: Colors.white,
+              color: CustomColors.kAccentColor,
               fontStyle: isPredicted ? FontStyle.italic : null,
               letterSpacing: -0.5,
             ),
           ),
           Spacer(),
-          if (!isPredicted)
-            Text(
-              category,
-              style: CustomStyles.kCategoryStyle,
-            ),
+          Text(
+            category,
+            style: CustomStyles.kCategoryStyle,
+          ),
           SizedBox(
             width: 8,
           ),
@@ -183,7 +182,7 @@ class MatchCard extends StatelessWidget {
   Container _buildRankingsContainer(
       Future<int> ranking1, Future<int> ranking2) {
     return Container(
-      height: 70,
+      height: 60,
       width: 30,
       decoration: BoxDecoration(
         color: CustomColors.kAccentColor,
@@ -215,12 +214,13 @@ class MatchCard extends StatelessWidget {
 
   Widget _buildRanking(int ranking) {
     return Container(
-      height: 35,
+      height: 30,
       width: 30,
       alignment: Alignment.center,
       child: Text(
         ranking == 0 ? "-" : ranking.toString(),
-        style: CustomStyles.kResultStyle.copyWith(color: Colors.white),
+        style:
+            CustomStyles.kResultStyle.copyWith(color: CustomColors.kWhiteColor),
       ),
     );
   }
@@ -237,10 +237,9 @@ class MatchCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               name,
-              style: CustomStyles.kPlayerNameStyle.copyWith(
-                color:
-                    isWinner ? null : CustomColors.kMainColor.withOpacity(0.5),
-              ),
+              style: isWinner
+                  ? CustomStyles.kPlayerNameStyle
+                  : CustomStyles.kLighterPlayerNameStyle,
             ),
           ),
         ),
@@ -249,22 +248,20 @@ class MatchCard extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               "W.O.",
-              style: CustomStyles.kResultStyle.copyWith(color: CustomColors.kMainColor.withOpacity(0.5)),
+              style: CustomStyles.kResultStyle,
             ),
           ),
         if (score != null && !wo)
           ...score.map(
             (score) => Container(
-              height: 35,
+              height: 30,
               width: 30,
               alignment: Alignment.center,
               child: Text(
                 score.toString(),
-                style: CustomStyles.kResultStyle.copyWith(
-                  color: isWinner
-                      ? null
-                      : CustomColors.kMainColor.withOpacity(0.5),
-                ),
+                style: isWinner
+                    ? CustomStyles.kResultStyle
+                    : CustomStyles.kLighterResultStyle,
               ),
             ),
           ),
@@ -274,8 +271,8 @@ class MatchCard extends StatelessWidget {
 
   Container _buildMatchAction(BuildContext context, TournamentMatch match) {
     return Container(
-      width: 70,
-      height: 70,
+      width: 60,
+      height: 60,
       child: match.date == null
           ? IconButton(
               icon: Icon(

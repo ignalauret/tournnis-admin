@@ -13,14 +13,25 @@ class GroupMatchesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GroupZone group = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
-        title: Text(group.name, style: CustomStyles.kAppBarTitle,),
+        backgroundColor: CustomColors.kAppBarColor,
+        title: Text(
+          group.name,
+          style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
             icon: Icon(
               Icons.edit,
-              color: CustomColors.kWhiteColor,
+              color: CustomColors.kAccentColor,
             ),
             onPressed: () {
               Navigator.of(context)
@@ -39,7 +50,7 @@ class GroupMatchesScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              GroupsListItem(group),
+              GroupsListItem(group, true),
               Text(
                 "Partidos",
                 style: CustomStyles.kTitleStyle,

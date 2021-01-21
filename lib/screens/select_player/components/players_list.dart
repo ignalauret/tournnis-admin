@@ -65,6 +65,7 @@ class PlayersListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: CustomColors.kMainColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
       ),

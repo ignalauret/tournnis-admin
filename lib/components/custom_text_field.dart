@@ -8,8 +8,8 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     this.label,
     this.hint,
-    this.letterColor = CustomColors.kWhiteColor,
-    this.hintColor = Colors.white70,
+    this.letterColor = CustomColors.kMainColor,
+    this.hintColor = Colors.black54,
   });
 
   final TextEditingController controller;

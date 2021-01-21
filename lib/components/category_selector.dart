@@ -45,7 +45,9 @@ class CategorySelector extends StatelessWidget {
           child: Text(
             name,
             style: CustomStyles.kResultStyle.copyWith(
-              color: selected ? CustomColors.kAccentColor : Colors.white,
+              color: selected
+                  ? CustomColors.kSelectedItemColor
+                  : CustomColors.kUnselectedItemColor,
             ),
           ),
         ),

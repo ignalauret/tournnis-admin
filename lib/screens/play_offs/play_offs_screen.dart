@@ -19,11 +19,19 @@ class _PlayOffsScreenState extends State<PlayOffsScreen> {
     final String tid = ModalRoute.of(context).settings.arguments;
     final PlayOffsProvider playoffData = context.watch<PlayOffsProvider>();
     return Scaffold(
-      backgroundColor: CustomColors.kMainColor,
+      backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: CustomColors.kAppBarColor,
         title: Text(
-          "PlayOffs",
+          "Playoffs",
           style: CustomStyles.kAppBarTitle,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: CustomColors.kAccentColor,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(

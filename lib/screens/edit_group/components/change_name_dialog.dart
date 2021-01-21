@@ -34,14 +34,16 @@ class _ChangeNameDialogState extends State<ChangeNameDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: CustomColors.kMainColor,
-      title: Text("Cambiar nombre", style: CustomStyles.kTitleStyle,),
+      backgroundColor: CustomColors.kBackgroundColor,
+      title: Text(
+        "Cambiar nombre",
+        style: CustomStyles.kTitleStyle,
+      ),
       content: Container(
         child: CustomTextField(
           controller: controller,
           label: "Nombre",
           hint: "Ingrese el nuevo nombre",
-
         ),
       ),
       actions: [
@@ -50,7 +52,7 @@ class _ChangeNameDialogState extends State<ChangeNameDialog> {
           child: FlatButton(
             child: Text(
               "Cancelar",
-              style: CustomStyles.kResultStyle.copyWith(color:  Colors.white70),
+              style: CustomStyles.kResultStyle.copyWith(color: Colors.grey),
             ),
             onPressed: () {
               Navigator.of(context).pop(false);
@@ -62,12 +64,14 @@ class _ChangeNameDialogState extends State<ChangeNameDialog> {
           child: FlatButton(
             child: Text(
               tapped ? "Guardando..." : "Guardar",
-              style: CustomStyles.kResultStyle.copyWith(color: tapped || controller.text.isEmpty ? Colors.white : CustomColors.kAccentColor),
+              style: CustomStyles.kResultStyle.copyWith(
+                  color: tapped || controller.text.isEmpty
+                      ? CustomColors.kAccentColor.withOpacity(0.5)
+                      : CustomColors.kAccentColor),
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Constants.kCardBorderRadius),
             ),
-            disabledColor: Colors.white38,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             onPressed: tapped || controller.text.isEmpty
                 ? null
