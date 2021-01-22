@@ -177,7 +177,9 @@ class PlayersProvider extends ChangeNotifier {
         .addAll({"cloud_name": "tournnis", "upload_preset": "profile_upload"});
     final response = await request.send();
     final data = await response.stream.bytesToString();
-    return jsonDecode(data)["url"];
+    String url = jsonDecode(data)["url"];
+    url = "https:" + url.split(":").last;
+    return url;
   }
 
   Future<bool> addMatchPoints(

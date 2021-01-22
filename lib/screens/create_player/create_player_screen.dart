@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tournnis_admin/components/profile_picture.dart';
 import 'package:tournnis_admin/components/text_data_card.dart';
+import 'package:tournnis_admin/utils/utils.dart';
 
 import '../../components/action_button.dart';
 import '../../components/custom_text_field.dart';
@@ -166,7 +163,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       SizedBox(height: 20),
                       TextDataCard(
                         title: "Fecha de nacimiento",
-                        data: DateFormat("d/M/y").format(birthDate),
+                        data: Utils.formatDate(birthDate),
                         size: size,
                         onTap: _selectDate,
                       ),

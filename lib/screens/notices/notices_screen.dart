@@ -74,6 +74,7 @@ class NoticesScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
+                      cacheExtent: 9999,
                       itemBuilder: (context, index) => GestureDetector(
                         onLongPress: () {
                           showDialog(

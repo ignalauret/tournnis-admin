@@ -23,7 +23,6 @@ environment:
 dependencies:
   provider:
   http:
-  intl:
   diagonal_scrollview:
   image_picker:
   flutter:

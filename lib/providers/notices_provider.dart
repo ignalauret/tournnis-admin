@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -36,8 +35,18 @@ class NoticesProvider extends ChangeNotifier {
     final response = await http.get(Constants.kDbPath + "/notices.json");
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final List<Notice> tempNotices = data["notices"] == null ? [] : Map<String, String>.from(data["notices"]).entries.map((entry) => Notice(entry.key, entry.value, true)).toList();
-      final List<Notice> tempSponsors = data["sponsors"] == null ? [] : Map<String, String>.from(data["sponsors"]).entries.map((entry) => Notice(entry.key, entry.value, false)).toList();
+      final List<Notice> tempNotices = data["notices"] == null
+          ? []
+          : Map<String, String>.from(data["notices"])
+              .entries
+              .map((entry) => Notice(entry.key, entry.value, true))
+              .toList();
+      final List<Notice> tempSponsors = data["sponsors"] == null
+          ? []
+          : Map<String, String>.from(data["sponsors"])
+              .entries
+              .map((entry) => Notice(entry.key, entry.value, false))
+              .toList();
       // Create sponsored list of notices
       final List<Notice> temp = [];
       temp.addAll(tempNotices);
@@ -62,8 +71,9 @@ class NoticesProvider extends ChangeNotifier {
 
   Future<bool> deleteNotice(Notice notice) async {
     final trail = notice.isNotice ? "notices" : "sponsors";
-    final response = await http.delete(Constants.kDbPath + "/notices/$trail/${notice.id}.json");
-    if(response.statusCode == 200) {
+    final response = await http
+        .delete(Constants.kDbPath + "/notices/$trail/${notice.id}.json");
+    if (response.statusCode == 200) {
       removeLocalNotice(notice.id);
       return true;
     } else {
@@ -88,7 +98,8 @@ class NoticesProvider extends ChangeNotifier {
     final response = await request.send();
     if (response.statusCode == 200) {
       final data = await response.stream.bytesToString();
-      final url = jsonDecode(data)["url"];
+      String url = jsonDecode(data)["url"];
+      url = "https:" + url.split(":").last;
       return await createNotice(isNotice: isNotice, url: url);
     } else {
       return false;
