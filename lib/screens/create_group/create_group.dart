@@ -42,7 +42,7 @@ class _CreateGroupState extends State<CreateGroup> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.kBackgroundColor,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: CustomColors.kAppBarColor,
         title: Text(

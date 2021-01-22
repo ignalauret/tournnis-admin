@@ -119,7 +119,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColors.kWhiteColor,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: CustomColors.kAppBarColor,
         title: Text(
