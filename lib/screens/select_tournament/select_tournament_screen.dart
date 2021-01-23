@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/screens/create_tournament/create_tournament_screen.dart';
 
 import '../../utils/custom_styles.dart';
 import '../../components/menu_button.dart';
@@ -19,6 +20,16 @@ class SelectTournamentScreen extends StatelessWidget {
           "Torneos",
           style: CustomStyles.kAppBarTitle,
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              color: CustomColors.kAccentColor,
+            ),
+            onPressed: () => Navigator.of(context)
+                .pushNamed(CreateTournamentScreen.routeName),
+          ),
+        ],
       ),
       body: SafeArea(
         child: FutureBuilder<List<Tournament>>(

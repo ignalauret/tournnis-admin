@@ -9,6 +9,7 @@ import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
 import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
+import 'package:tournnis_admin/screens/create_tournament/create_tournament_screen.dart';
 import 'package:tournnis_admin/screens/edit_group/edit_group_screen.dart';
 import 'package:tournnis_admin/screens/edit_play_off/edit_play_off_screen.dart';
 import 'package:tournnis_admin/screens/group_matches/group_matches_screen.dart';
@@ -75,6 +76,8 @@ class MyApp extends StatelessWidget {
         home: SelectTournamentScreen(),
         routes: {
           HomeScreen.routeName: (context) => HomeScreen(),
+          CreateTournamentScreen.routeName: (context) =>
+              CreateTournamentScreen(),
           // Matches
           MatchesScreen.routeName: (context) => MatchesScreen(),
           MatchOptionsScreen.routeName: (context) => MatchOptionsScreen(),

@@ -23,8 +23,14 @@ class TournamentsProvider extends ChangeNotifier {
     _tournaments = await fetchTournaments();
   }
 
-  void addLocalTournament(Tournament group) {
-    _tournaments.add(group);
+  void addLocalTournament(Tournament tournament) {
+    _tournaments.add(tournament);
+    notifyListeners();
+  }
+
+  void editLocalTournament(String tid, String name) {
+    final tournament = getTournamentById(tid);
+    tournament.name = name;
     notifyListeners();
   }
 
@@ -50,6 +56,49 @@ class TournamentsProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> setCurrentTid(String tid) async {
+    final response = await http.patch(
+      Constants.kDbPath + "/config.json",
+      body: jsonEncode({
+        "currentTid": tid,
+        "inGroups": 0,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> createTournament(String name) async {
+    final tournament = Tournament(name: name, startDate: DateTime.now());
+    final response = await http.post(
+      Constants.kDbPath + "/tournaments.json",
+      body: jsonEncode(tournament.toJson()),
+    );
+    if (response.statusCode == 200) {
+      tournament.id = jsonDecode(response.body)["name"];
+      addLocalTournament(tournament);
+      return await setCurrentTid(tournament.id);
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> editTournament(String tid, String name) async {
+    final response = await http.patch(
+      Constants.kDbPath + "/tournaments/$tid.json",
+      body: jsonEncode({"name": name}),
+    );
+    if (response.statusCode == 200) {
+      editLocalTournament(tid, name);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /* Getters */
 
   Tournament getTournamentById(String tid) {
@@ -59,7 +108,7 @@ class TournamentsProvider extends ChangeNotifier {
   }
 
   String getTournamentName(String tid) {
-    if(tid == null) return null;
+    if (tid == null) return null;
     return getTournamentById(tid).name;
   }
 }
