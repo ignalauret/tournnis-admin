@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tournnis_admin/components/category_tab_bar.dart';
 
-import '../../components/category_selector.dart';
+import 'package:provider/provider.dart';
+import 'package:tournnis_admin/providers/players_provider.dart';
 import '../../screens/create_player/create_player_screen.dart';
 import '../../screens/players/components/ranking.dart';
 import '../../utils/colors.dart';
@@ -50,6 +51,16 @@ class _PlayersScreenState extends State<PlayersScreen> {
               Navigator.of(context).pushNamed(CreatePlayerScreen.routeName);
             },
           ),
+          // Dev button, for cleaning db
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.cancel,
+          //     color: CustomColors.kAccentColor,
+          //   ),
+          //   onPressed: () {
+          //     context.read<PlayersProvider>().restartPoints();
+          //   },
+          // ),
         ],
       ),
       body: SafeArea(

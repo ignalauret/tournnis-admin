@@ -314,4 +314,25 @@ class PlayersProvider extends ChangeNotifier {
   //           .indexWhere((player) => player.id == pid) +
   //       1;
   // }
+
+  /* Dev */
+
+  // Future<void> restartPoints() async {
+  //   for (Player player in _players) {
+  //     print(player.name);
+  //     await http.patch(
+  //       Constants.kDbPath + "/players/${player.id}/points.json",
+  //       body: jsonEncode({"0": 0, "1": 0, "2": 0, "3": 0}),
+  //     );
+  //     await http.patch(
+  //       Constants.kDbPath + "/players/${player.id}/tournamentPoints.json",
+  //       body: jsonEncode({
+  //         "0": {"default": 0},
+  //         "1": {"default": 0},
+  //         "2": {"default": 0},
+  //         "3": {"default": 0}
+  //       }),
+  //     );
+  //   }
+  // }
 }
