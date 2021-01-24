@@ -27,6 +27,8 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
   void _createGroupZoneDraw(GroupsProvider groupsData, PlayOff playOff) {
     final players =
         groupsData.getGroupsWinners(context, playOff.tid, playOff.category);
+    // If there are not 8 groups, cant build predictions.
+    if (players.length != 16) return;
     final List<TournamentMatch> matches = [];
     for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
       matches.add(
@@ -86,7 +88,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
   Widget build(BuildContext context) {
     final PlayOff playOff = ModalRoute.of(context).settings.arguments;
     final GroupsProvider groupsData = context.watch<GroupsProvider>();
-    _createGroupZoneDraw(groupsData, playOff);
+    if (!playOff.hasStarted) _createGroupZoneDraw(groupsData, playOff);
 
     return Scaffold(
       backgroundColor: CustomColors.kBackgroundColor,

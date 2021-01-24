@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:tournnis_admin/utils/constants.dart';
+
 class Utils {
   static double log2(num x) => math.log(x) / math.log(2);
 
@@ -20,5 +22,13 @@ class Utils {
     final month = date.month;
     final year = date.year;
     return "$day/$month/$year";
+  }
+
+  static int getPlayOffPointsFromIndex(int index) {
+    if (index == -1) return Constants.kPlayOffPoints[0];
+    if (index == 0) return Constants.kPlayOffPoints[1];
+    if (index <= 2) return Constants.kPlayOffPoints[2];
+    if (index <= 6) return Constants.kPlayOffPoints[3];
+    return Constants.kPlayOffPoints[4];
   }
 }

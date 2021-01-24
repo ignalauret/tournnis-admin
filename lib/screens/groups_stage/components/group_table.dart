@@ -31,14 +31,14 @@ class GroupTable extends StatelessWidget {
         children: List.generate(group.playersIds.length, (index) => index)
             .map(
               (index) => _buildPlayerRow(
-            context,
-            group.tid,
-            tapPlayers,
-            index,
-            orderedPids,
-            playerData,
-          ),
-        )
+                context,
+                group.tid,
+                tapPlayers,
+                index,
+                orderedPids,
+                playerData,
+              ),
+            )
             .toList(),
       ),
     );
@@ -98,7 +98,7 @@ class GroupTable extends StatelessWidget {
               child: Text(
                 context.select<PlayersProvider, String>(
                     (data) => data.getPlayerName(orderedPids[index])),
-                style: index > orderedPids.length - 3
+                style: index > 2
                     ? CustomStyles.kLighterPlayerNameStyle
                     : CustomStyles.kPlayerNameStyle,
               ),
@@ -116,7 +116,7 @@ class GroupTable extends StatelessWidget {
                           orderedPids[index], group.tid, group.category)
                       .toString() +
                   " pts"),
-              style: index > orderedPids.length - 3
+              style: index > 2
                   ? CustomStyles.kLighterResultStyle
                   : CustomStyles.kResultStyle,
             ),

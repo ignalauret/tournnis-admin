@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/providers/tournaments_provider.dart';
 
 import '../models/group_zone.dart';
 import '../models/player.dart';
@@ -48,8 +49,7 @@ class MatchesProvider extends ChangeNotifier {
     return matches;
   }
 
-  List<TournamentMatch> getPlayerMatches(
-      String pid, String tid, int category) {
+  List<TournamentMatch> getPlayerMatches(String pid, String tid, int category) {
     return _matches
         .where((match) =>
             (match.pid1 == pid || match.pid2 == pid) &&
@@ -114,7 +114,8 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addLocalResult(String id, List<int> result1, List<int> result2, int isWo) {
+  void addLocalResult(
+      String id, List<int> result1, List<int> result2, int isWo) {
     final match = getMatchById(id);
     match.result1 = result1;
     match.result2 = result2;
@@ -189,13 +190,13 @@ class MatchesProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       final match = getMatchById(mid);
       // If match has ended, remove points.
-      if (match.hasEnded) {
+      if (match.hasEnded && !match.isPlayOff) {
         await context.read<PlayersProvider>().addPointsToPlayer(match.pid1,
             -1 * match.firstPlayerPoints, match.category, match.tid);
         await context.read<PlayersProvider>().addPointsToPlayer(match.pid2,
             -1 * match.secondPlayerPoints, match.category, match.tid);
       }
-      // Delete match in local memory.
+      //Delete match in local memory.
       removeLocalMatch(mid);
       return true;
     } else {
@@ -274,13 +275,13 @@ class MatchesProvider extends ChangeNotifier {
     final List<int> result1 = [];
     final List<int> result2 = [];
     int isWo = 0;
-    if(result == "1") {
-      result1.addAll([0,0]);
-      result2.addAll([6,6]);
+    if (result == "1") {
+      result1.addAll([0, 0]);
+      result2.addAll([6, 6]);
       isWo = 1;
     } else if (result == "2") {
-      result1.addAll([6,6]);
-      result2.addAll([0,0]);
+      result1.addAll([6, 6]);
+      result2.addAll([0, 0]);
       isWo = 2;
     } else {
       final sets = result.split(" ");
@@ -301,18 +302,26 @@ class MatchesProvider extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       if (match.isPlayOff) {
+        // Set the backend flag for telling the play off has started.
+        context.read<TournamentsProvider>().setInGroups();
         // If play off, add winner to next match.
         final playOffMatches = context
             .read<PlayOffsProvider>()
             .getPlayOff(match.tid, match.category)
             .matches;
         addLocalResult(match.id, result1, result2, isWo);
-        final success = await editPlayerOfMatchAtPosition(
-          playOffMatches[Utils.getNextMatchIndex(match.playOffIndex)],
-          Utils.getNextMatchPosition(match.playOffIndex),
-          match.winnerId,
-        );
-        return success;
+        // Check if is the final match
+        if (match.playOffIndex == 0) {
+          await endTournament(context, match);
+          return true;
+        } else {
+          final success = await editPlayerOfMatchAtPosition(
+            playOffMatches[Utils.getNextMatchIndex(match.playOffIndex)],
+            Utils.getNextMatchPosition(match.playOffIndex),
+            match.winnerId,
+          );
+          return success;
+        }
       } else {
         // If not play off, add points to player.
         int points1 = 0;
@@ -332,6 +341,30 @@ class MatchesProvider extends ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  Future<void> endTournament(
+      BuildContext context, TournamentMatch finalMatch) async {
+    final playOffMatches = _matches
+        .where((match) => match.tid == finalMatch.tid && match.isPlayOff)
+        .toList();
+    final playersProvider = context.read<PlayersProvider>();
+    // Add points to everyone except for the champion.
+    for (TournamentMatch match in playOffMatches) {
+      final loserId = match.loserId;
+      await playersProvider.addPointsToPlayer(
+          loserId,
+          Utils.getPlayOffPointsFromIndex(match.playOffIndex),
+          match.category,
+          match.tid);
+    }
+    // Add points to champion.
+    final championId = finalMatch.winnerId;
+    await playersProvider.addPointsToPlayer(
+        championId,
+        Utils.getPlayOffPointsFromIndex(-1),
+        finalMatch.category,
+        finalMatch.tid);
   }
 
   /* Getters */
@@ -401,8 +434,9 @@ class MatchesProvider extends ChangeNotifier {
   List<TournamentMatch> getMatchesOfPlayerOnCategory(String pid, int category) {
     final matches = _matches
         .where((match) =>
-    (match.pid1 == pid || match.pid2 == pid) &&
-        match.category == category)
+            (match.pid1 == pid || match.pid2 == pid) &&
+            match.category == category &&
+            match.date != null)
         .toList();
     matches.sort((m1, m2) => m2.date.compareTo(m1.date));
     return matches;

@@ -71,6 +71,16 @@ class TournamentsProvider extends ChangeNotifier {
     }
   }
 
+  /* Not so important to wait response */
+  Future<void> setInGroups() async {
+    await http.patch(
+      Constants.kDbPath + "/config.json",
+      body: jsonEncode({
+        "inGroups": 1,
+      }),
+    );
+  }
+
   Future<bool> createTournament(String name) async {
     final tournament = Tournament(name: name, startDate: DateTime.now());
     final response = await http.post(

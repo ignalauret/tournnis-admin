@@ -20,6 +20,7 @@ class CreateGroup extends StatefulWidget {
 class _CreateGroupState extends State<CreateGroup> {
   int selectedCategory = 0;
   final nameController = TextEditingController();
+  final indexController = TextEditingController();
   int players = 4;
   List<String> pids = [null, null, null, null];
   List<String> names = [null, null, null, null];
@@ -34,6 +35,7 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   void dispose() {
     nameController.dispose();
+    indexController.dispose();
     super.dispose();
   }
 
@@ -83,6 +85,14 @@ class _CreateGroupState extends State<CreateGroup> {
                       SizedBox(
                         height: 20,
                       ),
+                      CustomTextField(
+                        controller: indexController,
+                        label: "Número",
+                        hint: "Ingrese el número del grupo",
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       _buildPlayersTitle(),
                       ...List.generate(names.length, (index) => index)
                           .map(
@@ -108,6 +118,7 @@ class _CreateGroupState extends State<CreateGroup> {
                           name: nameController.text,
                           category: selectedCategory,
                           playersIds: pids,
+                          index: int.parse(indexController.text) - 1,
                         ),
                       )
                       .then((value) {
@@ -115,7 +126,8 @@ class _CreateGroupState extends State<CreateGroup> {
                   });
                 },
                 enabled: !pids.any((pid) => pid == null) &&
-                    nameController.text.isNotEmpty,
+                    nameController.text.isNotEmpty &&
+                    indexController.text.isNotEmpty,
               ),
             ],
           ),
@@ -131,11 +143,12 @@ class _CreateGroupState extends State<CreateGroup> {
       children: [
         GestureDetector(
           onTap: () {
-            setState(() {
-              players--;
-              pids.removeLast();
-              names.removeLast();
-            });
+            if (players > 2)
+              setState(() {
+                players--;
+                pids.removeLast();
+                names.removeLast();
+              });
           },
           child: Container(
             height: 30,

@@ -28,24 +28,34 @@ class Draw extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final matchesProvider = context.watch<MatchesProvider>();
-    return DiagonalScrollView(
-      maxHeight: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-      maxWidth: (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
-      child: Container(
-        height: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
-        width: (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
-        child: Row(
-          children: List.generate(
-            playOff.nRounds,
-            (index) => playOff.hasStarted
-                ? _buildRoundColumn(
-                    matchesProvider, playOff, playOff.nRounds - index - 1)
-                : _buildPredictedRoundColumn(
-                    playOff, playOff.nRounds - index - 1),
-          ).toList(),
-        ),
-      ),
-    );
+    return !playOff.hasStarted && playOff.predictedMatches == null
+        ? Center(
+            child: Text(
+              "Esta categoría no comenzó aún",
+              style: CustomStyles.kSubtitleStyle,
+            ),
+          )
+        : DiagonalScrollView(
+            maxHeight: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
+            maxWidth:
+                (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
+            enableZoom: true,
+            child: Container(
+              height: Utils.pow2(playOff.nRounds - 1) * 110.0 + 30,
+              width:
+                  (size.width * 0.85 + 2 * kMatchCardMargin) * playOff.nRounds,
+              child: Row(
+                children: List.generate(
+                  playOff.nRounds,
+                  (index) => playOff.hasStarted
+                      ? _buildRoundColumn(
+                          matchesProvider, playOff, playOff.nRounds - index - 1)
+                      : _buildPredictedRoundColumn(
+                          playOff, playOff.nRounds - index - 1),
+                ).toList(),
+              ),
+            ),
+          );
   }
 
   Column _buildRoundColumn(

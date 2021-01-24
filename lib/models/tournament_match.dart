@@ -50,18 +50,22 @@ class TournamentMatch {
     return isFirstWinner ? pid1 : pid2;
   }
 
+  String get loserId {
+    return isFirstWinner ? pid2 : pid1;
+  }
+
   int get firstPlayerPoints {
     if (!hasEnded) return 0;
-    if (isFirstWinner) return Constants.kLeaguePoints[0];
-    if (result1.length == 3) return Constants.kLeaguePoints[1];
-    return Constants.kLeaguePoints[2];
+    if (isFirstWinner) return Constants.kGroupPoints[0];
+    if (result1.length == 3) return Constants.kGroupPoints[1];
+    return Constants.kGroupPoints[2];
   }
 
   int get secondPlayerPoints {
     if (!hasEnded) return 0;
-    if (isSecondWinner) return Constants.kLeaguePoints[0];
-    if (result1.length == 3) return Constants.kLeaguePoints[1];
-    return Constants.kLeaguePoints[2];
+    if (isSecondWinner) return Constants.kGroupPoints[0];
+    if (result1.length == 3) return Constants.kGroupPoints[1];
+    return Constants.kGroupPoints[2];
   }
 
   int setsWonByPlayer(String pid) {
@@ -134,7 +138,6 @@ class TournamentMatch {
     }
     return null;
   }
-
 
   static String getCategoryName(int category) {
     switch (category) {

@@ -30,14 +30,16 @@ class GroupsProvider extends ChangeNotifier {
     return _groups.firstWhere((group) => group.id == id, orElse: () => null);
   }
 
-  List<String> getGroupsWinners(BuildContext context, String tid, int category) {
+  List<String> getGroupsWinners(
+      BuildContext context, String tid, int category) {
     final List<String> pids = [];
     final matchesData = context.watch<MatchesProvider>();
-    for(int i = 0; i < _groups.length; i++) {
-      if(_groups[i].tid != tid || _groups[i].category != category) continue;
+    for (int i = 0; i < _groups.length; i++) {
+      if (_groups[i].tid != tid || _groups[i].category != category) continue;
       final players = [..._groups[i].playersIds];
-      players.sort((p1, p2) => matchesData.comparePlayersWithPid(context, tid, category, p1, p2));
-      pids.addAll(players.sublist(0,2));
+      players.sort((p1, p2) =>
+          matchesData.comparePlayersWithPid(context, tid, category, p1, p2));
+      pids.addAll(players.sublist(0, 2));
     }
     return pids;
   }
@@ -75,8 +77,6 @@ class GroupsProvider extends ChangeNotifier {
       return null;
     }
   }
-
-
 
   Future<bool> createGroup(BuildContext context, GroupZone group) async {
     final ids =

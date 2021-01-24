@@ -27,11 +27,10 @@ class PlayOffsProvider extends ChangeNotifier {
 
   PlayOff getPlayOff(String tid, int category) {
     return _playOffs.firstWhere(
-          (poff) => poff.tid == tid && poff.category == category,
+      (poff) => poff.tid == tid && poff.category == category,
       orElse: () => PlayOff(
         tid: tid,
         category: category,
-        matches: List.generate(15, (index) => index.toString()),
         hasStarted: false,
       ),
     );

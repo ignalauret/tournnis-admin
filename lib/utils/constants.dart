@@ -4,5 +4,6 @@ class Constants {
   static const kCardBorderRadius = 5.0;
   static const kSponsorImageFrequency = 3;
 
-  static const kLeaguePoints = [30, 10, 5];
+  static const kGroupPoints = [20, 10, 5];
+  static const kPlayOffPoints = [250, 190, 140, 100, 70];
 }

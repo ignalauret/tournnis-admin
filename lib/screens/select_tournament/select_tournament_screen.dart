@@ -36,6 +36,13 @@ class SelectTournamentScreen extends StatelessWidget {
           future: context.watch<TournamentsProvider>().tournaments,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (snapshot.data.isEmpty)
+                return Center(
+                  child: Text(
+                    "No hay torneos",
+                    style: CustomStyles.kSubtitleStyle,
+                  ),
+                );
               return SizedBox(
                 width: double.infinity,
                 child: Column(
