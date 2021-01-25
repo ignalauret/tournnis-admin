@@ -72,7 +72,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                   children: [
                     Container(
                       height: 60,
-                      width: size.width - 40,
+                      width: size.width * 0.7,
                       alignment: Alignment.center,
                       child: SearchBar(
                         hint: "Buscar jugador",
