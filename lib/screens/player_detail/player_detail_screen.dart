@@ -5,6 +5,7 @@ import 'package:tournnis_admin/components/match_card.dart';
 import 'package:tournnis_admin/models/tournament_match.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
+import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
 import 'package:tournnis_admin/screens/player_detail/components/player_info_section.dart';
 
 import '../../models/player.dart';
@@ -52,6 +53,20 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: CustomColors.kAccentColor,
+            ),
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                CreatePlayerScreen.routeName,
+                arguments: player,
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: DefaultTabController(

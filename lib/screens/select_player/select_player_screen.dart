@@ -93,7 +93,7 @@ class _SelectPlayerScreenState extends State<SelectPlayerScreen> {
                           child: Text(
                             "Agregar",
                             style: CustomStyles.kResultStyle
-                                .copyWith(color: Colors.white),
+                                .copyWith(color: CustomColors.kMainColor),
                           ),
                         ),
                       ),
