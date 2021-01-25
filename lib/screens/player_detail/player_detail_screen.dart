@@ -32,19 +32,9 @@ class _PlayerDetailScreenState extends State<PlayerDetailScreen> {
       appBar: AppBar(
         backgroundColor: CustomColors.kAppBarColor,
         elevation: 0,
-        title: Container(
-          child: Row(
-            children: [
-              Spacer(),
-              Text(
-                "PERFIL",
-                style: CustomStyles.kAppBarTitle,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-            ],
-          ),
+        title: Text(
+          "PERFIL",
+          style: CustomStyles.kAppBarTitle,
         ),
         leading: IconButton(
           icon: Icon(

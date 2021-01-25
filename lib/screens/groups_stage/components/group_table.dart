@@ -98,7 +98,7 @@ class GroupTable extends StatelessWidget {
               child: Text(
                 context.select<PlayersProvider, String>(
                     (data) => data.getPlayerName(orderedPids[index])),
-                style: index > 2
+                style: index > 1
                     ? CustomStyles.kLighterPlayerNameStyle
                     : CustomStyles.kPlayerNameStyle,
               ),
@@ -116,7 +116,7 @@ class GroupTable extends StatelessWidget {
                           orderedPids[index], group.tid, group.category)
                       .toString() +
                   " pts"),
-              style: index > 2
+              style: index > 1
                   ? CustomStyles.kLighterResultStyle
                   : CustomStyles.kResultStyle,
             ),

@@ -45,6 +45,7 @@ class PlayersProvider extends ChangeNotifier {
         editData["backhand"] == 1 ? Backhand.OneHanded : Backhand.TwoHanded;
     player.birth = DateTime.parse(editData["birth"]);
     player.racket = editData["racket"];
+    player.imageUrl = editData["coverUrl"];
     notifyListeners();
   }
 

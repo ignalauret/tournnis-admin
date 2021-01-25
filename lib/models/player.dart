@@ -26,7 +26,7 @@ class Player {
   final List<Map<String, int>>
       tournamentCategoryPoints; // [{category [int] : points [int]}]
   final String profileUrl;
-  final String imageUrl;
+  String imageUrl;
   String racket;
   Backhand backhand;
   Handed handed;
