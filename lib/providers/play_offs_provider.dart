@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:tournnis_admin/providers/tournaments_provider.dart';
 
 import '../models/play_off.dart';
 import '../models/tournament_match.dart';
@@ -87,6 +88,8 @@ class PlayOffsProvider extends ChangeNotifier {
         body: json.encode(playOff.toJson()));
     if (response.statusCode == 200) {
       addLocalPlayOff(playOff);
+      // Set the backend flag for telling the play off has started.
+      context.read<TournamentsProvider>().setInGroups();
       return true;
     } else {
       return false;

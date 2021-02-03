@@ -91,7 +91,7 @@ class MatchCard extends StatelessWidget {
                                     match.isPredicted
                                         ? false
                                         : !match.isSecondWinner,
-                                    match.isWo == 1,
+                                    match.isWo == 2,
                                   ),
                                 ),
                                 Expanded(
@@ -101,7 +101,7 @@ class MatchCard extends StatelessWidget {
                                     match.isPredicted
                                         ? false
                                         : !match.isFirstWinner,
-                                    match.isWo == 2,
+                                    match.isWo == 1,
                                   ),
                                 ),
                               ],
@@ -116,7 +116,7 @@ class MatchCard extends StatelessWidget {
                                           playersData.getPlayerName(match.pid1),
                                           match.result1,
                                           !match.isSecondWinner,
-                                          match.isWo == 1,
+                                          match.isWo == 2,
                                         ),
                                       ),
                                       Expanded(
@@ -124,7 +124,7 @@ class MatchCard extends StatelessWidget {
                                           playersData.getPlayerName(match.pid2),
                                           match.result2,
                                           !match.isFirstWinner,
-                                          match.isWo == 2,
+                                          match.isWo == 1,
                                         ),
                                       ),
                                     ],

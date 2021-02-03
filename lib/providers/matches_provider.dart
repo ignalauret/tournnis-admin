@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:tournnis_admin/providers/tournaments_provider.dart';
 
 import '../models/group_zone.dart';
 import '../models/player.dart';
@@ -302,8 +301,6 @@ class MatchesProvider extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       if (match.isPlayOff) {
-        // Set the backend flag for telling the play off has started.
-        context.read<TournamentsProvider>().setInGroups();
         // If play off, add winner to next match.
         final playOffMatches = context
             .read<PlayOffsProvider>()

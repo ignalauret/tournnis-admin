@@ -56,6 +56,7 @@ class TournamentMatch {
 
   int get firstPlayerPoints {
     if (!hasEnded) return 0;
+    if (isWo == 1) return 0;
     if (isFirstWinner) return Constants.kGroupPoints[0];
     if (result1.length == 3) return Constants.kGroupPoints[1];
     return Constants.kGroupPoints[2];
@@ -63,6 +64,7 @@ class TournamentMatch {
 
   int get secondPlayerPoints {
     if (!hasEnded) return 0;
+    if (isWo == 2) return 0;
     if (isSecondWinner) return Constants.kGroupPoints[0];
     if (result1.length == 3) return Constants.kGroupPoints[1];
     return Constants.kGroupPoints[2];
