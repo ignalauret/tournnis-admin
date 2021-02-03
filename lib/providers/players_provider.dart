@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/player.dart';
 import '../models/tournament_match.dart';
-import '../providers/matches_provider.dart';
 import '../utils/constants.dart';
 
 class PlayersProvider extends ChangeNotifier {
