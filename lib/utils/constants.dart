@@ -8,5 +8,5 @@ class Constants {
   static const kSponsorImageFrequency = 3;
 
   static const kGroupPoints = [20, 10, 5];
-  static const kPlayOffPoints = [250, 190, 140, 100, 70];
+  static const kPlayOffPoints = [250, 190, 140, 100, 70, 50, 30];
 }
