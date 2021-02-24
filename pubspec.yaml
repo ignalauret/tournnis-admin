@@ -25,6 +25,7 @@ dependencies:
   http:
   diagonal_scrollview:
   image_picker:
+  shared_preferences:
   flutter:
     sdk: flutter
 
@@ -56,6 +57,9 @@ flutter:
           weight: 500
         - asset: assets/fonts/Montserrat-Bold.ttf
           weight: 700
+
+  assets:
+    - assets/img/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

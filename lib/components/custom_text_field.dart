@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.hint,
     this.letterColor = CustomColors.kMainColor,
     this.hintColor = Colors.black54,
+    this.obscure = false,
   });
 
   final TextEditingController controller;
@@ -17,10 +18,12 @@ class CustomTextField extends StatelessWidget {
   final String hint;
   final Color letterColor;
   final Color hintColor;
+  final bool obscure;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: obscure,
       controller: controller,
       style: CustomStyles.kNormalStyle.copyWith(color: letterColor),
       decoration: InputDecoration(

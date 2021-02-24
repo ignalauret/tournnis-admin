@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/providers/auth.dart';
 import 'package:tournnis_admin/screens/create_tournament/create_tournament_screen.dart';
 
 import '../../utils/custom_styles.dart';
@@ -28,6 +29,15 @@ class SelectTournamentScreen extends StatelessWidget {
             ),
             onPressed: () => Navigator.of(context)
                 .pushNamed(CreateTournamentScreen.routeName),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: CustomColors.kAccentColor,
+            ),
+            onPressed: () {
+              context.read<Auth>().logOut();
+            },
           ),
         ],
       ),

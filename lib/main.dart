@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/providers/auth.dart';
 import 'package:tournnis_admin/providers/groups_provider.dart';
 import 'package:tournnis_admin/providers/matches_provider.dart';
 import 'package:tournnis_admin/providers/notices_provider.dart';
@@ -7,7 +8,6 @@ import 'package:tournnis_admin/providers/play_offs_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
-import 'package:tournnis_admin/screens/create_match/create_match_screen.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
 import 'package:tournnis_admin/screens/create_tournament/create_tournament_screen.dart';
 import 'package:tournnis_admin/screens/edit_group/edit_group_screen.dart';
@@ -15,6 +15,8 @@ import 'package:tournnis_admin/screens/edit_play_off/edit_play_off_screen.dart';
 import 'package:tournnis_admin/screens/group_matches/group_matches_screen.dart';
 import 'package:tournnis_admin/screens/groups_stage/groups_stage_screen.dart';
 import 'package:tournnis_admin/screens/home/home_screen.dart';
+import 'package:tournnis_admin/screens/login/login_screen.dart';
+import 'package:tournnis_admin/screens/login/splash_screen.dart';
 import 'package:tournnis_admin/screens/match_options/match_options_screen.dart';
 import 'package:tournnis_admin/screens/matches/matches_screen.dart';
 import 'package:tournnis_admin/screens/notices/notices_screen.dart';
@@ -36,6 +38,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<Auth>(
+          create: (context) => Auth(),
+        ),
         ChangeNotifierProvider<PlayersProvider>(
           create: (context) => PlayersProvider(),
           lazy: false,
@@ -61,43 +66,52 @@ class MyApp extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: MaterialApp(
-        title: 'Tournnis',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: CustomColors.kMainColor,
-          accentColor: CustomColors.kAccentColor,
-          colorScheme: ColorScheme.light(
-              primary: CustomColors.kMainColor,
-              secondary: CustomColors.kAccentColor),
-          fontFamily: "Montserrat",
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+      child: Consumer<Auth>(
+        builder: (ctx, authData, _) => MaterialApp(
+          title: 'Tournnis',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: CustomColors.kMainColor,
+            accentColor: CustomColors.kAccentColor,
+            colorScheme: ColorScheme.light(
+                primary: CustomColors.kMainColor,
+                secondary: CustomColors.kAccentColor),
+            fontFamily: "Montserrat",
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: authData.isAuth
+              ? SelectTournamentScreen()
+              : FutureBuilder(
+                  future: authData.tryAutoLogIn(),
+                  builder: (context, snapshot) =>
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : LoginScreen(),
+                ),
+          routes: {
+            HomeScreen.routeName: (context) => HomeScreen(),
+            CreateTournamentScreen.routeName: (context) =>
+                CreateTournamentScreen(),
+            // Matches
+            MatchesScreen.routeName: (context) => MatchesScreen(),
+            MatchOptionsScreen.routeName: (context) => MatchOptionsScreen(),
+            // Groups
+            GroupStageScreen.routeName: (context) => GroupStageScreen(),
+            CreateGroup.routeName: (context) => CreateGroup(),
+            EditGroupScreen.routeName: (context) => EditGroupScreen(),
+            GroupMatchesScreen.routeName: (context) => GroupMatchesScreen(),
+            // Players
+            SelectPlayerScreen.routeName: (context) => SelectPlayerScreen(),
+            PlayersScreen.routeName: (context) => PlayersScreen(),
+            CreatePlayerScreen.routeName: (context) => CreatePlayerScreen(),
+            PlayerDetailScreen.routeName: (context) => PlayerDetailScreen(),
+            PlayOffsScreen.routeName: (context) => PlayOffsScreen(),
+            PlayOffDraw.routeName: (context) => PlayOffDraw(),
+            EditPlayOffScreen.routeName: (context) => EditPlayOffScreen(),
+            // Notices
+            NoticesScreen.routeName: (context) => NoticesScreen(),
+          },
         ),
-        home: SelectTournamentScreen(),
-        routes: {
-          HomeScreen.routeName: (context) => HomeScreen(),
-          CreateTournamentScreen.routeName: (context) =>
-              CreateTournamentScreen(),
-          // Matches
-          MatchesScreen.routeName: (context) => MatchesScreen(),
-          MatchOptionsScreen.routeName: (context) => MatchOptionsScreen(),
-          //CreateMatchScreen.routeName: (context) => CreateMatchScreen(),
-          // Groups
-          GroupStageScreen.routeName: (context) => GroupStageScreen(),
-          CreateGroup.routeName: (context) => CreateGroup(),
-          EditGroupScreen.routeName: (context) => EditGroupScreen(),
-          GroupMatchesScreen.routeName: (context) => GroupMatchesScreen(),
-          // Players
-          SelectPlayerScreen.routeName: (context) => SelectPlayerScreen(),
-          PlayersScreen.routeName: (context) => PlayersScreen(),
-          CreatePlayerScreen.routeName: (context) => CreatePlayerScreen(),
-          PlayerDetailScreen.routeName: (context) => PlayerDetailScreen(),
-          PlayOffsScreen.routeName: (context) => PlayOffsScreen(),
-          PlayOffDraw.routeName: (context) => PlayOffDraw(),
-          EditPlayOffScreen.routeName: (context) => EditPlayOffScreen(),
-          // Notices
-          NoticesScreen.routeName: (context) => NoticesScreen(),
-        },
       ),
     );
   }
