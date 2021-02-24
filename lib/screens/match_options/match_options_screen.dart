@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/screens/match_options/components/remove_date_dialog.dart';
 
 import '../../components/match_card.dart';
 import '../../components/menu_button.dart';
 import '../../models/tournament_match.dart';
 import '../../providers/matches_provider.dart';
-import '../../screens/match_options/components/delete_match_dialog.dart';
 import '../../screens/matches/components/match_result_dialog.dart';
 import '../../utils/colors.dart';
 import '../../utils/custom_styles.dart';
@@ -44,7 +44,7 @@ class MatchOptionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TournamentMatch match = ModalRoute.of(context).settings.arguments;
+    final String mid = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: CustomColors.kBackgroundColor,
       appBar: AppBar(
@@ -62,42 +62,42 @@ class MatchOptionsScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MatchCard(match),
-            SizedBox(
-              width: double.infinity,
-            ),
-            Spacer(),
-            MenuButton(
-              match.date == null ? "Programar" : "Reprogramar",
-              () => _setMatchDate(context, match),
-            ),
-            if (match.date != null)
-              MenuButton(
-                match.hasEnded ? "Editar resultado" : "Agregar resultado",
-                () => showDialog(
-                  context: context,
-                  builder: (context) => MatchResultDialog(match),
+        child: Consumer<MatchesProvider>(
+          builder: (context, matchesData, _) {
+            final TournamentMatch match = matchesData.getMatchById(mid);
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MatchCard(match),
+                SizedBox(
+                  width: double.infinity,
                 ),
-              ),
-            // if (match.category != 0 && !match.isPlayOff)
-            //   MenuButton(
-            //     "Eliminar partido",
-            //     () {
-            //       showDialog(
-            //               context: context,
-            //               builder: (context) => DeleteMatchDialog(match))
-            //           .then((deleted) {
-            //         if (deleted) Navigator.of(context).pop();
-            //       });
-            //     },
-            //     letterColor: Colors.red,
-            //   ),
-            Spacer(),
-          ],
+                Spacer(),
+                if (!match.hasEnded)
+                  MenuButton(
+                    match.date == null ? "Programar" : "Reprogramar",
+                    () => _setMatchDate(context, match),
+                  ),
+                if (match.date != null)
+                  MenuButton(
+                    match.hasEnded ? "Editar resultado" : "Agregar resultado",
+                    () => showDialog(
+                      context: context,
+                      builder: (context) => MatchResultDialog(match),
+                    ),
+                  ),
+                if (match.date != null && !match.hasEnded)
+                  MenuButton(
+                    "Desprogramar",
+                    () => showDialog(
+                        context: context,
+                        builder: (context) => RemoveDateDialog(match.id)),
+                  ),
+                Spacer(),
+              ],
+            );
+          },
         ),
       ),
     );

@@ -265,6 +265,21 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> removeDate(String mid) async {
+    final response = await http.patch(
+      Constants.kDbPath + "/matches/$mid.json",
+      body: jsonEncode({
+        "date": null,
+      }),
+    );
+    if (response.statusCode == 200) {
+      addLocalDate(mid, null);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> addResult(
     BuildContext context,
     TournamentMatch match,

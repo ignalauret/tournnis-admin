@@ -59,7 +59,7 @@ class MatchCard extends StatelessWidget {
                       ? null
                       : () => Navigator.of(context).pushNamed(
                             MatchOptionsScreen.routeName,
-                            arguments: match,
+                            arguments: match.id,
                           ),
               child: Container(
                 height: 60,
