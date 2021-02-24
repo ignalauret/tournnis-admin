@@ -7,6 +7,9 @@ import '../models/tournament.dart';
 import '../utils/constants.dart';
 
 class TournamentsProvider extends ChangeNotifier {
+  TournamentsProvider(this.token);
+
+  final String token;
   List<Tournament> _tournaments;
 
   Future<List<Tournament>> get tournaments async {

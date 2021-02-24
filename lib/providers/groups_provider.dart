@@ -10,10 +10,11 @@ import '../utils/constants.dart';
 import '../models/group_zone.dart';
 
 class GroupsProvider extends ChangeNotifier {
-  GroupsProvider() {
+  GroupsProvider(this.token) {
     getGroups();
   }
 
+  final String token;
   List<GroupZone> _groups;
 
   Future<List<GroupZone>> get groups async {
@@ -84,7 +85,7 @@ class GroupsProvider extends ChangeNotifier {
     if (ids == null) return false;
     group.matchesIds = ids;
     final response = await http.post(
-      Constants.kDbPath + "/groups.json",
+      Constants.kDbPath + "/groups.json?auth=$token",
       body: jsonEncode(group.toJson()),
     );
     if (response.statusCode == 200) {
@@ -98,7 +99,8 @@ class GroupsProvider extends ChangeNotifier {
 
   Future<bool> deleteGroup(BuildContext context, String gid) async {
     final group = getGroupById(gid);
-    final response = await http.delete(Constants.kDbPath + "/groups/$gid.json");
+    final response =
+        await http.delete(Constants.kDbPath + "/groups/$gid.json?auth=$token");
     if (response.statusCode == 200) {
       final bool success = await context
           .read<MatchesProvider>()
@@ -115,7 +117,7 @@ class GroupsProvider extends ChangeNotifier {
 
   Future<bool> changeGroupName(String gid, String newName) async {
     final response = await http.patch(
-      Constants.kDbPath + "/groups/$gid.json",
+      Constants.kDbPath + "/groups/$gid.json?auth=$token",
       body: jsonEncode({"name": newName}),
     );
     if (response.statusCode == 200) {
@@ -146,7 +148,7 @@ class GroupsProvider extends ChangeNotifier {
     }
     group.playersIds.add(pid);
     final response = await http.patch(
-      Constants.kDbPath + "/groups/$gid.json",
+      Constants.kDbPath + "/groups/$gid.json?auth=$token",
       body: jsonEncode(
         {"players": group.playersIds, "matches": group.matchesIds},
       ),
@@ -175,7 +177,7 @@ class GroupsProvider extends ChangeNotifier {
     group.matchesIds.removeWhere((mid) => toRemove.contains(mid));
     group.playersIds.remove(pid);
     final response = await http.patch(
-      Constants.kDbPath + "/groups/$gid.json",
+      Constants.kDbPath + "/groups/$gid.json?auth=$token",
       body: jsonEncode(
         {"players": group.playersIds, "matches": group.matchesIds},
       ),

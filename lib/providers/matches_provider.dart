@@ -13,10 +13,11 @@ import '../utils/constants.dart';
 import '../utils/utils.dart';
 
 class MatchesProvider extends ChangeNotifier {
-  MatchesProvider() {
+  MatchesProvider(this.token) {
     getMatches();
   }
 
+  final String token;
   List<TournamentMatch> _matches;
 
   Future<List<TournamentMatch>> get matches async {
@@ -142,7 +143,7 @@ class MatchesProvider extends ChangeNotifier {
   Future<String> createMatch(TournamentMatch match) async {
     // Try adding match in DB.
     final response = await http.post(
-      Constants.kDbPath + "/matches.json",
+      Constants.kDbPath + "/matches.json?auth=$token",
       body: jsonEncode(match.toJson()),
     );
     if (response.statusCode == 200) {
@@ -185,7 +186,7 @@ class MatchesProvider extends ChangeNotifier {
   Future<bool> deleteMatch(BuildContext context, String mid) async {
     // Try deleting match in DB.
     final response =
-        await http.delete(Constants.kDbPath + "/matches/$mid.json");
+        await http.delete(Constants.kDbPath + "/matches/$mid.json?auth=$token");
     if (response.statusCode == 200) {
       final match = getMatchById(mid);
       // If match has ended, remove points.
@@ -239,7 +240,7 @@ class MatchesProvider extends ChangeNotifier {
       body = {"pid2": newPid};
     }
     final response = await http.patch(
-      Constants.kDbPath + "/matches/$mid.json",
+      Constants.kDbPath + "/matches/$mid.json?auth=$token",
       body: jsonEncode(body),
     );
     if (response.statusCode == 200) {
@@ -252,7 +253,7 @@ class MatchesProvider extends ChangeNotifier {
 
   Future<bool> addDate(TournamentMatch match, DateTime date) async {
     final response = await http.patch(
-      Constants.kDbPath + "/matches/${match.id}.json",
+      Constants.kDbPath + "/matches/${match.id}.json?auth=$token",
       body: jsonEncode({
         "date": date.toString(),
       }),
@@ -267,7 +268,7 @@ class MatchesProvider extends ChangeNotifier {
 
   Future<bool> removeDate(String mid) async {
     final response = await http.patch(
-      Constants.kDbPath + "/matches/$mid.json",
+      Constants.kDbPath + "/matches/$mid.json?auth=$token",
       body: jsonEncode({
         "date": null,
       }),
@@ -307,7 +308,7 @@ class MatchesProvider extends ChangeNotifier {
     }
     // Try updating result in DB
     final response = await http.patch(
-      Constants.kDbPath + "/matches/${match.id}.json",
+      Constants.kDbPath + "/matches/${match.id}.json?auth=$token",
       body: jsonEncode({
         "result1": result1,
         "result2": result2,

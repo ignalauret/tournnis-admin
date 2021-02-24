@@ -8,10 +8,11 @@ import '../models/tournament_match.dart';
 import '../utils/constants.dart';
 
 class PlayersProvider extends ChangeNotifier {
-  PlayersProvider() {
+  PlayersProvider(this.token) {
     getPlayers();
   }
 
+  final String token;
   List<Player> _players = [];
 
   Future<List<Player>> get players async {
@@ -103,7 +104,7 @@ class PlayersProvider extends ChangeNotifier {
     );
     // Try adding player to DB.
     final response = await http.post(
-      Constants.kDbPath + "/players.json",
+      Constants.kDbPath + "/players.json?auth=$token",
       body: jsonEncode(player.toJson()),
     );
 
@@ -119,7 +120,7 @@ class PlayersProvider extends ChangeNotifier {
   Future<bool> deletePlayer(String pid) async {
     // Try deleting from DB.
     final response =
-        await http.delete(Constants.kDbPath + "/players/$pid.json");
+        await http.delete(Constants.kDbPath + "/players/$pid.json?auth=$token");
     if (response.statusCode == 200) {
       // Remove from local memory.
       removeLocalPlayer(pid);
@@ -149,7 +150,7 @@ class PlayersProvider extends ChangeNotifier {
       "coverUrl": imageUrl,
     };
     final response = await http.patch(
-      Constants.kDbPath + "/players/$pid.json",
+      Constants.kDbPath + "/players/$pid.json?auth=$token",
       body: jsonEncode(editData),
     );
     if (response.statusCode == 200) {
@@ -195,7 +196,7 @@ class PlayersProvider extends ChangeNotifier {
         getPlayerTournamentPoints(pid, tid, category) + points;
     // Try adding points in DB.
     final response = await http.patch(
-      Constants.kDbPath + "/players/$pid/points.json",
+      Constants.kDbPath + "/players/$pid/points.json?auth=$token",
       body: jsonEncode({"$category": newPoints}),
     );
 
@@ -204,7 +205,7 @@ class PlayersProvider extends ChangeNotifier {
       setLocalPlayerPoints(pid, category, newPoints);
       // try adding points to tournament in DB.
       final response2 = await http.patch(
-        Constants.kDbPath + "/players/$pid/tournamentPoints/$category.json",
+        Constants.kDbPath + "/players/$pid/tournamentPoints/$category.json?auth=$token",
         body: jsonEncode({"$tid": newTournamentPoints}),
       );
       if (response2.statusCode == 200) {
@@ -244,10 +245,6 @@ class PlayersProvider extends ChangeNotifier {
   // final Map<String, List<Player>> tournamentRankingCache = {};
   final Map<int, List<Player>> globalRankingCache = {};
 
-  // void refreshTournamentCache() {
-  //   tournamentRankingCache.clear();
-  // }
-
   void refreshGlobalCache() {
     globalRankingCache.clear();
   }
@@ -282,37 +279,6 @@ class PlayersProvider extends ChangeNotifier {
             .indexWhere((player) => player.id == pid) +
         1;
   }
-
-  // Future<List<Player>> getTournamentRanking(
-  //     BuildContext context, String tid, int category) async {
-  //   // Return if cached
-  //   if (tournamentRankingCache.containsKey("$tid/$category")) {
-  //     return tournamentRankingCache["$tid/$category"];
-  //   }
-  //   final playersList = await players;
-  //   // Remove players that don't have points.
-  //   // playersList.removeWhere(
-  //   //     (player) => player.getTournamentPointsOfCategory(tid, category) == 0);
-  //   // Sort by points.
-  //   playersList.sort(
-  //     (p1, p2) =>
-  //         context.read<MatchesProvider>().comparePlayers(tid, category, p1, p2),
-  //   );
-  //   // Cache
-  //   tournamentRankingCache["$tid/$category"] = [...playersList];
-  //   notifyListeners();
-  //   return playersList;
-  // }
-  //
-  // Future<int> getPlayerRankingFromTournament(
-  //     BuildContext context, String pid, String tid, int category) async {
-  //   if (!tournamentRankingCache.containsKey("$tid/$category")) {
-  //     await getTournamentRanking(context, tid, category);
-  //   }
-  //   return tournamentRankingCache["$tid/$category"]
-  //           .indexWhere((player) => player.id == pid) +
-  //       1;
-  // }
 
   /* Dev */
 

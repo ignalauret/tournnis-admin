@@ -41,29 +41,30 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Auth>(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProvider<PlayersProvider>(
-          create: (context) => PlayersProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, PlayersProvider>(
+          create: (context) => PlayersProvider(null),
+          update: (context, authData, prev) => PlayersProvider(authData.token),
         ),
-        ChangeNotifierProvider<MatchesProvider>(
-          create: (context) => MatchesProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, MatchesProvider>(
+          create: (context) => MatchesProvider(null),
+          update: (context, authData, prev) => MatchesProvider(authData.token),
         ),
-        ChangeNotifierProvider<GroupsProvider>(
-          create: (context) => GroupsProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, GroupsProvider>(
+          create: (context) => GroupsProvider(null),
+          update: (context, authData, prev) => GroupsProvider(authData.token),
         ),
-        ChangeNotifierProvider<TournamentsProvider>(
-          create: (context) => TournamentsProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, TournamentsProvider>(
+          create: (context) => TournamentsProvider(null),
+          update: (context, authData, prev) =>
+              TournamentsProvider(authData.token),
         ),
-        ChangeNotifierProvider<PlayOffsProvider>(
-          create: (context) => PlayOffsProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, PlayOffsProvider>(
+          create: (context) => PlayOffsProvider(null),
+          update: (context, authData, prev) => PlayOffsProvider(authData.token),
         ),
-        ChangeNotifierProvider<NoticesProvider>(
-          create: (context) => NoticesProvider(),
-          lazy: false,
+        ChangeNotifierProxyProvider<Auth, NoticesProvider>(
+          create: (context) => NoticesProvider(null),
+          update: (context, authData, prev) => NoticesProvider(authData.token),
         ),
       ],
       child: Consumer<Auth>(

@@ -11,10 +11,11 @@ import '../providers/matches_provider.dart';
 import '../utils/constants.dart';
 
 class PlayOffsProvider extends ChangeNotifier {
-  PlayOffsProvider() {
+  PlayOffsProvider(this.token) {
     getPlayOffs();
   }
 
+  final String token;
   List<PlayOff> _playOffs;
 
   Future<List<PlayOff>> get playOffs async {
@@ -84,7 +85,7 @@ class PlayOffsProvider extends ChangeNotifier {
     }
     playOff.matches = mids;
     playOff.hasStarted = true;
-    final response = await http.post(Constants.kDbPath + "/playOffs.json",
+    final response = await http.post(Constants.kDbPath + "/playOffs.json?auth=$token",
         body: json.encode(playOff.toJson()));
     if (response.statusCode == 200) {
       addLocalPlayOff(playOff);
@@ -102,7 +103,7 @@ class PlayOffsProvider extends ChangeNotifier {
         .deleteMatches(context, playOff.matches);
     if (success) {
       final response =
-          await http.delete(Constants.kDbPath + "/playOffs/${playOff.id}.json");
+          await http.delete(Constants.kDbPath + "/playOffs/${playOff.id}.json?auth=$token");
       if (response.statusCode == 200) {
         removeLocalPlayOff(playOff.id);
         return true;

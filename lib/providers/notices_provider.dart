@@ -6,10 +6,11 @@ import 'package:tournnis_admin/models/notice.dart';
 import 'package:tournnis_admin/utils/constants.dart';
 
 class NoticesProvider extends ChangeNotifier {
-  NoticesProvider() {
+  NoticesProvider(this.token) {
     getNotices();
   }
 
+  final String token;
   List<Notice> _notices;
 
   Future<List<Notice>> get notices async {
@@ -59,7 +60,7 @@ class NoticesProvider extends ChangeNotifier {
 
   Future<bool> createNotice({bool isNotice, String url}) async {
     final trail = isNotice ? "notices" : "sponsors";
-    final response = await http.post(Constants.kDbPath + "/notices/$trail.json",
+    final response = await http.post(Constants.kDbPath + "/notices/$trail.json?auth=$token",
         body: jsonEncode(url));
     if (response.statusCode == 200) {
       addLocalNotice(Notice(jsonDecode(response.body)["name"], url, isNotice));
@@ -72,7 +73,7 @@ class NoticesProvider extends ChangeNotifier {
   Future<bool> deleteNotice(Notice notice) async {
     final trail = notice.isNotice ? "notices" : "sponsors";
     final response = await http
-        .delete(Constants.kDbPath + "/notices/$trail/${notice.id}.json");
+        .delete(Constants.kDbPath + "/notices/$trail/${notice.id}.json?auth=$token");
     if (response.statusCode == 200) {
       removeLocalNotice(notice.id);
       return true;
