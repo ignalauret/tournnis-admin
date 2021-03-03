@@ -284,7 +284,6 @@ class PlayersProvider extends ChangeNotifier {
 
   // Future<void> restartPoints() async {
   //   for (Player player in _players) {
-  //     print(player.name);
   //     await http.patch(
   //       Constants.kDbPath + "/players/${player.id}/points.json",
   //       body: jsonEncode({"0": 0, "1": 0, "2": 0, "3": 0}),

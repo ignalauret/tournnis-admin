@@ -143,7 +143,7 @@ class MatchesProvider extends ChangeNotifier {
   Future<String> createMatch(TournamentMatch match) async {
     // Try adding match in DB.
     final response = await http.post(
-      Constants.kDbPath + "/matches.json?auth=$token",
+      Constants.kDbPath + "/matches.json?",
       body: jsonEncode(match.toJson()),
     );
     if (response.statusCode == 200) {

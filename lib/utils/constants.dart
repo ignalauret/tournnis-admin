@@ -1,6 +1,6 @@
 class Constants {
   // Dev
-  //static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
+  // static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
   // Prod
   static const kDbPath = "https://tournnis-18078-default-rtdb.firebaseio.com";
   static const kCloudinaryUploadPath = "https://api.cloudinary.com/v1_1/tournnis/image/upload";

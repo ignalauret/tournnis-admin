@@ -61,7 +61,7 @@ class TournamentsProvider extends ChangeNotifier {
 
   Future<bool> setCurrentTid(String tid) async {
     final response = await http.patch(
-      Constants.kDbPath + "/config.json",
+      Constants.kDbPath + "/config.json?auth=$token",
       body: jsonEncode({
         "currentTid": tid,
         "inGroups": 0,
@@ -77,7 +77,7 @@ class TournamentsProvider extends ChangeNotifier {
   /* Not so important to wait response */
   Future<void> setInGroups() async {
     await http.patch(
-      Constants.kDbPath + "/config.json",
+      Constants.kDbPath + "/config.json?aut=$token",
       body: jsonEncode({
         "inGroups": 1,
       }),
@@ -87,7 +87,7 @@ class TournamentsProvider extends ChangeNotifier {
   Future<bool> createTournament(String name) async {
     final tournament = Tournament(name: name, startDate: DateTime.now());
     final response = await http.post(
-      Constants.kDbPath + "/tournaments.json",
+      Constants.kDbPath + "/tournaments.json?auth=$token",
       body: jsonEncode(tournament.toJson()),
     );
     if (response.statusCode == 200) {
@@ -101,7 +101,7 @@ class TournamentsProvider extends ChangeNotifier {
 
   Future<bool> editTournament(String tid, String name) async {
     final response = await http.patch(
-      Constants.kDbPath + "/tournaments/$tid.json",
+      Constants.kDbPath + "/tournaments/$tid.json?auth=$token",
       body: jsonEncode({"name": name}),
     );
     if (response.statusCode == 200) {

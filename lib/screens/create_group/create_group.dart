@@ -75,7 +75,7 @@ class _CreateGroupState extends State<CreateGroup> {
                             selectedCategory = cat;
                           });
                         },
-                        options: [0, 1, 2, 3],
+                        options: [1, 2, 3],
                       ),
                       CustomTextField(
                         controller: nameController,

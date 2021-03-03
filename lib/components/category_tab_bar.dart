@@ -5,21 +5,22 @@ import 'package:tournnis_admin/utils/custom_styles.dart';
 const kCategoryNames = ["Todas", "Platino", "Oro", "Plata", "Bronce"];
 
 class CategoryTabBar extends StatelessWidget {
-  CategoryTabBar({this.onSelect}) : options = 4;
-  CategoryTabBar.withAll({this.onSelect}) : options = 5;
+  CategoryTabBar({this.onSelect, this.options = const [0, 1, 2, 3]});
+  CategoryTabBar.withAll({this.onSelect}) : options = [0, 1, 2, 3, 4];
 
   final Function(int) onSelect;
-  final int options;
+  final List<int> options;
 
   @override
   Widget build(BuildContext context) {
     return TabBar(
       tabs: List.generate(
-        options,
+        options.length,
         (index) => FittedBox(
           fit: BoxFit.scaleDown,
           child: Tab(
-            text: kCategoryNames[options == 4 ? index + 1 : index],
+            text: kCategoryNames[
+                options.length == 5 ? options[index] : options[index] + 1],
           ),
         ),
       ),

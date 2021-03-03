@@ -7,6 +7,7 @@ import 'package:tournnis_admin/providers/notices_provider.dart';
 import 'package:tournnis_admin/providers/play_offs_provider.dart';
 import 'package:tournnis_admin/providers/players_provider.dart';
 import 'package:tournnis_admin/providers/tournaments_provider.dart';
+import 'package:tournnis_admin/screens/create_elimination_draw/create_elimination_draw.dart';
 import 'package:tournnis_admin/screens/create_group/create_group.dart';
 import 'package:tournnis_admin/screens/create_player/create_player_screen.dart';
 import 'package:tournnis_admin/screens/create_tournament/create_tournament_screen.dart';
@@ -44,14 +45,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, PlayersProvider>(
           create: (context) => PlayersProvider(null),
           update: (context, authData, prev) => PlayersProvider(authData.token),
+          lazy: false,
         ),
         ChangeNotifierProxyProvider<Auth, MatchesProvider>(
           create: (context) => MatchesProvider(null),
           update: (context, authData, prev) => MatchesProvider(authData.token),
+          lazy: false,
         ),
         ChangeNotifierProxyProvider<Auth, GroupsProvider>(
           create: (context) => GroupsProvider(null),
           update: (context, authData, prev) => GroupsProvider(authData.token),
+          lazy: false,
         ),
         ChangeNotifierProxyProvider<Auth, TournamentsProvider>(
           create: (context) => TournamentsProvider(null),
@@ -61,6 +65,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, PlayOffsProvider>(
           create: (context) => PlayOffsProvider(null),
           update: (context, authData, prev) => PlayOffsProvider(authData.token),
+          lazy: false,
         ),
         ChangeNotifierProxyProvider<Auth, NoticesProvider>(
           create: (context) => NoticesProvider(null),
@@ -106,9 +111,12 @@ class MyApp extends StatelessWidget {
             PlayersScreen.routeName: (context) => PlayersScreen(),
             CreatePlayerScreen.routeName: (context) => CreatePlayerScreen(),
             PlayerDetailScreen.routeName: (context) => PlayerDetailScreen(),
+            // Play Offs
             PlayOffsScreen.routeName: (context) => PlayOffsScreen(),
             PlayOffDraw.routeName: (context) => PlayOffDraw(),
             EditPlayOffScreen.routeName: (context) => EditPlayOffScreen(),
+            CreateEliminationDraw.routeName: (context) =>
+                CreateEliminationDraw(),
             // Notices
             NoticesScreen.routeName: (context) => NoticesScreen(),
           },

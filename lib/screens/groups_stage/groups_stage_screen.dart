@@ -54,18 +54,18 @@ class _GroupStageScreenState extends State<GroupStageScreen> {
       ),
       body: SafeArea(
         child: DefaultTabController(
-          length: 4,
+          length: 3,
           child: Container(
             child: Column(
               children: [
-                CategoryTabBar(),
+                CategoryTabBar(options: [1,2,3],),
                 Expanded(
                   child: TabBarView(
                     children: List.generate(
-                      4,
+                      3,
                       (index) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: GroupsList(index, tid),
+                        child: GroupsList(index + 1, tid),
                       ),
                     ),
                   ),

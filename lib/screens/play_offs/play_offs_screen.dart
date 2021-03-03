@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tournnis_admin/screens/create_elimination_draw/create_elimination_draw.dart';
 
 import '../../components/menu_button.dart';
 import '../../providers/play_offs_provider.dart';
@@ -44,8 +45,16 @@ class _PlayOffsScreenState extends State<PlayOffsScreen> {
             ),
             MenuButton(
               "Platino",
-              () => Navigator.of(context).pushNamed(PlayOffDraw.routeName,
-                  arguments: playoffData.getPlayOff(tid, 0)),
+              () {
+                final poff = playoffData.getPlayOff(tid, 0);
+                if (poff.hasStarted)
+                  Navigator.of(context)
+                      .pushNamed(PlayOffDraw.routeName, arguments: poff);
+                else
+                  Navigator.of(context).pushNamed(
+                      CreateEliminationDraw.routeName,
+                      arguments: tid);
+              },
             ),
             MenuButton(
               "Oro",

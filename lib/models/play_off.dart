@@ -9,14 +9,22 @@ class PlayOff {
   List<TournamentMatch> predictedMatches;
   bool hasStarted;
 
-  PlayOff({this.id, this.tid, this.category, this.matches, this.hasStarted, this.predictedMatches});
+  PlayOff({
+    this.id,
+    this.tid,
+    this.category,
+    this.matches,
+    this.hasStarted,
+    this.predictedMatches,
+  });
 
   factory PlayOff.fromJson(String id, Map<String, dynamic> json) {
     return PlayOff(
       id: id,
       tid: json["tid"],
       category: json["category"],
-      matches: List<String>.from(json["matches"]),
+      matches:
+          json["matches"] == null ? null : List<String>.from(json["matches"]),
       hasStarted: json["hasStarted"],
     );
   }
@@ -31,8 +39,10 @@ class PlayOff {
   }
 
   int get nRounds {
-    return 4;
-    return Utils.log2(matches.length).floor() + 1;
+    if (this.hasStarted)
+      return Utils.log2(matches.length).floor() + 1;
+    else
+      return Utils.log2(predictedMatches.length).floor() + 1;
   }
 
   List<String> getMatchesOfRound(int round) {
@@ -40,6 +50,7 @@ class PlayOff {
   }
 
   List<TournamentMatch> getPredictedMatchesOfRound(int round) {
-    return predictedMatches.sublist(Utils.pow2(round) - 1, Utils.pow2(round + 1) - 1);
+    return predictedMatches.sublist(
+        Utils.pow2(round) - 1, Utils.pow2(round + 1) - 1);
   }
 }

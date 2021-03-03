@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/play_off.dart';
-import '../../../models/player.dart';
 import '../../../models/tournament_match.dart';
 import '../../../providers/groups_provider.dart';
-import '../../../providers/players_provider.dart';
 import '../../../screens/edit_play_off/edit_play_off_screen.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/custom_styles.dart';
-import '../../../utils/utils.dart';
 
 import 'draw.dart';
 
@@ -30,7 +27,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
     // If there are not 8 groups, cant build predictions.
     if (players.length != 16) return;
     final List<TournamentMatch> matches = [];
-    for (int i = 0; i < Utils.pow2(playOff.nRounds - 1) - 1; i++) {
+    for (int i = 0; i < 7; i++) {
       matches.add(
         TournamentMatch(
           tid: playOff.tid,
@@ -42,7 +39,7 @@ class _PlayOffDrawState extends State<PlayOffDraw> {
     }
     matches.addAll(
       List.generate(
-        Utils.pow2(playOff.nRounds - 1),
+        8,
         (index) => TournamentMatch(
           pid1: players[kGroupMatchOrder[2 * index]],
           pid2: players[kGroupMatchOrder[2 * index + 1]],
