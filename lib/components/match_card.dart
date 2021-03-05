@@ -92,6 +92,7 @@ class MatchCard extends StatelessWidget {
                                         ? false
                                         : !match.isSecondWinner,
                                     match.isWo == 2,
+                                    match.isWo == 3,
                                   ),
                                 ),
                                 Expanded(
@@ -102,6 +103,7 @@ class MatchCard extends StatelessWidget {
                                         ? false
                                         : !match.isFirstWinner,
                                     match.isWo == 1,
+                                    match.isWo == 3,
                                   ),
                                 ),
                               ],
@@ -117,6 +119,7 @@ class MatchCard extends StatelessWidget {
                                           match.result1,
                                           !match.isSecondWinner,
                                           match.isWo == 2,
+                                          match.isWo == 3,
                                         ),
                                       ),
                                       Expanded(
@@ -125,6 +128,7 @@ class MatchCard extends StatelessWidget {
                                           match.result2,
                                           !match.isFirstWinner,
                                           match.isWo == 1,
+                                          match.isWo == 3,
                                         ),
                                       ),
                                     ],
@@ -225,7 +229,8 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Row _buildPlayerRow(String name, List<int> score, bool isWinner, bool wo) {
+  Row _buildPlayerRow(
+      String name, List<int> score, bool isWinner, bool wo, bool isDoubleWo) {
     return Row(
       children: [
         SizedBox(
@@ -251,7 +256,15 @@ class MatchCard extends StatelessWidget {
               style: CustomStyles.kResultStyle,
             ),
           ),
-        if (score != null && !wo)
+        if (isDoubleWo)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              "Penaliz.",
+              style: CustomStyles.kResultStyle,
+            ),
+          ),
+        if (score != null && !wo && !isDoubleWo)
           ...score.map(
             (score) => Container(
               height: 30,

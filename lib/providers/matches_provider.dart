@@ -298,6 +298,8 @@ class MatchesProvider extends ChangeNotifier {
       result1.addAll([6, 6]);
       result2.addAll([0, 0]);
       isWo = 2;
+    } else if (result == "3") {
+      isWo = 3;
     } else {
       final sets = result.split(" ");
       for (String set in sets) {

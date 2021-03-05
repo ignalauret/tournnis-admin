@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tournnis_admin/components/category_selector.dart';
 import 'package:tournnis_admin/components/category_tab_bar.dart';
 
 import '../../screens/create_group/create_group.dart';

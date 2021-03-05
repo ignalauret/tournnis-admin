@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tournnis_admin/utils/constants.dart';
 
 class Auth extends ChangeNotifier {
   String _token;
@@ -43,7 +44,7 @@ class Auth extends ChangeNotifier {
   Future<String> logIn(String username, String password) async {
     final email = username + "@tournnis.com";
     final url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAdG8HnPyAikgRREQJNRSxOIzZtlyPTvyM";
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${Constants.kFirebaseKey}";
 
     final response = await http.post(
       url,

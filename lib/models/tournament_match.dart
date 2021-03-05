@@ -11,8 +11,8 @@ class TournamentMatch {
   int isWo;
   DateTime date;
   final String tid; // Tournament ID.
-  final bool isPlayOff; // If is a play off match or a round match.
   int category;
+  final bool isPlayOff; // If is a play off match or a round match.
   final int playOffIndex;
   final bool isPredicted;
 
@@ -22,7 +22,7 @@ class TournamentMatch {
     this.pid2,
     this.result1,
     this.result2,
-    this.isWo = 0, // 0: not WO, 1: WO player 1, 2: WO player 2
+    this.isWo = 0, // 0: not WO, 1: WO player 1, 2: WO player 2, 3: double WO
     this.date,
     @required this.tid,
     this.isPlayOff,
@@ -33,17 +33,17 @@ class TournamentMatch {
 
   /* Getters */
   bool get isFirstWinner {
-    if (result1 == null) return false;
+    if (result1 == null || isWo == 3) return false;
     return result1.last > result2.last;
   }
 
   bool get isSecondWinner {
-    if (result2 == null) return false;
+    if (result2 == null || isWo == 3) return false;
     return result2.last > result1.last;
   }
 
   bool get hasEnded {
-    return result1 != null;
+    return result1 != null || this.isWo == 3;
   }
 
   String get winnerId {
@@ -57,6 +57,7 @@ class TournamentMatch {
   int get firstPlayerPoints {
     if (!hasEnded) return 0;
     if (isWo == 1) return 0;
+    if (isWo == 3) return Constants.kPointsLostInDoubleWo;
     if (isFirstWinner) return Constants.kGroupPoints[0];
     if (result1.length == 3) return Constants.kGroupPoints[1];
     return Constants.kGroupPoints[2];
@@ -65,12 +66,14 @@ class TournamentMatch {
   int get secondPlayerPoints {
     if (!hasEnded) return 0;
     if (isWo == 2) return 0;
+    if (isWo == 3) return Constants.kPointsLostInDoubleWo;
     if (isSecondWinner) return Constants.kGroupPoints[0];
     if (result1.length == 3) return Constants.kGroupPoints[1];
     return Constants.kGroupPoints[2];
   }
 
   int setsWonByPlayer(String pid) {
+    if (isWo == 3) return 0;
     if (pid == winnerId) {
       return 2;
     } else {
@@ -79,6 +82,7 @@ class TournamentMatch {
   }
 
   int setsLostByPlayer(String pid) {
+    if (isWo == 3) return 0;
     if (pid == winnerId) {
       return result1.length - 2;
     } else {
@@ -92,6 +96,7 @@ class TournamentMatch {
   }
 
   int gamesWonByPlayer(String pid) {
+    if (isWo == 3) return 0;
     if (pid == this.pid1) {
       return result1.fold<int>(
           0, (previousValue, games) => previousValue + games);
@@ -103,6 +108,7 @@ class TournamentMatch {
   }
 
   int gamesLostByPlayer(String pid) {
+    if (isWo == 3) return 0;
     if (pid == this.pid1) {
       return gamesWonByPlayer(this.pid2);
     } else if (pid == this.pid2) {
@@ -118,6 +124,7 @@ class TournamentMatch {
 
   int tiebreaksWonByPlayer(String pid) {
     if (!hasEnded) return 0;
+    if (isWo == 3) return 0;
     int count = 0;
     if (pid == this.pid1) {
       for (int i = 0; i < result1.length; i++) {
@@ -133,6 +140,7 @@ class TournamentMatch {
 
   int tiebreaksLostByPlayer(String pid) {
     if (!hasEnded) return 0;
+    if (isWo == 3) return 0;
     if (pid == this.pid1) {
       return tiebreaksWonByPlayer(this.pid2);
     } else if (pid == this.pid2) {

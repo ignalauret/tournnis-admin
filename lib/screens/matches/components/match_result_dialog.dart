@@ -50,7 +50,7 @@ class _MatchResultDialogState extends State<MatchResultDialog> {
   }
 
   bool checkResultFormat(String result) {
-    if (result == "1" || result == "2") return true;
+    if (result == "1" || result == "2" || result == "3") return true;
     final sets = result.split(" ");
     if (sets.length != 2 && sets.length != 3) {
       return false;
