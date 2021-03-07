@@ -13,7 +13,6 @@ class Player {
     @required this.nationality,
     @required this.club,
     this.racket,
-    this.profileUrl,
     this.imageUrl,
     this.backhand = Backhand.TwoHanded,
     this.handed = Handed.Right,
@@ -25,7 +24,6 @@ class Player {
   final List<int> globalCategoryPoints; // [points [int]]
   final List<Map<String, int>>
       tournamentCategoryPoints; // [{category [int] : points [int]}]
-  final String profileUrl;
   String imageUrl;
   String racket;
   Backhand backhand;
@@ -88,7 +86,6 @@ class Player {
       birth: DateTime.parse(playerData["birth"]),
       nationality: playerData["nationality"],
       club: playerData["club"],
-      profileUrl: playerData["profileUrl"],
       imageUrl: playerData["coverUrl"],
       racket: playerData["racket"],
       handed: parseHand(playerData["handed"]),
@@ -111,7 +108,6 @@ class Player {
       "birth": birth.toString(),
       "points": globalCategoryPoints,
       "coverUrl": imageUrl,
-      "profileUrl": profileUrl,
       "tournamentPoints": tournamentCategoryPoints,
     };
   }

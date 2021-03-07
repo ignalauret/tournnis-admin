@@ -263,10 +263,6 @@ class PlayersProvider extends ChangeNotifier {
     return getPlayerById(pid).getTournamentPointsOfCategory(tid, category);
   }
 
-  String getPlayerImage(String id) {
-    return getPlayerById(id).profileUrl;
-  }
-
   Player getPlayerById(String id) {
     return _players.firstWhere((player) => player.id == id);
   }
@@ -328,6 +324,18 @@ class PlayersProvider extends ChangeNotifier {
   //         "3": {"default": 0}
   //       }),
   //     );
+  //   }
+  // }
+
+  // Future<void> fixImages(List<Player> players) async {
+  //   for (Player player in players) {
+  //     if (player.imageUrl == null) {
+  //       final response = await http.patch(
+  //         Constants.kDbPath + "/players/${player.id}.json?auth=$token",
+  //         body: jsonEncode({"coverUrl": "ignacio_lauret.png"}),
+  //       );
+  //       print(response.body);
+  //     }
   //   }
   // }
 }

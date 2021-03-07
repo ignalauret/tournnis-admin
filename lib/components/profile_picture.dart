@@ -11,7 +11,11 @@ class ProfilePicture extends StatelessWidget {
       width: diameter,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        image: DecorationImage(image: NetworkImage(imagePath)),
+        image: DecorationImage(
+          image: imagePath == null || imagePath.contains("ignacio_lauret")
+              ? AssetImage("assets/img/icon.png")
+              : NetworkImage(imagePath),
+        ),
       ),
     );
   }
