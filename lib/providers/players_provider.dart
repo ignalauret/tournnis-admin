@@ -205,11 +205,42 @@ class PlayersProvider extends ChangeNotifier {
       setLocalPlayerPoints(pid, category, newPoints);
       // try adding points to tournament in DB.
       final response2 = await http.patch(
-        Constants.kDbPath + "/players/$pid/tournamentPoints/$category.json?auth=$token",
+        Constants.kDbPath +
+            "/players/$pid/tournamentPoints/$category.json?auth=$token",
         body: jsonEncode({"$tid": newTournamentPoints}),
       );
       if (response2.statusCode == 200) {
         setLocalPlayerTournamentPoints(pid, tid, category, newTournamentPoints);
+        return true;
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> setTournamentPointsToPlayer(
+      String pid, int points, int category, String tid) async {
+    final newPoints = getPlayerPoints(pid, category) -
+        getPlayerTournamentPoints(pid, tid, category) +
+        points;
+    // Try adding points in DB.
+    final response = await http.patch(
+      Constants.kDbPath + "/players/$pid/points.json?auth=$token",
+      body: jsonEncode({"$category": newPoints}),
+    );
+
+    if (response.statusCode == 200) {
+      // Add points in local memory.
+      setLocalPlayerPoints(pid, category, newPoints);
+      // try adding points to tournament in DB.
+      final response2 = await http.patch(
+        Constants.kDbPath +
+            "/players/$pid/tournamentPoints/$category.json?auth=$token",
+        body: jsonEncode({"$tid": points}),
+      );
+      if (response2.statusCode == 200) {
+        setLocalPlayerTournamentPoints(pid, tid, category, points);
         return true;
       }
       return false;

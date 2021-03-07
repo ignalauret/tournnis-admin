@@ -1,7 +1,7 @@
 class Constants {
   // Dev
-  // static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
-  // static const kFirebaseKey = "AIzaSyB1FNzL-ZYNqhxbCD-BzcxHqjjQKYLOD1g";
+  //static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
+  //static const kFirebaseKey = "AIzaSyB1FNzL-ZYNqhxbCD-BzcxHqjjQKYLOD1g";
 
   // Prod
   static const kDbPath = "https://tournnis-18078-default-rtdb.firebaseio.com";

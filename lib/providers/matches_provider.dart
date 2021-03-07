@@ -361,13 +361,16 @@ class MatchesProvider extends ChangeNotifier {
   Future<void> endTournament(
       BuildContext context, TournamentMatch finalMatch) async {
     final playOffMatches = _matches
-        .where((match) => match.tid == finalMatch.tid && match.isPlayOff)
+        .where((match) =>
+            match.tid == finalMatch.tid &&
+            match.category == finalMatch.category &&
+            match.isPlayOff)
         .toList();
     final playersProvider = context.read<PlayersProvider>();
     // Add points to everyone except for the champion.
     for (TournamentMatch match in playOffMatches) {
       final loserId = match.loserId;
-      await playersProvider.addPointsToPlayer(
+      await playersProvider.setTournamentPointsToPlayer(
           loserId,
           Utils.getPlayOffPointsFromIndex(match.playOffIndex),
           match.category,
@@ -375,7 +378,7 @@ class MatchesProvider extends ChangeNotifier {
     }
     // Add points to champion.
     final championId = finalMatch.winnerId;
-    await playersProvider.addPointsToPlayer(
+    await playersProvider.setTournamentPointsToPlayer(
         championId,
         Utils.getPlayOffPointsFromIndex(-1),
         finalMatch.category,
