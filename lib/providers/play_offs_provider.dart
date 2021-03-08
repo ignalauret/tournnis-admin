@@ -131,21 +131,39 @@ class PlayOffsProvider extends ChangeNotifier {
       mids.add(mid);
     }
     for (int i = 0; i < players.length ~/ 2; i++) {
+      final String pid1 = players[2 * i] ?? "bye";
+      final String pid2 = players[2 * i + 1] ?? "bye";
+      final int playOffIndex = players.length ~/ 2 - 1 + i;
       final String mid = await matchesData.createMatch(
         TournamentMatch(
-          pid1: players[2 * i],
-          pid2: players[2 * i + 1],
+          pid1: pid1,
+          pid2: pid2,
           isPlayOff: true,
-          playOffIndex: players.length ~/ 2 - 1 + i,
+          playOffIndex: playOffIndex,
           tid: tid,
           category: category,
         ),
       );
       if (mid == null) return false;
       mids.add(mid);
+      if (pid1 == "bye") {
+        await matchesData.editPlayerOfMatchAtPosition(
+          mids[Utils.getNextMatchIndex(playOffIndex)],
+          Utils.getNextMatchPosition(playOffIndex),
+          pid2,
+        );
+      }
+      if (pid2 == "bye") {
+        await matchesData.editPlayerOfMatchAtPosition(
+          mids[Utils.getNextMatchIndex(playOffIndex)],
+          Utils.getNextMatchPosition(playOffIndex),
+          pid1,
+        );
+      }
     }
     playOff.matches = mids;
-    final response = await http.post(Constants.kDbPath + "/playOffs.json?auth=$token",
+    final response = await http.post(
+        Constants.kDbPath + "/playOffs.json?auth=$token",
         body: json.encode(playOff.toJson()));
     if (response.statusCode == 200) {
       addLocalPlayOff(playOff);

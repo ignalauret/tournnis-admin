@@ -14,7 +14,9 @@ const kRoundNames = [
   "Final",
   "Semifinal",
   "Cuartos de final",
-  "Octavos de final"
+  "Octavos de final",
+  "Ronda de 16",
+  "Ronda de 32",
 ];
 
 const kMatchCardMargin = 20.0;

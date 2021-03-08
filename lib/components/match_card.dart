@@ -55,7 +55,7 @@ class MatchCard extends StatelessWidget {
                 match.date, match.categoryName, size, match.isPredicted),
             GestureDetector(
               onTap:
-                  match.isPredicted || match.pid1 == null || match.pid2 == null
+                  match.isPredicted || match.pid1 == null || match.pid2 == null || match.isBye
                       ? null
                       : () => Navigator.of(context).pushNamed(
                             MatchOptionsScreen.routeName,
@@ -81,7 +81,8 @@ class MatchCard extends StatelessWidget {
                       child: match.hasEnded ||
                               match.pid1 == null ||
                               match.pid2 == null ||
-                              match.isPredicted
+                              match.isPredicted ||
+                              match.isBye
                           ? Column(
                               children: [
                                 Expanded(

@@ -32,6 +32,10 @@ class TournamentMatch {
   });
 
   /* Getters */
+  bool get isBye {
+    return (this.pid1 == "bye" || this.pid2 == "bye");
+  }
+
   bool get isFirstWinner {
     if (result1 == null || isWo == 3) return false;
     return result1.last > result2.last;

@@ -251,6 +251,7 @@ class PlayersProvider extends ChangeNotifier {
 
   /* Getters */
   String getPlayerName(String id) {
+    if (id == "bye") return "Bye";
     if (id == null) return " ";
     return getPlayerById(id).name;
   }

@@ -1,13 +1,14 @@
 class Constants {
   // Dev
-  //static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
-  //static const kFirebaseKey = "AIzaSyB1FNzL-ZYNqhxbCD-BzcxHqjjQKYLOD1g";
+  // static const kDbPath = "https://tournnis-dev-default-rtdb.firebaseio.com";
+  // static const kFirebaseKey = "AIzaSyB1FNzL-ZYNqhxbCD-BzcxHqjjQKYLOD1g";
 
   // Prod
   static const kDbPath = "https://tournnis-18078-default-rtdb.firebaseio.com";
   static const kFirebaseKey = "AIzaSyAdG8HnPyAikgRREQJNRSxOIzZtlyPTvyM";
 
-  static const kCloudinaryUploadPath = "https://api.cloudinary.com/v1_1/tournnis/image/upload";
+  static const kCloudinaryUploadPath =
+      "https://api.cloudinary.com/v1_1/tournnis/image/upload";
   static const kCardBorderRadius = 5.0;
   static const kSponsorImageFrequency = 3;
 
